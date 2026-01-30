@@ -1,0 +1,2799 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>넥슨 매출액 추적</title>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <style>
+        :root {
+            --claude-orange: #E57B53;
+            --chart-positive: #4ECDC4;
+            --chart-negative: #FF6B6B;
+            --chart-secondary: #5B9BD5;
+            --chart-tertiary: #9B59B6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-weight: 300;
+            line-height: 1.3;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* 좌측 패널 */
+        .left-panel {
+            width: 180px;
+            min-width: 120px;
+            display: flex;
+            flex-direction: column;
+            background: #fafafa;
+        }
+
+        .search-box {
+            padding: 8px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid var(--claude-orange);
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 300;
+            outline: none;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 2px rgba(229, 123, 83, 0.2);
+        }
+
+        .source-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 4px 8px;
+        }
+
+        .source-group {
+            margin: 4px 0;
+        }
+
+        .source-header {
+            display: flex;
+            align-items: center;
+            padding: 6px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 13px;
+            color: var(--claude-orange);
+            transition: background 0.15s;
+        }
+
+        .source-header:hover {
+            background: rgba(229, 123, 83, 0.1);
+        }
+
+        .source-header .arrow {
+            margin-right: 6px;
+            font-size: 10px;
+            transition: transform 0.2s;
+        }
+
+        .source-header.expanded .arrow {
+            transform: rotate(90deg);
+        }
+
+        .source-items {
+            padding-left: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+
+        .source-items.expanded {
+            max-height: 500px;
+        }
+
+        .source-item {
+            display: block;
+            color: #666;
+            font-size: 11px;
+            text-decoration: none;
+            padding: 3px 6px;
+            margin: 2px 0;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .source-item:hover {
+            background: rgba(229, 123, 83, 0.1);
+            color: var(--claude-orange);
+        }
+
+        /* 중앙 패널 */
+        .center-panel {
+            flex: 4;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 300px;
+        }
+
+        .chart-container {
+            height: 40%;
+            min-height: 200px;
+            padding: 8px;
+        }
+
+        #stockChart {
+            width: 100%;
+            height: 100%;
+        }
+
+        .table-container {
+            flex: 1;
+            overflow: auto;
+            padding: 8px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        .data-table th,
+        .data-table td {
+            border: 1px solid #eee;
+            padding: 6px 8px;
+            text-align: center;
+        }
+
+        .data-table th {
+            background: #fafafa;
+            font-weight: 300;
+            color: var(--claude-orange);
+            position: sticky;
+            top: 0;
+        }
+
+        .data-table th:first-child {
+            text-align: left;
+            width: 80px;
+        }
+
+        .data-table td:first-child {
+            text-align: left;
+            font-weight: 400;
+            color: #666;
+        }
+
+        .data-table td.has-data {
+            cursor: pointer;
+            color: var(--claude-orange);
+            font-weight: 400;
+            min-width: 80px;
+            text-align: left;
+            padding: 4px 8px;
+        }
+
+        .data-table td.has-data:hover {
+            background: rgba(229, 123, 83, 0.1);
+        }
+
+        .cell-preview {
+            font-size: 10px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .cell-badge {
+            background: var(--claude-orange);
+            color: white;
+            font-size: 9px;
+            padding: 1px 4px;
+            border-radius: 8px;
+            margin-left: 4px;
+            vertical-align: middle;
+        }
+
+        /* 우측 패널 */
+        .right-panel {
+            flex: 1.2;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            min-width: 200px;
+        }
+
+        .detail-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .detail-placeholder {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .detail-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            background: #fafafa;
+        }
+
+        .detail-source {
+            font-size: 11px;
+            color: var(--claude-orange);
+            margin-bottom: 4px;
+        }
+
+        .detail-date {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .detail-chart {
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+            min-height: 180px;
+        }
+
+        #detailChart {
+            width: 100%;
+            height: 160px;
+        }
+
+        .detail-charts {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-chart-item {
+            height: 140px;
+        }
+
+        .detail-content {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .detail-title {
+            font-size: 14px;
+            font-weight: 400;
+            color: #333;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .detail-summary {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .detail-summary ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .detail-summary li {
+            padding: 6px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .detail-summary li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--claude-orange);
+        }
+
+        /* 팝오버 */
+        .popover {
+            position: fixed;
+            background: #fff;
+            border: 1px solid var(--claude-orange);
+            border-radius: 6px;
+            padding: 8px;
+            max-width: 250px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            display: none;
+        }
+
+        .popover.visible {
+            display: block;
+        }
+
+        .popover-title {
+            font-size: 12px;
+            font-weight: 400;
+            color: var(--claude-orange);
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .popover-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: #666;
+            padding: 6px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+
+        .popover-item:hover {
+            color: var(--claude-orange);
+            background: rgba(229, 123, 83, 0.1);
+        }
+
+        .popover-date {
+            font-size: 10px;
+            color: #999;
+            flex-shrink: 0;
+            width: 40px;
+        }
+
+        .popover-title-text {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* 셀 카운트 스타일 */
+        .cell-count {
+            font-size: 11px;
+            color: var(--claude-orange);
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .cell-count:hover {
+            text-decoration: underline;
+        }
+
+        /* 스크롤바 스타일 */
+        .source-list::-webkit-scrollbar,
+        .table-container::-webkit-scrollbar,
+        .detail-container::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        .source-list::-webkit-scrollbar-thumb,
+        .table-container::-webkit-scrollbar-thumb,
+        .detail-container::-webkit-scrollbar-thumb {
+            background: var(--claude-orange);
+            border-radius: 2px;
+        }
+
+        /* Highcharts 커스텀 */
+        .highcharts-button-box {
+            fill: #fafafa;
+        }
+
+        .highcharts-button text {
+            fill: #666 !important;
+            font-weight: 300 !important;
+        }
+
+        .highcharts-button-pressed .highcharts-button-box {
+            fill: var(--claude-orange) !important;
+        }
+
+        .highcharts-button-pressed text {
+            fill: #fff !important;
+        }
+
+        /* 메인 콘텐츠 영역 (중앙+우측+하단) */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 상단 영역 (중앙+우측) */
+        .upper-area {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            min-height: 200px;
+        }
+
+        /* 하단 결과 패널 */
+        .bottom-panel {
+            height: 280px;
+            min-height: 100px;
+            background: #fff;
+            flex-shrink: 0;
+        }
+
+        /* 리사이저 공통 스타일 */
+        .resizer {
+            background: #eee;
+            flex-shrink: 0;
+            transition: background 0.15s;
+            position: relative;
+        }
+
+        .resizer:hover {
+            background: rgba(229, 123, 83, 0.4);
+        }
+
+        .resizer.active {
+            background: var(--claude-orange);
+        }
+
+        /* 수평 리사이저 (좌우 조절) */
+        .resizer-horizontal {
+            width: 5px;
+            cursor: col-resize;
+        }
+
+        /* 수직 리사이저 (상하 조절) */
+        .resizer-vertical {
+            height: 5px;
+            cursor: row-resize;
+        }
+
+        .result-container {
+            height: 100%;
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .result-placeholder {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .result-header {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--claude-orange);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .result-title {
+            font-weight: 400;
+        }
+
+        .result-period {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .result-content {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .result-summary h4 {
+            font-size: 12px;
+            font-weight: 400;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .result-summary ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .result-summary li {
+            padding: 4px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .result-summary li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--claude-orange);
+        }
+
+        .result-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .result-container::-webkit-scrollbar-thumb {
+            background: var(--claude-orange);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 좌측 패널 -->
+        <div class="left-panel" id="leftPanel">
+            <div class="search-box">
+                <input type="text" class="search-input" value="넥슨의 매출액" readonly>
+            </div>
+            <div class="source-list" id="sourceList">
+                <!-- 아코디언 목록 -->
+            </div>
+        </div>
+
+        <!-- 좌측-메인 리사이저 -->
+        <div class="resizer resizer-horizontal" id="resizerLeft"></div>
+
+        <!-- 메인 콘텐츠 영역 -->
+        <div class="main-content">
+            <!-- 상단 영역 (중앙+우측) -->
+            <div class="upper-area" id="upperArea">
+                <!-- 중앙 패널 -->
+                <div class="center-panel" id="centerPanel">
+                    <div class="chart-container">
+                        <div id="stockChart"></div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="dataTable">
+                            <!-- 테이블 내용 -->
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 중앙-우측 리사이저 -->
+                <div class="resizer resizer-horizontal" id="resizerCenter"></div>
+
+                <!-- 우측 패널 -->
+                <div class="right-panel" id="rightPanel">
+                    <div class="detail-container" id="detailContainer">
+                        <div class="detail-placeholder" id="detailPlaceholder">
+                            항목을 선택하세요
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 상단-하단 리사이저 -->
+            <div class="resizer resizer-vertical" id="resizerBottom"></div>
+
+            <!-- 하단 결과 패널 -->
+            <div class="bottom-panel" id="bottomPanel">
+                <div class="result-container" id="resultContainer">
+                    <div class="result-placeholder">결과가 여기에 표시됩니다</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 팝오버 -->
+    <div class="popover" id="popover">
+        <div class="popover-title" id="popoverTitle"></div>
+        <div class="popover-content" id="popoverContent"></div>
+    </div>
+
+    <script>
+        // 출처별 더미 데이터
+        const sourceData = {
+            dart: {
+                name: '공시(DART)',
+                items: [
+                    '넥슨 2024년 사업보고서',
+                    '2024년 4분기 실적공시',
+                    '2024년 3분기 분기보고서',
+                    '2024년 2분기 분기보고서',
+                    '2024년 1분기 분기보고서',
+                    '주요사항보고서(자기주식취득)',
+                    '임원현황 공시'
+                ]
+            },
+            darkReport: {
+                name: '다크리포트',
+                items: [
+                    '넥슨 매출 둔화 우려 분석',
+                    '메이플스토리 매출 하락 리포트',
+                    '던전앤파이터 중국 매출 분석',
+                    'FC온라인 시즌 매출 추정',
+                    '신작 기대작 매출 전망'
+                ]
+            },
+            policy: {
+                name: '정책/규제',
+                items: [
+                    '확률형 아이템 규제 강화안',
+                    '게임산업법 개정 논의',
+                    '청소년 게임시간 제한 완화',
+                    '중국 판호 정책 변화',
+                    '일본 게임시장 규제 동향'
+                ]
+            },
+            news: {
+                name: '뉴스/기타',
+                items: [
+                    '넥슨 신작 "퍼스트 디센던트" 출시',
+                    '블루아카이브 글로벌 흥행',
+                    '메이플스토리 20주년 이벤트',
+                    '넥슨 북미 스튜디오 확장',
+                    'EA와 전략적 파트너십 체결',
+                    'FC온라인 e스포츠 대회 개최'
+                ]
+            }
+        };
+
+        // 이벤트 데이터 (날짜별) - 확장된 구조
+        const eventData = {
+            dart: {
+                '2024-01': [{
+                    id: 'dart-2024-01-1',
+                    title: '2023년 4분기 잠정실적 공시',
+                    summary: [
+                        '매출 3.2조원 달성 (전년 동기 대비 12% 증가)',
+                        '영업이익 8,500억원 (영업이익률 26.6%)',
+                        '메이플스토리, 던전앤파이터 매출 견조',
+                        'FC온라인 시즌 매출 호조',
+                        '중국 던파 모바일 월 매출 2,000억원 추정',
+                        '블루아카이브 일본 매출 상승세 지속',
+                        '퍼스트 디센던트 개발 진행률 85%',
+                        '2024년 연간 매출 가이던스 상향 조정',
+                        '현금성 자산 5조원 돌파',
+                        '배당금 증가 및 자사주 매입 계획 발표',
+                        '게임 라이브 서비스 모델 전환 가속화',
+                        '글로벌 e스포츠 투자 확대 전략 수립'
+                    ],
+                    charts: [
+                        {
+                            title: '분기별 실적 흐름 (억원)',
+                            type: 'waterfall',
+                            data: [
+                                { name: 'Q1', y: 28000, color: '#4ECDC4' },
+                                { name: 'Q2 증가', y: 1500, color: '#4ECDC4' },
+                                { name: 'Q3 증가', y: 700, color: '#4ECDC4' },
+                                { name: 'Q4 증가', y: 1800, color: '#4ECDC4' },
+                                { name: '연간', isSum: true, color: '#E57B53' }
+                            ]
+                        },
+                        {
+                            title: '성장률 비교',
+                            type: 'comparison',
+                            categories: ['매출성장률', '영업이익률'],
+                            series: [
+                                { name: '넥슨', data: [12, 26.6], color: '#E57B53' },
+                                { name: '업계평균', data: [8, 18], color: '#5B9BD5' }
+                            ]
+                        },
+                        {
+                            title: '게임별 매출 비중',
+                            type: 'pie',
+                            data: [
+                                { name: '메이플', y: 35 },
+                                { name: '던파', y: 25 },
+                                { name: 'FC온라인', y: 22 },
+                                { name: '기타', y: 18 }
+                            ]
+                        }
+                    ],
+                    date: '2024-01-15'
+                },
+                {
+                    id: 'dart-2024-01-2',
+                    title: '주요사항보고서(유상증자)',
+                    summary: ['유상증자 500억원 결정', '신주 발행가 50,000원'],
+                    charts: [],
+                    date: '2024-01-20'
+                },
+                {
+                    id: 'dart-2024-01-3',
+                    title: '임원보수한도 승인의 건',
+                    summary: ['이사보수 한도 30억원', '감사보수 한도 5억원'],
+                    charts: [],
+                    date: '2024-01-25'
+                },
+                {
+                    id: 'dart-2024-01-4',
+                    title: '자기주식 처분결과 보고서',
+                    summary: ['자기주식 100만주 처분', '처분금액 500억원'],
+                    charts: [],
+                    date: '2024-01-28'
+                }],
+                '2024-02': [{
+                    id: 'dart-2024-02-1',
+                    title: '2023년 사업보고서 제출',
+                    summary: [
+                        '연간 총 매출 11.97조원 기록',
+                        '해외 매출 비중 75% 달성',
+                        '신규 IP 개발 투자 확대',
+                        '임직원 수 7,200명으로 증가'
+                    ],
+                    charts: [
+                        {
+                            title: '연간 매출 성장 (억원)',
+                            type: 'waterfall',
+                            data: [
+                                { name: '2021', y: 85000, color: '#4ECDC4' },
+                                { name: '2022 증가', y: 13000, color: '#4ECDC4' },
+                                { name: '2023 증가', y: 21700, color: '#4ECDC4' },
+                                { name: '누적', isSum: true, color: '#E57B53' }
+                            ]
+                        },
+                        {
+                            title: '매출 지역별 비중 (%)',
+                            type: 'pie',
+                            data: [
+                                { name: '국내', y: 25 },
+                                { name: '해외', y: 75 }
+                            ]
+                        },
+                        {
+                            title: '연간 성장률 비교',
+                            type: 'comparison',
+                            categories: ['매출성장률', '인력성장률'],
+                            series: [
+                                { name: '넥슨', data: [22.2, 5.9], color: '#E57B53' },
+                                { name: '업계평균', data: [12, 3], color: '#5B9BD5' }
+                            ]
+                        }
+                    ],
+                    date: '2024-02-28'
+                },
+                {
+                    id: 'dart-2024-02-2',
+                    title: '정기주주총회 소집공고',
+                    summary: ['제27기 정기주주총회 개최 안내', '배당금 지급 안건 상정'],
+                    charts: [],
+                    date: '2024-02-15'
+                },
+                {
+                    id: 'dart-2024-02-3',
+                    title: '감사보고서 제출',
+                    summary: ['외부감사인 적정의견', '내부회계관리제도 적정'],
+                    charts: [],
+                    date: '2024-02-20'
+                }],
+                '2024-03': [],
+                '2024-04': [{
+                    id: 'dart-2024-04-1',
+                    title: '2024년 1분기 분기보고서',
+                    summary: [
+                        '매출 3.1조원 (전년 동기 대비 8% 증가)',
+                        '영업이익 7,800억원',
+                        '블루아카이브 글로벌 성장세',
+                        '신작 퍼스트 디센던트 개발 진행 중'
+                    ],
+                    charts: [
+                        {
+                            title: '분기 매출 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: 'Q1 2023', y: 28000 },
+                                { name: 'Q1 2024', y: 31000 }
+                            ]
+                        },
+                        {
+                            title: '게임별 매출 비중 (%)',
+                            type: 'pie',
+                            data: [
+                                { name: '메이플', y: 35 },
+                                { name: '던파', y: 25 },
+                                { name: 'FC온라인', y: 20 },
+                                { name: '기타', y: 20 }
+                            ]
+                        },
+                        {
+                            title: '영업이익 추이 (억원)',
+                            type: 'line',
+                            data: [
+                                { name: 'Q1 2023', y: 6800 },
+                                { name: 'Q1 2024', y: 7800 }
+                            ]
+                        }
+                    ],
+                    date: '2024-04-15'
+                }],
+                '2024-05': [{
+                    id: 'dart-2024-05-1',
+                    title: '주요사항보고서(자기주식취득)',
+                    summary: [
+                        '자기주식 500억원 규모 취득 결정',
+                        '주주가치 제고 목적',
+                        '취득 기간: 2024.05 ~ 2024.08',
+                        '취득 방법: 장내 매수'
+                    ],
+                    charts: [
+                        {
+                            title: '자사주 매입 규모 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '2022', y: 300 },
+                                { name: '2023', y: 400 },
+                                { name: '2024', y: 500 }
+                            ]
+                        },
+                        {
+                            title: '주주환원율 (%)',
+                            type: 'line',
+                            data: [
+                                { name: '2022', y: 15 },
+                                { name: '2023', y: 18 },
+                                { name: '2024', y: 22 }
+                            ]
+                        },
+                        {
+                            title: '자사주 비중 (%)',
+                            type: 'pie',
+                            data: [
+                                { name: '유통주식', y: 92 },
+                                { name: '자사주', y: 8 }
+                            ]
+                        }
+                    ],
+                    date: '2024-05-10'
+                }],
+                '2024-06': [],
+                '2024-07': [{
+                    id: 'dart-2024-07-1',
+                    title: '2024년 2분기 분기보고서',
+                    summary: [
+                        '매출 3.3조원 (전분기 대비 6% 증가)',
+                        '영업이익 8,200억원',
+                        '퍼스트 디센던트 출시 효과',
+                        '중국 시장 매출 회복세'
+                    ],
+                    charts: [
+                        {
+                            title: '2024년 분기별 매출 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: 'Q1', y: 31000 },
+                                { name: 'Q2', y: 33000 }
+                            ]
+                        },
+                        {
+                            title: '영업이익률 (%)',
+                            type: 'line',
+                            data: [
+                                { name: 'Q1', y: 25.2 },
+                                { name: 'Q2', y: 24.8 }
+                            ]
+                        },
+                        {
+                            title: '지역별 매출 비중',
+                            type: 'pie',
+                            data: [
+                                { name: '한국', y: 22 },
+                                { name: '중국', y: 35 },
+                                { name: '일본', y: 25 },
+                                { name: '기타', y: 18 }
+                            ]
+                        }
+                    ],
+                    date: '2024-07-15'
+                }],
+                '2024-08': [],
+                '2024-09': [],
+                '2024-10': [{
+                    id: 'dart-2024-10-1',
+                    title: '2024년 3분기 분기보고서',
+                    summary: [
+                        '매출 3.5조원 (전분기 대비 6% 증가)',
+                        '영업이익 9,100억원 (역대 최고)',
+                        '퍼스트 디센던트 누적 매출 3,000억원',
+                        '블루아카이브 일본 매출 1위 달성'
+                    ],
+                    charts: [
+                        {
+                            title: '2024년 분기별 매출 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: 'Q1', y: 31000 },
+                                { name: 'Q2', y: 33000 },
+                                { name: 'Q3', y: 35000 }
+                            ]
+                        },
+                        {
+                            title: '영업이익률 (%)',
+                            type: 'line',
+                            data: [
+                                { name: 'Q1', y: 25.2 },
+                                { name: 'Q2', y: 24.8 },
+                                { name: 'Q3', y: 26.0 }
+                            ]
+                        },
+                        {
+                            title: '신작 매출 비중',
+                            type: 'pie',
+                            data: [
+                                { name: '퍼스트디센던트', y: 25 },
+                                { name: '기존 IP', y: 75 }
+                            ]
+                        }
+                    ],
+                    date: '2024-10-15'
+                }],
+                '2024-11': [],
+                '2024-12': [{
+                    id: 'dart-2024-12-1',
+                    title: '2024년 4분기 잠정실적 공시',
+                    summary: [
+                        '매출 3.8조원 (역대 최고 분기 실적)',
+                        '영업이익 1조원 돌파',
+                        '연간 총 매출 13.7조원 전망',
+                        '2025년 신작 라인업 발표 예정'
+                    ],
+                    charts: [
+                        {
+                            title: '2024년 분기별 실적 흐름 (억원)',
+                            type: 'waterfall',
+                            data: [
+                                { name: 'Q1', y: 31000, color: '#4ECDC4' },
+                                { name: 'Q2 증가', y: 2000, color: '#4ECDC4' },
+                                { name: 'Q3 증가', y: 2000, color: '#4ECDC4' },
+                                { name: 'Q4 증가', y: 3000, color: '#4ECDC4' },
+                                { name: '연간', isSum: true, color: '#E57B53' }
+                            ]
+                        },
+                        {
+                            title: '전년 대비 성장률 (%)',
+                            type: 'comparison',
+                            categories: ['매출성장률', '영업이익률', 'ROE'],
+                            series: [
+                                { name: '넥슨', data: [14.5, 26.3, 18.2], color: '#4ECDC4' },
+                                { name: '업계평균', data: [6.2, 15.8, 10.5], color: '#5B9BD5' }
+                            ]
+                        },
+                        {
+                            title: '게임별 매출 비중',
+                            type: 'pie',
+                            data: [
+                                { name: '메이플', y: 32 },
+                                { name: '던파', y: 28 },
+                                { name: 'FC온라인', y: 18 },
+                                { name: '퍼스트디센던트', y: 12 },
+                                { name: '기타', y: 10 }
+                            ]
+                        }
+                    ],
+                    date: '2024-12-20'
+                }]
+            },
+            darkReport: {
+                '2024-01': [],
+                '2024-02': [{
+                    id: 'dark-2024-02-1',
+                    title: '메이플 매출 하락 분석',
+                    summary: [
+                        '메이플스토리 1월 매출 전월 대비 15% 하락',
+                        '신규 콘텐츠 부재로 유저 이탈 가속화',
+                        '경쟁작 대비 업데이트 주기 늦어',
+                        '20주년 이벤트로 반등 기대'
+                    ],
+                    charts: [
+                        {
+                            title: '월별 매출 추이 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '11월', y: 1200 },
+                                { name: '12월', y: 1400 },
+                                { name: '1월', y: 1190 }
+                            ]
+                        },
+                        {
+                            title: 'DAU 추이 (만명)',
+                            type: 'line',
+                            data: [
+                                { name: '11월', y: 45 },
+                                { name: '12월', y: 52 },
+                                { name: '1월', y: 38 }
+                            ]
+                        },
+                        {
+                            title: '경쟁작 대비 점유율',
+                            type: 'pie',
+                            data: [
+                                { name: '메이플', y: 42 },
+                                { name: '로아', y: 35 },
+                                { name: '기타', y: 23 }
+                            ]
+                        }
+                    ],
+                    date: '2024-02-05'
+                }],
+                '2024-03': [{
+                    id: 'dark-2024-03-1',
+                    title: '던파 중국 매출 추정',
+                    summary: [
+                        '던전앤파이터 모바일 중국 매출 월 2,000억원 추정',
+                        '텐센트 협력으로 안정적 운영',
+                        '신규 직업 업데이트로 매출 상승',
+                        '규제 리스크는 제한적'
+                    ],
+                    charts: [
+                        {
+                            title: '월 매출 추정 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '1월', y: 1800 },
+                                { name: '2월', y: 2200 },
+                                { name: '3월', y: 2000 }
+                            ]
+                        },
+                        {
+                            title: '중국 게임 순위',
+                            type: 'line',
+                            data: [
+                                { name: '1월', y: 3 },
+                                { name: '2월', y: 2 },
+                                { name: '3월', y: 2 }
+                            ]
+                        },
+                        {
+                            title: '플랫폼별 비중',
+                            type: 'pie',
+                            data: [
+                                { name: 'iOS', y: 45 },
+                                { name: 'Android', y: 55 }
+                            ]
+                        }
+                    ],
+                    date: '2024-03-12'
+                }],
+                '2024-04': [{
+                    id: 'dark-2024-04-1',
+                    title: '블루아카이브 일본 시장 분석',
+                    summary: ['일본 앱스토어 매출 5위권 유지', '일러스트 퀄리티로 2차 창작 활성화'],
+                    charts: [],
+                    date: '2024-04-05'
+                },
+                {
+                    id: 'dark-2024-04-2',
+                    title: '넥슨 인력 구조조정 루머',
+                    summary: ['비용 절감 차원 구조조정 진행 추정', '개발 인력 영향은 제한적'],
+                    charts: [],
+                    date: '2024-04-10'
+                },
+                {
+                    id: 'dark-2024-04-3',
+                    title: '퍼스트 디센던트 CBT 분석',
+                    summary: ['CBT 유저 피드백 분석', '최적화 이슈 개선 필요'],
+                    charts: [],
+                    date: '2024-04-15'
+                },
+                {
+                    id: 'dark-2024-04-4',
+                    title: '메이플스토리 네오 업데이트 반응',
+                    summary: ['신규 콘텐츠 호평', 'DAU 20% 상승'],
+                    charts: [],
+                    date: '2024-04-20'
+                },
+                {
+                    id: 'dark-2024-04-5',
+                    title: '중국 게임 규제 영향 분석',
+                    summary: ['미성년자 플레이 시간 제한 강화', '넥슨 중국 매출 영향 제한적'],
+                    charts: [],
+                    date: '2024-04-25'
+                }],
+                '2024-05': [{
+                    id: 'dark-2024-05-1',
+                    title: 'FC온라인 시즌 리포트',
+                    summary: [
+                        'FC온라인 시즌 전환기 매출 급증',
+                        '월드컵 효과로 유저 유입 증가',
+                        '경쟁작 EA FC 대비 국내 점유율 우위',
+                        'e스포츠 투자 확대 전략'
+                    ],
+                    charts: [
+                        {
+                            title: '시즌별 매출 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '23시즌', y: 3200 },
+                                { name: '24시즌', y: 3800 }
+                            ]
+                        },
+                        {
+                            title: '신규 유저 추이 (만명)',
+                            type: 'line',
+                            data: [
+                                { name: '3월', y: 12 },
+                                { name: '4월', y: 18 },
+                                { name: '5월', y: 25 }
+                            ]
+                        },
+                        {
+                            title: '국내 축구게임 점유율',
+                            type: 'pie',
+                            data: [
+                                { name: 'FC온라인', y: 72 },
+                                { name: 'EA FC', y: 28 }
+                            ]
+                        }
+                    ],
+                    date: '2024-05-20'
+                }],
+                '2024-06': [{
+                    id: 'dark-2024-06-1',
+                    title: '넥슨 종합 매출 전망',
+                    summary: [
+                        '2024년 연간 매출 13조원 상회 전망',
+                        '퍼스트 디센던트 출시로 하반기 실적 기대',
+                        '해외 매출 비중 80% 돌파 예상',
+                        '목표주가 상향 조정'
+                    ],
+                    charts: [
+                        {
+                            title: 'FCF 분석 (억원)',
+                            type: 'waterfall',
+                            data: [
+                                { name: '영업CF', y: 35000, color: '#4ECDC4' },
+                                { name: '감가상각', y: 4000, color: '#4ECDC4' },
+                                { name: '투자', y: -8000, color: '#FF6B6B' },
+                                { name: '운전자본', y: -2000, color: '#FF6B6B' },
+                                { name: 'FCF', isSum: true, color: '#E57B53' }
+                            ]
+                        },
+                        {
+                            title: '성장률 비교 (%)',
+                            type: 'comparison',
+                            categories: ['5년 평균', '최근 1년'],
+                            series: [
+                                { name: '넥슨', data: [19.2, 14.2], color: '#4ECDC4' },
+                                { name: '업계', data: [8.5, 5.3], color: '#5B9BD5' },
+                                { name: '시장', data: [9.1, 11.2], color: '#E57B53' }
+                            ]
+                        },
+                        {
+                            title: '해외 매출 비중 (%)',
+                            type: 'pie',
+                            data: [
+                                { name: '해외', y: 80 },
+                                { name: '국내', y: 20 }
+                            ]
+                        }
+                    ],
+                    date: '2024-06-15'
+                }],
+                '2024-07': [],
+                '2024-08': [{
+                    id: 'dark-2024-08-1',
+                    title: '신작 기대작 분석',
+                    summary: [
+                        '퍼스트 디센던트 출시 첫 주 매출 500억원',
+                        '스팀 동시접속 20만명 달성',
+                        '과금 모델에 대한 유저 반응 엇갈려',
+                        '장기 운영 전략이 관건'
+                    ],
+                    charts: [
+                        {
+                            title: '일별 매출 추이 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '1일차', y: 120 },
+                                { name: '2일차', y: 95 },
+                                { name: '3일차', y: 85 },
+                                { name: '7일차', y: 70 }
+                            ]
+                        },
+                        {
+                            title: '동시접속자 (만명)',
+                            type: 'line',
+                            data: [
+                                { name: '1일차', y: 26 },
+                                { name: '2일차', y: 22 },
+                                { name: '3일차', y: 20 },
+                                { name: '7일차', y: 15 }
+                            ]
+                        },
+                        {
+                            title: '플랫폼별 매출 비중',
+                            type: 'pie',
+                            data: [
+                                { name: 'Steam', y: 40 },
+                                { name: 'PS5', y: 35 },
+                                { name: 'Xbox', y: 25 }
+                            ]
+                        }
+                    ],
+                    date: '2024-08-05'
+                }],
+                '2024-09': [],
+                '2024-10': [{
+                    id: 'dark-2024-10-1',
+                    title: '퍼스트디센던트 매출 분석',
+                    summary: [
+                        '출시 3개월 누적 매출 2,500억원',
+                        '콘솔 플랫폼 매출 비중 60%',
+                        '시즌 업데이트로 유저 복귀 증가',
+                        '연내 추가 콘텐츠 업데이트 예정'
+                    ],
+                    charts: [
+                        {
+                            title: '월별 매출 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '7월', y: 1200 },
+                                { name: '8월', y: 800 },
+                                { name: '9월', y: 500 }
+                            ]
+                        },
+                        {
+                            title: 'MAU 추이 (만명)',
+                            type: 'line',
+                            data: [
+                                { name: '7월', y: 450 },
+                                { name: '8월', y: 280 },
+                                { name: '9월', y: 180 }
+                            ]
+                        },
+                        {
+                            title: '플랫폼별 매출 비중',
+                            type: 'pie',
+                            data: [
+                                { name: 'PC', y: 40 },
+                                { name: 'PS5', y: 35 },
+                                { name: 'Xbox', y: 25 }
+                            ]
+                        }
+                    ],
+                    date: '2024-10-08'
+                }],
+                '2024-11': [{
+                    id: 'dark-2024-11-1',
+                    title: '블루아카이브 글로벌 분석',
+                    summary: [
+                        '블루아카이브 글로벌 월 매출 800억원',
+                        '일본 시장 앱스토어 매출 1위 기록',
+                        '2.5주년 이벤트로 복귀 유저 급증',
+                        '서브컬처 장르 대표 IP로 성장'
+                    ],
+                    charts: [
+                        {
+                            title: '월 매출 추이 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '9월', y: 650 },
+                                { name: '10월', y: 720 },
+                                { name: '11월', y: 800 }
+                            ]
+                        },
+                        {
+                            title: 'DAU 추이 (만명)',
+                            type: 'line',
+                            data: [
+                                { name: '9월', y: 120 },
+                                { name: '10월', y: 145 },
+                                { name: '11월', y: 180 }
+                            ]
+                        },
+                        {
+                            title: '지역별 매출 비중 (%)',
+                            type: 'pie',
+                            data: [
+                                { name: '일본', y: 50 },
+                                { name: '한국', y: 20 },
+                                { name: '북미', y: 15 },
+                                { name: '기타', y: 15 }
+                            ]
+                        }
+                    ],
+                    date: '2024-11-12'
+                }],
+                '2024-12': []
+            },
+            policy: {
+                '2024-01': [],
+                '2024-02': [],
+                '2024-03': [{
+                    id: 'policy-2024-03-1',
+                    title: '확률형 아이템 규제안 발의',
+                    summary: [
+                        '국회 확률형 아이템 확률 공개 의무화 법안 발의',
+                        '게임사 자율 규제 강화 요구',
+                        '넥슨 등 주요 게임사 이미 확률 공개 중',
+                        '실제 영향은 제한적일 전망'
+                    ],
+                    charts: [
+                        {
+                            title: '확률 공개 현황 (개사)',
+                            type: 'column',
+                            data: [
+                                { name: '공개', y: 45 },
+                                { name: '미공개', y: 12 }
+                            ]
+                        },
+                        {
+                            title: '규제 영향도 (점)',
+                            type: 'line',
+                            data: [
+                                { name: '넥슨', y: 2 },
+                                { name: '엔씨', y: 3 },
+                                { name: '크래프톤', y: 2 }
+                            ]
+                        },
+                        {
+                            title: '가챠 매출 비중 (%)',
+                            type: 'pie',
+                            data: [
+                                { name: '가챠', y: 35 },
+                                { name: '기타', y: 65 }
+                            ]
+                        }
+                    ],
+                    date: '2024-03-25'
+                }],
+                '2024-04': [],
+                '2024-05': [],
+                '2024-06': [{
+                    id: 'policy-2024-06-1',
+                    title: '게임산업법 개정 논의',
+                    summary: [
+                        '게임산업진흥법 개정안 국회 상임위 통과',
+                        '게임 이용자 보호 조항 강화',
+                        '결제 한도 상향 조정 포함',
+                        '업계 의견 수렴 진행 중'
+                    ],
+                    charts: [
+                        {
+                            title: '결제 한도 변화 (만원)',
+                            type: 'column',
+                            data: [
+                                { name: '현행', y: 50 },
+                                { name: '개정안', y: 100 }
+                            ]
+                        },
+                        {
+                            title: '업계 찬반 비율 (%)',
+                            type: 'pie',
+                            data: [
+                                { name: '찬성', y: 68 },
+                                { name: '반대', y: 22 },
+                                { name: '보류', y: 10 }
+                            ]
+                        },
+                        {
+                            title: '민원 건수 추이',
+                            type: 'line',
+                            data: [
+                                { name: '4월', y: 320 },
+                                { name: '5월', y: 280 },
+                                { name: '6월', y: 195 }
+                            ]
+                        }
+                    ],
+                    date: '2024-06-20'
+                }],
+                '2024-07': [],
+                '2024-08': [],
+                '2024-09': [{
+                    id: 'policy-2024-09-1',
+                    title: '중국 판호 정책 완화 소식',
+                    summary: [
+                        '중국 판호 발급 재개 및 확대',
+                        '한국 게임사 신청 가능성 열려',
+                        '넥슨 던전앤파이터 모바일 후속작 진출 기대',
+                        '단, 실제 발급까지 시간 필요'
+                    ],
+                    charts: [
+                        {
+                            title: '월별 판호 발급 건수',
+                            type: 'column',
+                            data: [
+                                { name: '7월', y: 88 },
+                                { name: '8월', y: 95 },
+                                { name: '9월', y: 102 }
+                            ]
+                        },
+                        {
+                            title: '한국게임 발급 추이',
+                            type: 'line',
+                            data: [
+                                { name: '2022', y: 2 },
+                                { name: '2023', y: 5 },
+                                { name: '2024', y: 8 }
+                            ]
+                        },
+                        {
+                            title: '장르별 발급 비중',
+                            type: 'pie',
+                            data: [
+                                { name: 'RPG', y: 45 },
+                                { name: '캐주얼', y: 30 },
+                                { name: '기타', y: 25 }
+                            ]
+                        }
+                    ],
+                    date: '2024-09-10'
+                }],
+                '2024-10': [],
+                '2024-11': [],
+                '2024-12': [{
+                    id: 'policy-2024-12-1',
+                    title: '청소년 보호법 개정',
+                    summary: [
+                        '게임 셧다운제 폐지 확정',
+                        '자율규제 체계로 전환',
+                        '게임사 부담 완화 기대',
+                        '2025년 시행 예정'
+                    ],
+                    charts: [
+                        {
+                            title: '셧다운제 비용 절감 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '넥슨', y: 45 },
+                                { name: '엔씨', y: 38 },
+                                { name: '크래프톤', y: 25 }
+                            ]
+                        },
+                        {
+                            title: '청소년 이용시간 변화 예상',
+                            type: 'line',
+                            data: [
+                                { name: '현행', y: 2.5 },
+                                { name: '개정후', y: 3.2 }
+                            ]
+                        },
+                        {
+                            title: '규제 현황 (국가수)',
+                            type: 'pie',
+                            data: [
+                                { name: '규제', y: 3 },
+                                { name: '자율', y: 42 }
+                            ]
+                        }
+                    ],
+                    date: '2024-12-15'
+                }]
+            },
+            news: {
+                '2024-01': [{
+                    id: 'news-2024-01-1',
+                    title: '메이플스토리 신규 직업 출시',
+                    summary: [
+                        '메이플스토리 신규 직업 "라라" 업데이트',
+                        '자연 친화 컨셉의 마법사 계열',
+                        '출시 첫 주 동시접속 30% 증가',
+                        '유저 반응 호평'
+                    ],
+                    charts: [
+                        {
+                            title: '동시접속자 변화 (만명)',
+                            type: 'column',
+                            data: [
+                                { name: '출시전', y: 12 },
+                                { name: '출시후', y: 15.6 }
+                            ]
+                        },
+                        {
+                            title: '신규 캐릭터 생성 수',
+                            type: 'line',
+                            data: [
+                                { name: '1일차', y: 85000 },
+                                { name: '3일차', y: 120000 },
+                                { name: '7일차', y: 180000 }
+                            ]
+                        },
+                        {
+                            title: '직업별 점유율 (%)',
+                            type: 'pie',
+                            data: [
+                                { name: '라라', y: 18 },
+                                { name: '기존직업', y: 82 }
+                            ]
+                        }
+                    ],
+                    date: '2024-01-18'
+                }],
+                '2024-02': [],
+                '2024-03': [{
+                    id: 'news-2024-03-1',
+                    title: '넥슨 북미 스튜디오 설립 발표',
+                    summary: [
+                        'LA에 신규 개발 스튜디오 설립',
+                        '글로벌 AAA 게임 개발 목표',
+                        '초기 인력 100명 규모',
+                        '언리얼 엔진 기반 프로젝트 진행'
+                    ],
+                    charts: [
+                        {
+                            title: '해외 스튜디오 투자 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '2022', y: 800 },
+                                { name: '2023', y: 1200 },
+                                { name: '2024', y: 1800 }
+                            ]
+                        },
+                        {
+                            title: '글로벌 인력 추이 (명)',
+                            type: 'line',
+                            data: [
+                                { name: '2022', y: 350 },
+                                { name: '2023', y: 480 },
+                                { name: '2024', y: 620 }
+                            ]
+                        },
+                        {
+                            title: '지역별 스튜디오 분포',
+                            type: 'pie',
+                            data: [
+                                { name: '한국', y: 65 },
+                                { name: '북미', y: 20 },
+                                { name: '일본', y: 10 },
+                                { name: '유럽', y: 5 }
+                            ]
+                        }
+                    ],
+                    date: '2024-03-05'
+                }],
+                '2024-04': [{
+                    id: 'news-2024-04-1',
+                    title: '블루아카이브 2주년 이벤트',
+                    summary: [
+                        '블루아카이브 글로벌 2주년 기념 이벤트',
+                        '신규 학생 캐릭터 3종 추가',
+                        '2주년 기념 무료 가챠 제공',
+                        '실시간 트렌드 1위 기록'
+                    ],
+                    charts: [
+                        {
+                            title: '이벤트 기간 매출 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '이벤트전', y: 180 },
+                                { name: '이벤트중', y: 420 }
+                            ]
+                        },
+                        {
+                            title: 'DAU 변화 (만명)',
+                            type: 'line',
+                            data: [
+                                { name: '1주전', y: 85 },
+                                { name: '이벤트', y: 145 },
+                                { name: '1주후', y: 110 }
+                            ]
+                        },
+                        {
+                            title: '신규 캐릭터 인기도',
+                            type: 'pie',
+                            data: [
+                                { name: '캐릭터A', y: 45 },
+                                { name: '캐릭터B', y: 35 },
+                                { name: '캐릭터C', y: 20 }
+                            ]
+                        }
+                    ],
+                    date: '2024-04-09'
+                }],
+                '2024-05': [],
+                '2024-06': [{
+                    id: 'news-2024-06-1',
+                    title: 'FC온라인 시즌 업데이트',
+                    summary: [
+                        'FC온라인 2024 시즌 대규모 업데이트',
+                        '유로 2024 공식 라이선스 콘텐츠',
+                        '신규 선수 카드 500종 추가',
+                        '시즌 패스 판매 호조'
+                    ],
+                    charts: [
+                        {
+                            title: '시즌패스 판매량 (만건)',
+                            type: 'column',
+                            data: [
+                                { name: '23시즌', y: 85 },
+                                { name: '24시즌', y: 120 }
+                            ]
+                        },
+                        {
+                            title: 'DAU 추이 (만명)',
+                            type: 'line',
+                            data: [
+                                { name: '5월', y: 180 },
+                                { name: '6월초', y: 220 },
+                                { name: '6월말', y: 245 }
+                            ]
+                        },
+                        {
+                            title: '콘텐츠별 이용 비중',
+                            type: 'pie',
+                            data: [
+                                { name: '매치', y: 55 },
+                                { name: '팩개봉', y: 30 },
+                                { name: '기타', y: 15 }
+                            ]
+                        }
+                    ],
+                    date: '2024-06-10'
+                }],
+                '2024-07': [{
+                    id: 'news-2024-07-1',
+                    title: '퍼스트 디센던트 출시',
+                    summary: [
+                        '넥슨 신작 루터 슈터 "퍼스트 디센던트" 정식 출시',
+                        'PC, PS5, Xbox 동시 출시',
+                        '출시 첫날 스팀 동시접속 10만명',
+                        'F2P 모델로 진입 장벽 낮춰'
+                    ],
+                    charts: [
+                        {
+                            title: '플랫폼별 다운로드 (만건)',
+                            type: 'column',
+                            data: [
+                                { name: 'Steam', y: 180 },
+                                { name: 'PS5', y: 120 },
+                                { name: 'Xbox', y: 80 }
+                            ]
+                        },
+                        {
+                            title: '동시접속자 추이 (만명)',
+                            type: 'line',
+                            data: [
+                                { name: '1일차', y: 10 },
+                                { name: '2일차', y: 18 },
+                                { name: '3일차', y: 22 }
+                            ]
+                        },
+                        {
+                            title: '지역별 유저 분포',
+                            type: 'pie',
+                            data: [
+                                { name: '북미', y: 35 },
+                                { name: '유럽', y: 30 },
+                                { name: '아시아', y: 25 },
+                                { name: '기타', y: 10 }
+                            ]
+                        }
+                    ],
+                    date: '2024-07-02'
+                },
+                {
+                    id: 'news-2024-07-2',
+                    title: '넥슨 북미 스튜디오 인수',
+                    summary: ['Embark Studios 인수 완료', '3A급 신작 개발 계획'],
+                    charts: [],
+                    date: '2024-07-05'
+                },
+                {
+                    id: 'news-2024-07-3',
+                    title: '메이플스토리 월드 오픈베타',
+                    summary: ['유저 제작 콘텐츠 플랫폼 오픈', '초기 반응 호조'],
+                    charts: [],
+                    date: '2024-07-10'
+                },
+                {
+                    id: 'news-2024-07-4',
+                    title: 'EA와 파트너십 확대',
+                    summary: ['FC 프랜차이즈 협력 강화', '새로운 스포츠 게임 공동 개발'],
+                    charts: [],
+                    date: '2024-07-15'
+                },
+                {
+                    id: 'news-2024-07-5',
+                    title: '던전앤파이터 모바일 신규 업데이트',
+                    summary: ['신규 직업 "다크나이트" 추가', '중국 매출 순위 1위 탈환'],
+                    charts: [],
+                    date: '2024-07-20'
+                },
+                {
+                    id: 'news-2024-07-6',
+                    title: '블루아카이브 2주년 기념 이벤트',
+                    summary: ['글로벌 동시 이벤트 진행', '유저 감사 보상 지급'],
+                    charts: [],
+                    date: '2024-07-25'
+                }],
+                '2024-08': [{
+                    id: 'news-2024-08-1',
+                    title: '퍼스트 디센던트 500만 다운로드',
+                    summary: [
+                        '출시 한 달 만에 글로벌 500만 다운로드 달성',
+                        '스팀 최고 동시접속 26만명 기록',
+                        '시즌 1 업데이트 예고',
+                        '유저 피드백 반영 패치 진행'
+                    ],
+                    charts: [
+                        {
+                            title: '누적 다운로드 (만건)',
+                            type: 'column',
+                            data: [
+                                { name: '1주차', y: 200 },
+                                { name: '2주차', y: 350 },
+                                { name: '4주차', y: 500 }
+                            ]
+                        },
+                        {
+                            title: '최고 동시접속 (만명)',
+                            type: 'line',
+                            data: [
+                                { name: '1주차', y: 22 },
+                                { name: '2주차', y: 26 },
+                                { name: '4주차', y: 18 }
+                            ]
+                        },
+                        {
+                            title: '유저 평점 분포',
+                            type: 'pie',
+                            data: [
+                                { name: '긍정', y: 68 },
+                                { name: '중립', y: 18 },
+                                { name: '부정', y: 14 }
+                            ]
+                        }
+                    ],
+                    date: '2024-08-02'
+                }],
+                '2024-09': [],
+                '2024-10': [{
+                    id: 'news-2024-10-1',
+                    title: '메이플스토리 20주년',
+                    summary: [
+                        '메이플스토리 서비스 20주년 기념 행사',
+                        '오프라인 팬미팅 1만명 참여',
+                        '20주년 기념 캐릭터 및 아이템 출시',
+                        '20년간의 역사 전시회 개최'
+                    ],
+                    charts: [
+                        {
+                            title: '연도별 매출 추이 (억원)',
+                            type: 'column',
+                            data: [
+                                { name: '2014', y: 4500 },
+                                { name: '2019', y: 8200 },
+                                { name: '2024', y: 12000 }
+                            ]
+                        },
+                        {
+                            title: '누적 유저 수 (만명)',
+                            type: 'line',
+                            data: [
+                                { name: '2014', y: 2500 },
+                                { name: '2019', y: 4200 },
+                                { name: '2024', y: 5800 }
+                            ]
+                        },
+                        {
+                            title: '이벤트 참여 비중',
+                            type: 'pie',
+                            data: [
+                                { name: '온라인', y: 85 },
+                                { name: '오프라인', y: 15 }
+                            ]
+                        }
+                    ],
+                    date: '2024-10-29'
+                }],
+                '2024-11': [{
+                    id: 'news-2024-11-1',
+                    title: '넥슨 개발자 컨퍼런스',
+                    summary: [
+                        'NDC 2024 온라인 개최',
+                        '신작 5종 최초 공개',
+                        '차세대 게임 엔진 발표',
+                        'AI 기술 활용 사례 공유'
+                    ],
+                    charts: [
+                        {
+                            title: '참가자 수 추이 (명)',
+                            type: 'column',
+                            data: [
+                                { name: '2022', y: 8500 },
+                                { name: '2023', y: 12000 },
+                                { name: '2024', y: 18000 }
+                            ]
+                        },
+                        {
+                            title: '세션 수 추이',
+                            type: 'line',
+                            data: [
+                                { name: '2022', y: 85 },
+                                { name: '2023', y: 110 },
+                                { name: '2024', y: 145 }
+                            ]
+                        },
+                        {
+                            title: '분야별 세션 비중',
+                            type: 'pie',
+                            data: [
+                                { name: '개발', y: 45 },
+                                { name: 'AI/ML', y: 25 },
+                                { name: '아트', y: 20 },
+                                { name: '기타', y: 10 }
+                            ]
+                        }
+                    ],
+                    date: '2024-11-15'
+                }],
+                '2024-12': [{
+                    id: 'news-2024-12-1',
+                    title: '연말 대규모 업데이트',
+                    summary: [
+                        '주요 게임 연말 대규모 업데이트 일제히 진행',
+                        '메이플스토리: 신규 보스 콘텐츠',
+                        'FC온라인: 겨울 이벤트',
+                        '블루아카이브: 크리스마스 스토리'
+                    ],
+                    charts: [
+                        {
+                            title: '게임별 업데이트 규모 (GB)',
+                            type: 'column',
+                            data: [
+                                { name: '메이플', y: 3.2 },
+                                { name: 'FC온라인', y: 5.8 },
+                                { name: '블루아카', y: 2.1 }
+                            ]
+                        },
+                        {
+                            title: '예상 DAU 증가율 (%)',
+                            type: 'line',
+                            data: [
+                                { name: '메이플', y: 25 },
+                                { name: 'FC온라인', y: 35 },
+                                { name: '블루아카', y: 40 }
+                            ]
+                        },
+                        {
+                            title: '콘텐츠 유형별 비중',
+                            type: 'pie',
+                            data: [
+                                { name: '이벤트', y: 50 },
+                                { name: '신규콘텐츠', y: 35 },
+                                { name: '밸런스', y: 15 }
+                            ]
+                        }
+                    ],
+                    date: '2024-12-20'
+                }]
+            }
+        };
+
+        // 넥슨 주가 더미 데이터 생성
+        function generateStockData() {
+            const data = [];
+            const startDate = new Date('2024-01-01');
+            const endDate = new Date('2024-12-31');
+            let price = 180000; // 시작 가격 (원)
+
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                if (d.getDay() !== 0 && d.getDay() !== 6) { // 주말 제외
+                    const change = (Math.random() - 0.48) * 5000;
+                    price = Math.max(150000, Math.min(250000, price + change));
+                    data.push([d.getTime(), Math.round(price)]);
+                }
+            }
+            return data;
+        }
+
+        // 좌측 패널 아코디언 렌더링
+        function renderSourceList() {
+            const container = document.getElementById('sourceList');
+            let html = '';
+
+            for (const [key, source] of Object.entries(sourceData)) {
+                html += `
+                    <div class="source-group">
+                        <div class="source-header" onclick="toggleSource('${key}')">
+                            <span class="arrow">▶</span>
+                            ${source.name}
+                        </div>
+                        <div class="source-items" id="source-${key}">
+                            ${source.items.map(item =>
+                                `<a class="source-item">${item}</a>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // 아코디언 토글
+        function toggleSource(key) {
+            const header = document.querySelector(`#source-${key}`).previousElementSibling;
+            const items = document.getElementById(`source-${key}`);
+
+            header.classList.toggle('expanded');
+            items.classList.toggle('expanded');
+        }
+
+        // 테이블 렌더링
+        function renderTable(min, max) {
+            const startDate = new Date(min);
+            const endDate = new Date(max);
+            const diffDays = (endDate - startDate) / (1000 * 60 * 60 * 24);
+
+            let columns = [];
+            let grain = 'month';
+
+            if (diffDays <= 60) {
+                grain = 'week';
+            } else if (diffDays <= 180) {
+                grain = 'month';
+            } else if (diffDays <= 400) {
+                grain = 'month';
+            } else {
+                grain = 'quarter';
+            }
+
+            // 컬럼 생성
+            if (grain === 'week') {
+                let current = new Date(startDate);
+                while (current <= endDate) {
+                    const weekStart = new Date(current);
+                    columns.push({
+                        label: `${weekStart.getMonth() + 1}/${weekStart.getDate()}`,
+                        key: `${weekStart.getFullYear()}-${String(weekStart.getMonth() + 1).padStart(2, '0')}`
+                    });
+                    current.setDate(current.getDate() + 7);
+                }
+            } else if (grain === 'month') {
+                let current = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+                while (current <= endDate) {
+                    const monthKey = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`;
+                    columns.push({
+                        label: `${current.getMonth() + 1}월`,
+                        key: monthKey
+                    });
+                    current.setMonth(current.getMonth() + 1);
+                }
+            } else {
+                // 분기
+                let current = new Date(startDate.getFullYear(), Math.floor(startDate.getMonth() / 3) * 3, 1);
+                while (current <= endDate) {
+                    const quarter = Math.floor(current.getMonth() / 3) + 1;
+                    columns.push({
+                        label: `${current.getFullYear()} Q${quarter}`,
+                        key: `${current.getFullYear()}-Q${quarter}`
+                    });
+                    current.setMonth(current.getMonth() + 3);
+                }
+            }
+
+            const table = document.getElementById('dataTable');
+            const sources = ['dart', 'darkReport', 'policy', 'news'];
+            const sourceNamesShort = {
+                dart: '공시',
+                darkReport: '다크리포트',
+                policy: '정책/규제',
+                news: '뉴스/기타'
+            };
+
+            let html = '<thead><tr><th>출처</th>';
+            columns.forEach(col => {
+                html += `<th>${col.label}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+
+            sources.forEach(src => {
+                html += `<tr><td>${sourceNamesShort[src]}</td>`;
+                columns.forEach(col => {
+                    const events = getEventsForPeriod(src, col.key, grain);
+                    const count = events.length;
+                    if (count > 0) {
+                        const tooltipText = getTooltipText(events);
+                        const cellContent = getCellPreview(events);
+                        html += `<td class="has-data" title="${tooltipText}" onclick="handleCellClick(event, '${src}', '${col.key}', '${grain}')">${cellContent}</td>`;
+                    } else {
+                        html += '<td>-</td>';
+                    }
+                });
+                html += '</tr>';
+            });
+
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+
+        // 기간별 이벤트 조회
+        function getEventsForPeriod(source, key, grain) {
+            const events = [];
+            const data = eventData[source];
+
+            if (grain === 'week' || grain === 'month') {
+                if (data[key]) {
+                    events.push(...data[key]);
+                }
+            } else if (grain === 'quarter') {
+                const [year, q] = key.split('-Q');
+                const quarter = parseInt(q);
+                const months = [(quarter - 1) * 3 + 1, (quarter - 1) * 3 + 2, (quarter - 1) * 3 + 3];
+                months.forEach(m => {
+                    const monthKey = `${year}-${String(m).padStart(2, '0')}`;
+                    if (data[monthKey]) {
+                        events.push(...data[monthKey]);
+                    }
+                });
+            }
+
+            return events;
+        }
+
+        // 툴팁 텍스트 생성
+        function getTooltipText(events) {
+            if (events.length === 0) return '';
+            const firstTitle = events[0].title;
+            if (events.length === 1) {
+                return firstTitle;
+            }
+            return `${firstTitle} 외 ${events.length - 1}건`;
+        }
+
+        // 셀 미리보기 생성
+        function getCellPreview(events) {
+            if (events.length === 0) return '-';
+            return `<span class="cell-count">${events.length}건</span>`;
+        }
+
+        // 출처명 매핑
+        const sourceNames = {
+            dart: '공시(DART)',
+            darkReport: '다크리포트',
+            policy: '정책/규제',
+            news: '뉴스/기타'
+        };
+
+        // 셀 클릭 핸들러
+        function handleCellClick(event, source, key, grain) {
+            const events = getEventsForPeriod(source, key, grain);
+            if (events.length === 0) return;
+
+            if (events.length === 1) {
+                // 항목이 1개면 바로 상세보기 표시
+                showDetail(events[0], source);
+                hidePopover();
+            } else {
+                // 항목이 2개 이상이면 팝오버 표시
+                showPopover(event, source, key, grain, events);
+            }
+
+            event.stopPropagation();
+        }
+
+        // 팝오버 표시
+        function showPopover(event, source, key, grain, events) {
+            const popover = document.getElementById('popover');
+            const title = document.getElementById('popoverTitle');
+            const content = document.getElementById('popoverContent');
+
+            // 헤더: "공시(DART) · 1월" 형식
+            const monthLabel = key.includes('-Q') ? key : key.split('-')[1] + '월';
+            title.textContent = `${sourceNames[source]} · ${monthLabel}`;
+
+            // 항목: 날짜 + 제목
+            content.innerHTML = events.map((e, idx) => {
+                const date = e.date ? e.date.substring(5).replace('-', '.') : '';
+                const truncTitle = e.title.length > 20 ? e.title.substring(0, 20) + '…' : e.title;
+                return `
+                    <div class="popover-item" onclick="onPopoverItemClick(event, '${source}', '${key}', ${idx})" title="${e.title}">
+                        <span class="popover-date">${date}</span>
+                        <span class="popover-title-text">${truncTitle}</span>
+                    </div>
+                `;
+            }).join('');
+
+            const rect = event.target.getBoundingClientRect();
+            popover.style.left = `${rect.left}px`;
+            popover.style.top = `${rect.bottom + 5}px`;
+            popover.classList.add('visible');
+        }
+
+        // 팝오버 항목 클릭
+        function onPopoverItemClick(event, source, key, index) {
+            const events = eventData[source][key];
+            if (events && events[index]) {
+                showDetail(events[index], source);
+            }
+            hidePopover();
+            event.stopPropagation();
+        }
+
+        // 팝오버 숨기기
+        function hidePopover() {
+            document.getElementById('popover').classList.remove('visible');
+        }
+
+        document.addEventListener('click', () => {
+            hidePopover();
+        });
+
+        // 상세보기 표시
+        let detailCharts = [];
+
+        function showDetail(item, source) {
+            const container = document.getElementById('detailContainer');
+
+            // 결과 패널도 함께 업데이트
+            updateResultSummary(item, source);
+
+            // 기존 차트 정리
+            detailCharts.forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            detailCharts = [];
+
+            let chartsHtml = '';
+            if (item.charts && item.charts.length > 0) {
+                chartsHtml = `<div class="detail-charts">
+                    ${item.charts.map((c, i) =>
+                        `<div class="detail-chart-item" id="detailChart${i}"></div>`
+                    ).join('')}
+                </div>`;
+            }
+
+            const summaryHtml = item.summary ?
+                `<ul>${item.summary.map(s => `<li>${s}</li>`).join('')}</ul>` :
+                '<p>요약 정보가 없습니다.</p>';
+
+            container.innerHTML = `
+                <div class="detail-header">
+                    <div class="detail-source">${sourceNames[source]}</div>
+                    <div class="detail-date">${item.date}</div>
+                </div>
+                ${chartsHtml}
+                <div class="detail-content">
+                    <div class="detail-title">${item.title}</div>
+                    <div class="detail-summary">${summaryHtml}</div>
+                </div>
+            `;
+
+            // 각 차트 렌더링
+            if (item.charts && item.charts.length > 0) {
+                item.charts.forEach((chartConfig, i) => {
+                    renderDetailChart(`detailChart${i}`, chartConfig);
+                });
+            }
+        }
+
+        // 상세보기 차트 렌더링
+        function renderDetailChart(containerId, chartConfig) {
+            const chartType = chartConfig.type || 'column';
+
+            if (chartType === 'waterfall') {
+                renderWaterfallChart(containerId, chartConfig);
+            } else if (chartType === 'comparison') {
+                renderComparisonChart(containerId, chartConfig);
+            } else if (chartType === 'pie') {
+                renderPieChart(containerId, chartConfig);
+            } else {
+                renderColumnChart(containerId, chartConfig);
+            }
+        }
+
+        // Waterfall 차트 렌더링
+        function renderWaterfallChart(containerId, config) {
+            const chart = Highcharts.chart(containerId, {
+                chart: {
+                    type: 'waterfall',
+                    backgroundColor: 'transparent',
+                    height: 140,
+                    style: {
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        fontWeight: '300'
+                    }
+                },
+                title: {
+                    text: config.title || '',
+                    style: { fontSize: '11px', fontWeight: '400', color: '#666' }
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: { style: { fontSize: '9px', color: '#666' } },
+                    lineColor: '#eee'
+                },
+                yAxis: {
+                    title: { text: '' },
+                    labels: { style: { fontSize: '9px', color: '#666' } },
+                    gridLineColor: '#eee'
+                },
+                legend: { enabled: false },
+                tooltip: {
+                    backgroundColor: '#fff',
+                    borderColor: '#E57B53',
+                    borderRadius: 6,
+                    style: { fontSize: '11px', color: '#666' },
+                    pointFormat: '<b>{point.y}</b>'
+                },
+                plotOptions: {
+                    waterfall: {
+                        dataLabels: {
+                            enabled: true,
+                            formatter: function() {
+                                if (this.point.isSum) return '';
+                                return this.y > 0 ? '+' + this.y : this.y;
+                            },
+                            style: { fontSize: '9px', fontWeight: '300', color: '#666' }
+                        },
+                        borderWidth: 0,
+                        lineColor: '#E57B53',
+                        lineWidth: 1
+                    }
+                },
+                series: [{
+                    data: config.data,
+                    upColor: '#4ECDC4',
+                    color: '#FF6B6B'
+                }],
+                credits: { enabled: false }
+            });
+            detailCharts.push(chart);
+        }
+
+        // 비교 차트 렌더링
+        function renderComparisonChart(containerId, config) {
+            const chart = Highcharts.chart(containerId, {
+                chart: {
+                    type: 'column',
+                    backgroundColor: 'transparent',
+                    height: 140,
+                    style: {
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        fontWeight: '300'
+                    }
+                },
+                title: {
+                    text: config.title || '',
+                    style: { fontSize: '11px', fontWeight: '400', color: '#666' }
+                },
+                xAxis: {
+                    categories: config.categories,
+                    labels: { style: { fontSize: '9px', color: '#666' } },
+                    lineColor: '#eee'
+                },
+                yAxis: {
+                    title: { text: '' },
+                    plotLines: [{ value: 0, width: 1, color: '#999' }],
+                    labels: { style: { fontSize: '9px', color: '#666' } },
+                    gridLineColor: '#eee'
+                },
+                legend: {
+                    enabled: true,
+                    itemStyle: { fontSize: '9px', fontWeight: '300', color: '#666' }
+                },
+                tooltip: {
+                    backgroundColor: '#fff',
+                    borderColor: '#E57B53',
+                    borderRadius: 6,
+                    style: { fontSize: '11px', color: '#666' },
+                    shared: true
+                },
+                plotOptions: {
+                    column: {
+                        dataLabels: {
+                            enabled: true,
+                            format: '{y}%',
+                            style: { fontSize: '8px', fontWeight: '300', color: '#666' }
+                        },
+                        borderRadius: 2,
+                        groupPadding: 0.1
+                    }
+                },
+                series: config.series,
+                credits: { enabled: false }
+            });
+            detailCharts.push(chart);
+        }
+
+        // 파이 차트 렌더링
+        function renderPieChart(containerId, config) {
+            const chart = Highcharts.chart(containerId, {
+                chart: {
+                    type: 'pie',
+                    backgroundColor: 'transparent',
+                    height: 140,
+                    style: {
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        fontWeight: '300'
+                    }
+                },
+                title: {
+                    text: config.title || '',
+                    style: { fontSize: '11px', fontWeight: '400', color: '#666' }
+                },
+                legend: { enabled: false },
+                tooltip: {
+                    backgroundColor: '#fff',
+                    borderColor: '#E57B53',
+                    borderRadius: 6,
+                    style: { fontSize: '11px', color: '#666' }
+                },
+                plotOptions: {
+                    pie: {
+                        colors: ['#E57B53', '#F5A87A', '#F8C4A8', '#FAD9C4', '#FCE9DD'],
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.name}: {point.percentage:.0f}%',
+                            style: {
+                                fontSize: '9px',
+                                fontWeight: '300',
+                                color: '#666'
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    name: '비중',
+                    data: config.data
+                }],
+                credits: { enabled: false }
+            });
+            detailCharts.push(chart);
+        }
+
+        // 컬럼/라인 차트 렌더링
+        function renderColumnChart(containerId, config) {
+            const chartType = config.type || 'column';
+            const chart = Highcharts.chart(containerId, {
+                chart: {
+                    type: chartType,
+                    backgroundColor: 'transparent',
+                    height: 140,
+                    style: {
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        fontWeight: '300'
+                    }
+                },
+                title: {
+                    text: config.title || '',
+                    style: { fontSize: '11px', fontWeight: '400', color: '#666' }
+                },
+                xAxis: {
+                    type: 'category',
+                    labels: { style: { fontSize: '10px', color: '#666' } },
+                    lineColor: '#eee',
+                    tickColor: '#eee'
+                },
+                yAxis: {
+                    title: { text: '' },
+                    labels: { style: { fontSize: '10px', color: '#666' } },
+                    gridLineColor: '#eee'
+                },
+                legend: { enabled: false },
+                tooltip: {
+                    backgroundColor: '#fff',
+                    borderColor: '#E57B53',
+                    borderRadius: 6,
+                    style: { fontSize: '11px', color: '#666' }
+                },
+                plotOptions: {
+                    column: {
+                        color: '#E57B53',
+                        borderRadius: 3
+                    },
+                    line: {
+                        color: '#E57B53',
+                        marker: {
+                            fillColor: '#E57B53',
+                            lineColor: '#E57B53'
+                        }
+                    }
+                },
+                series: [{
+                    name: '값',
+                    data: config.data
+                }],
+                credits: { enabled: false }
+            });
+            detailCharts.push(chart);
+        }
+
+        // 차트 초기화
+        function initChart() {
+            const stockData = generateStockData();
+
+            Highcharts.stockChart('stockChart', {
+                chart: {
+                    backgroundColor: 'transparent',
+                    style: {
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        fontWeight: '300'
+                    }
+                },
+                rangeSelector: {
+                    buttons: [{
+                        type: 'month',
+                        count: 1,
+                        text: '1개월'
+                    }, {
+                        type: 'month',
+                        count: 3,
+                        text: '3개월'
+                    }, {
+                        type: 'month',
+                        count: 6,
+                        text: '6개월'
+                    }, {
+                        type: 'all',
+                        text: '전체'
+                    }],
+                    selected: 3,
+                    inputEnabled: false,
+                    buttonTheme: {
+                        fill: '#fafafa',
+                        stroke: '#eee',
+                        'stroke-width': 1,
+                        r: 4,
+                        style: {
+                            color: '#666',
+                            fontWeight: '300'
+                        },
+                        states: {
+                            hover: {
+                                fill: 'rgba(229, 123, 83, 0.1)',
+                                style: {
+                                    color: '#E57B53'
+                                }
+                            },
+                            select: {
+                                fill: '#E57B53',
+                                style: {
+                                    color: '#fff'
+                                }
+                            }
+                        }
+                    }
+                },
+                navigator: {
+                    enabled: true,
+                    height: 30,
+                    maskFill: 'rgba(229, 123, 83, 0.1)',
+                    outlineColor: '#eee',
+                    handles: {
+                        backgroundColor: '#E57B53',
+                        borderColor: '#E57B53'
+                    },
+                    series: {
+                        color: '#E57B53',
+                        lineWidth: 1
+                    }
+                },
+                scrollbar: {
+                    enabled: false
+                },
+                xAxis: {
+                    events: {
+                        afterSetExtremes: function(e) {
+                            renderTable(e.min, e.max);
+                        }
+                    },
+                    lineColor: '#eee',
+                    tickColor: '#eee',
+                    labels: {
+                        style: {
+                            color: '#666',
+                            fontWeight: '300'
+                        }
+                    }
+                },
+                yAxis: {
+                    gridLineColor: '#eee',
+                    labels: {
+                        style: {
+                            color: '#666',
+                            fontWeight: '300'
+                        },
+                        formatter: function() {
+                            return (this.value / 1000) + 'K';
+                        }
+                    },
+                    title: {
+                        text: ''
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#fff',
+                    borderColor: '#E57B53',
+                    borderRadius: 6,
+                    style: {
+                        color: '#666',
+                        fontWeight: '300'
+                    },
+                    valuePrefix: '₩',
+                    valueSuffix: ''
+                },
+                series: [{
+                    name: '넥슨 주가',
+                    data: stockData,
+                    color: '#E57B53',
+                    lineWidth: 2,
+                    tooltip: {
+                        valueDecimals: 0
+                    }
+                }],
+                credits: {
+                    enabled: false
+                },
+                exporting: {
+                    enabled: false
+                }
+            });
+
+            // 초기 테이블 렌더링
+            const firstDate = stockData[0][0];
+            const lastDate = stockData[stockData.length - 1][0];
+            renderTable(firstDate, lastDate);
+        }
+
+        // 리사이저 기능
+        function initResizers() {
+            // 좌측 패널 리사이저
+            initHorizontalResizer('resizerLeft', 'leftPanel', null, 120, 400);
+
+            // 중앙-우측 리사이저
+            initCenterResizer();
+
+            // 상단-하단 리사이저
+            initVerticalResizer();
+        }
+
+        function initHorizontalResizer(resizerId, leftPanelId, rightPanelId, minWidth, maxWidth) {
+            const resizer = document.getElementById(resizerId);
+            const leftPanel = document.getElementById(leftPanelId);
+
+            let isResizing = false;
+            let startX, startWidth;
+
+            resizer.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                startX = e.clientX;
+                startWidth = leftPanel.offsetWidth;
+                resizer.classList.add('active');
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                const diff = e.clientX - startX;
+                let newWidth = startWidth + diff;
+                newWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
+                leftPanel.style.width = newWidth + 'px';
+                leftPanel.style.minWidth = newWidth + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    resizer.classList.remove('active');
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                    // 차트 리사이즈 트리거
+                    window.dispatchEvent(new Event('resize'));
+                }
+            });
+        }
+
+        function initCenterResizer() {
+            const resizer = document.getElementById('resizerCenter');
+            const centerPanel = document.getElementById('centerPanel');
+            const rightPanel = document.getElementById('rightPanel');
+            const upperArea = document.getElementById('upperArea');
+
+            let isResizing = false;
+            let startX, startRightWidth;
+
+            resizer.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                startX = e.clientX;
+                startRightWidth = rightPanel.offsetWidth;
+
+                // 중앙 패널 너비를 현재 값으로 고정
+                if (!centerPanel.style.width) {
+                    centerPanel.style.flex = 'none';
+                    centerPanel.style.width = centerPanel.offsetWidth + 'px';
+                }
+
+                resizer.classList.add('active');
+                document.body.style.cursor = 'col-resize';
+                document.body.style.userSelect = 'none';
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                const diff = e.clientX - startX;
+                let newRightWidth = startRightWidth - diff;
+
+                // 우측 패널 최소/최대 너비 제한
+                const minRight = 200;
+                const maxRight = 800;
+
+                if (newRightWidth < minRight) {
+                    newRightWidth = minRight;
+                }
+                if (newRightWidth > maxRight) {
+                    newRightWidth = maxRight;
+                }
+
+                rightPanel.style.flex = 'none';
+                rightPanel.style.width = newRightWidth + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    resizer.classList.remove('active');
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                    window.dispatchEvent(new Event('resize'));
+                }
+            });
+        }
+
+        function initVerticalResizer() {
+            const resizer = document.getElementById('resizerBottom');
+            const upperArea = document.getElementById('upperArea');
+            const bottomPanel = document.getElementById('bottomPanel');
+            const mainContent = document.querySelector('.main-content');
+
+            let isResizing = false;
+            let startY, startUpperHeight, startBottomHeight;
+
+            resizer.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                startY = e.clientY;
+                startUpperHeight = upperArea.offsetHeight;
+                startBottomHeight = bottomPanel.offsetHeight;
+                resizer.classList.add('active');
+                document.body.style.cursor = 'row-resize';
+                document.body.style.userSelect = 'none';
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isResizing) return;
+                const diff = e.clientY - startY;
+                const totalHeight = startUpperHeight + startBottomHeight;
+                let newUpperHeight = startUpperHeight + diff;
+                let newBottomHeight = startBottomHeight - diff;
+
+                // 최소 높이 제한
+                const minUpper = 200;
+                const minBottom = 100;
+
+                if (newUpperHeight < minUpper) {
+                    newUpperHeight = minUpper;
+                    newBottomHeight = totalHeight - minUpper;
+                }
+                if (newBottomHeight < minBottom) {
+                    newBottomHeight = minBottom;
+                    newUpperHeight = totalHeight - minBottom;
+                }
+
+                upperArea.style.flex = 'none';
+                upperArea.style.height = newUpperHeight + 'px';
+                bottomPanel.style.height = newBottomHeight + 'px';
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isResizing) {
+                    isResizing = false;
+                    resizer.classList.remove('active');
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                    window.dispatchEvent(new Event('resize'));
+                }
+            });
+        }
+
+        // 종합 분석 요약 업데이트
+        function updateResultSummary(item, source) {
+            const container = document.getElementById('resultContainer');
+
+            if (!item) {
+                container.innerHTML = '<div class="result-placeholder">결과가 여기에 표시됩니다</div>';
+                return;
+            }
+
+            // 선택된 항목을 기반으로 종합 분석 요약 생성 (더미 데이터)
+            const insights = generateInsights(item, source);
+
+            container.innerHTML = `
+                <div class="result-header">
+                    <span class="result-title">종합 분석 요약</span>
+                    <span class="result-period">${item.date}</span>
+                </div>
+                <div class="result-content">
+                    <div class="result-summary">
+                        <h4>핵심 인사이트</h4>
+                        <ul>
+                            ${insights.map(i => `<li>${i}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 인사이트 생성 (더미 로직)
+        function generateInsights(item, source) {
+            const baseInsights = [];
+
+            // 출처별 기본 인사이트
+            if (source === 'dart') {
+                baseInsights.push('공시 자료 기반 실적 데이터로 신뢰도 높음');
+                if (item.summary && item.summary.some(s => s.includes('매출'))) {
+                    baseInsights.push('매출 관련 핵심 지표 확인 필요');
+                }
+                if (item.summary && item.summary.some(s => s.includes('영업이익'))) {
+                    baseInsights.push('수익성 지표가 업계 평균 대비 양호한 수준');
+                }
+            } else if (source === 'darkReport') {
+                baseInsights.push('비공식 분석 자료로 참고용 활용 권장');
+                baseInsights.push('시장 센티먼트 파악에 유용한 데이터');
+            } else if (source === 'policy') {
+                baseInsights.push('규제 환경 변화에 따른 사업 영향도 모니터링 필요');
+                baseInsights.push('중장기 전략 수립 시 반영 검토');
+            } else if (source === 'news') {
+                baseInsights.push('시장 관심도 및 브랜드 인지도 관련 지표');
+                baseInsights.push('단기 주가 변동성에 영향 가능');
+            }
+
+            // 항목별 추가 인사이트
+            if (item.charts && item.charts.length > 0) {
+                const chartTypes = item.charts.map(c => c.type);
+                if (chartTypes.includes('waterfall')) {
+                    baseInsights.push('누적 흐름 분석을 통한 성장 동인 파악 가능');
+                }
+                if (chartTypes.includes('comparison')) {
+                    baseInsights.push('경쟁사 대비 상대적 위치 확인 필요');
+                }
+                if (chartTypes.includes('pie')) {
+                    baseInsights.push('포트폴리오 구성 및 집중도 리스크 검토');
+                }
+            }
+
+            return baseInsights.slice(0, 4); // 최대 4개 인사이트
+        }
+
+        // 초기화
+        renderSourceList();
+        initChart();
+        initResizers();
+
+        // 모든 아코디언 펼치기 (초기 상태)
+        Object.keys(sourceData).forEach(key => {
+            toggleSource(key);
+        });
+    </script>
+</body>
+</html>
