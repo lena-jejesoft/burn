@@ -28,6 +28,7 @@
             line-height: 1.3;
             height: 100vh;
             overflow: hidden;
+            background: #fff;
         }
 
         .container {
@@ -35,110 +36,66 @@
             height: 100vh;
         }
 
-        /* 좌측 패널 */
-        .left-panel {
-            width: 180px;
-            min-width: 120px;
+        /* 아이콘 사이드바 */
+        .icon-sidebar {
+            width: 48px;
+            min-width: 48px;
+            background: #fff;
+            border-right: 1px solid #eee;
             display: flex;
             flex-direction: column;
-            background: #fafafa;
+            align-items: center;
+            padding: 12px 0;
         }
 
-        .search-box {
-            padding: 8px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 6px 8px;
-            border: 1px solid var(--claude-orange);
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 300;
-            outline: none;
-        }
-
-        .search-input:focus {
-            box-shadow: 0 0 0 2px rgba(229, 123, 83, 0.2);
-        }
-
-        .source-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 4px 8px;
-        }
-
-        .source-group {
-            margin: 4px 0;
-        }
-
-        .source-header {
+        .icon-sidebar-item {
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
-            padding: 6px;
-            cursor: pointer;
-            border-radius: 4px;
-            font-size: 13px;
-            color: var(--claude-orange);
-            transition: background 0.15s;
-        }
-
-        .source-header:hover {
-            background: rgba(229, 123, 83, 0.1);
-        }
-
-        .source-header .arrow {
-            margin-right: 6px;
-            font-size: 10px;
-            transition: transform 0.2s;
-        }
-
-        .source-header.expanded .arrow {
-            transform: rotate(90deg);
-        }
-
-        .source-items {
-            padding-left: 20px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.2s ease-out;
-        }
-
-        .source-items.expanded {
-            max-height: 500px;
-        }
-
-        .source-item {
-            display: block;
-            color: #666;
-            font-size: 11px;
-            text-decoration: none;
-            padding: 3px 6px;
-            margin: 2px 0;
-            border-radius: 3px;
+            justify-content: center;
+            margin: 4px 0;
+            border-radius: 8px;
             cursor: pointer;
             transition: background 0.15s;
+            color: #999;
         }
 
-        .source-item:hover {
+        .icon-sidebar-item:hover {
             background: rgba(229, 123, 83, 0.1);
             color: var(--claude-orange);
+        }
+
+        .icon-sidebar-item.active {
+            background: rgba(229, 123, 83, 0.15);
+            color: var(--claude-orange);
+        }
+
+        .icon-sidebar-item svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .icon-sidebar-spacer {
+            flex: 1;
         }
 
         /* 중앙 패널 */
         .center-panel {
-            flex: 4;
+            flex: none;
+            width: 60%;
+            min-width: 500px;
             background: #fff;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            min-width: 300px;
         }
 
         .chart-container {
-            height: 40%;
-            min-height: 200px;
+            height: 55vh;
+            min-height: 500px;
             padding: 8px;
+            flex-shrink: 0;
         }
 
         #stockChart {
@@ -150,6 +107,7 @@
             flex: 1;
             overflow: auto;
             padding: 8px;
+            min-height: 500px;
         }
 
         .data-table {
@@ -182,6 +140,60 @@
             text-align: left;
             font-weight: 400;
             color: #666;
+        }
+
+        .data-table td.source-name {
+            cursor: pointer;
+            color: var(--claude-orange);
+        }
+
+        .data-table td.source-name:hover {
+            text-decoration: underline;
+        }
+
+        .source-detail-container {
+            padding: 16px;
+            background: #fafafa;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .source-detail-container.active {
+            display: block;
+        }
+
+        .source-detail h4 {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--claude-orange);
+            margin-bottom: 12px;
+        }
+
+        .source-detail ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .source-detail li {
+            padding: 6px 0;
+            padding-left: 16px;
+            position: relative;
+            font-size: 13px;
+            color: #333;
+            border-bottom: 1px solid #eee;
+        }
+
+        .source-detail li:last-child {
+            border-bottom: none;
+        }
+
+        .source-detail li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--claude-orange);
         }
 
         .data-table td.has-data {
@@ -219,19 +231,77 @@
 
         /* 우측 패널 */
         .right-panel {
-            flex: 1.2;
+            flex: 1;
             background: #fff;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            min-width: 200px;
+            min-width: 280px;
+            max-width: 450px;
+            padding-right: 0;
+            margin-right: 0;
         }
 
         .detail-container {
             height: 100%;
+            width: 100%;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+            padding-right: 0;
+        }
+
+        /* 탭 스타일 */
+        .detail-tabs {
+            display: flex;
+            border-bottom: 1px solid #eee;
+            background: #fafafa;
+            flex-shrink: 0;
+        }
+
+        .detail-tab {
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 400;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            background: #f5f5f5;
+            border-bottom: 1px solid #eee;
+            transition: all 0.15s;
+        }
+
+        .detail-tab:hover {
+            background: #ebebeb;
+        }
+
+        .detail-tab.active {
+            background: var(--claude-orange);
+            color: #fff;
+            font-weight: 500;
+            border-bottom: none;
+        }
+
+        .detail-tab-content {
+            flex: 1;
             overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--claude-orange) transparent;
+        }
+
+        /* 스크롤바 빈 공간 제거 */
+        .detail-tab-content::-webkit-scrollbar {
+            width: 6px;
+            background: #fff;
+        }
+
+        .detail-tab-content::-webkit-scrollbar-track {
+            background: #fff;
+        }
+
+        .detail-tab-content::-webkit-scrollbar-thumb {
+            background: var(--claude-orange);
+            border-radius: 3px;
         }
 
         .detail-placeholder {
@@ -284,9 +354,8 @@
         }
 
         .detail-content {
-            flex: 1;
             padding: 16px;
-            overflow-y: auto;
+            padding-right: 10px;
         }
 
         .detail-title {
@@ -320,6 +389,81 @@
             position: absolute;
             left: 0;
             color: var(--claude-orange);
+        }
+
+        /* 분석 섹션 */
+        .detail-analysis {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+            font-size: 12px;
+            color: #444;
+            line-height: 1.7;
+        }
+
+        .detail-analysis h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin: 16px 0 8px 0;
+        }
+
+        .detail-analysis h5 {
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+            margin: 12px 0 6px 0;
+        }
+
+        .detail-analysis p {
+            margin: 8px 0;
+        }
+
+        .detail-analysis strong {
+            color: var(--claude-orange);
+        }
+
+        .detail-analysis ul {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0;
+        }
+
+        .detail-analysis li {
+            padding: 4px 0 4px 16px;
+            position: relative;
+        }
+
+        .detail-analysis li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--claude-orange);
+            font-size: 10px;
+        }
+
+        .analysis-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 11px;
+        }
+
+        .analysis-table th,
+        .analysis-table td {
+            border: 1px solid #ddd;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        .analysis-table th {
+            background: #f5f5f5;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .analysis-table td {
+            color: #555;
         }
 
         /* 팝오버 */
@@ -390,19 +534,37 @@
             text-decoration: underline;
         }
 
-        /* 스크롤바 스타일 */
+        /* 스크롤바 공통 - 오버레이 방식 */
+        .source-list,
+        .table-container,
+        .detail-container,
+        .detail-tab-content {
+            scrollbar-width: thin;
+            scrollbar-color: var(--claude-orange) transparent;
+        }
+
+        /* 스크롤바 스타일 - Webkit */
         .source-list::-webkit-scrollbar,
         .table-container::-webkit-scrollbar,
-        .detail-container::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
+        .detail-container::-webkit-scrollbar,
+        .detail-tab-content::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .source-list::-webkit-scrollbar-track,
+        .table-container::-webkit-scrollbar-track,
+        .detail-container::-webkit-scrollbar-track,
+        .detail-tab-content::-webkit-scrollbar-track {
+            background: transparent;
         }
 
         .source-list::-webkit-scrollbar-thumb,
         .table-container::-webkit-scrollbar-thumb,
-        .detail-container::-webkit-scrollbar-thumb {
+        .detail-container::-webkit-scrollbar-thumb,
+        .detail-tab-content::-webkit-scrollbar-thumb {
             background: var(--claude-orange);
-            border-radius: 2px;
+            border-radius: 3px;
         }
 
         /* Highcharts 커스텀 */
@@ -436,15 +598,6 @@
             flex: 1;
             display: flex;
             overflow: hidden;
-            min-height: 200px;
-        }
-
-        /* 하단 결과 패널 */
-        .bottom-panel {
-            height: 280px;
-            min-height: 100px;
-            background: #fff;
-            flex-shrink: 0;
         }
 
         /* 리사이저 공통 스타일 */
@@ -469,28 +622,13 @@
             cursor: col-resize;
         }
 
-        /* 수직 리사이저 (상하 조절) */
-        .resizer-vertical {
-            height: 5px;
-            cursor: row-resize;
-        }
-
-        .result-container {
-            height: 100%;
+        /* 전망 탭 스타일 */
+        .forecast-container {
             padding: 16px;
-            overflow-y: auto;
+            padding-right: 10px;
         }
 
-        .result-placeholder {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-size: 13px;
-        }
-
-        .result-header {
+        .forecast-header {
             font-size: 13px;
             font-weight: 400;
             color: var(--claude-orange);
@@ -502,71 +640,109 @@
             align-items: center;
         }
 
-        .result-title {
+        .forecast-title {
             font-weight: 400;
         }
 
-        .result-period {
+        .forecast-period {
             font-size: 11px;
             color: #999;
         }
 
-        .result-content {
+        .forecast-content {
             font-size: 12px;
             color: #666;
             line-height: 1.6;
         }
 
-        .result-summary h4 {
+        .forecast-section h4 {
             font-size: 12px;
             font-weight: 400;
             color: #333;
             margin-bottom: 8px;
         }
 
-        .result-summary ul {
+        .forecast-section ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
 
-        .result-summary li {
+        .forecast-section li {
             padding: 4px 0;
             padding-left: 16px;
             position: relative;
         }
 
-        .result-summary li::before {
+        .forecast-section li::before {
             content: '•';
             position: absolute;
             left: 0;
             color: var(--claude-orange);
         }
-
-        .result-container::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .result-container::-webkit-scrollbar-thumb {
-            background: var(--claude-orange);
-            border-radius: 2px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- 좌측 패널 -->
-        <div class="left-panel" id="leftPanel">
-            <div class="search-box">
-                <input type="text" class="search-input" value="넥슨의 매출액" readonly>
+        <!-- 아이콘 사이드바 -->
+        <div class="icon-sidebar">
+            <div class="icon-sidebar-item active" title="차트">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
             </div>
-            <div class="source-list" id="sourceList">
-                <!-- 아코디언 목록 -->
+            <div class="icon-sidebar-item" title="홈">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+            </div>
+            <div class="icon-sidebar-item" title="비교분석">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </div>
+            <div class="icon-sidebar-item" title="보고서">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                    <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+            </div>
+            <div class="icon-sidebar-spacer"></div>
+            <div class="icon-sidebar-item" title="검색">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+            </div>
+            <div class="icon-sidebar-item" title="알림">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                </svg>
+            </div>
+            <div class="icon-sidebar-item" title="캘린더">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+            </div>
+            <div class="icon-sidebar-item" title="정보">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
             </div>
         </div>
-
-        <!-- 좌측-메인 리사이저 -->
-        <div class="resizer resizer-horizontal" id="resizerLeft"></div>
 
         <!-- 메인 콘텐츠 영역 -->
         <div class="main-content">
@@ -581,9 +757,13 @@
                         <table class="data-table" id="dataTable">
                             <!-- 테이블 내용 -->
                         </table>
+                        <div class="source-detail-container" id="sourceDetailContainer">
+                            <!-- 출처 클릭 시 보고서 목록 표시 -->
+                        </div>
                     </div>
                 </div>
 
+                <!-- 중앙-우측 리사이저 -->
                 <!-- 중앙-우측 리사이저 -->
                 <div class="resizer resizer-horizontal" id="resizerCenter"></div>
 
@@ -594,16 +774,6 @@
                             항목을 선택하세요
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- 상단-하단 리사이저 -->
-            <div class="resizer resizer-vertical" id="resizerBottom"></div>
-
-            <!-- 하단 결과 패널 -->
-            <div class="bottom-panel" id="bottomPanel">
-                <div class="result-container" id="resultContainer">
-                    <div class="result-placeholder">결과가 여기에 표시됩니다</div>
                 </div>
             </div>
         </div>
@@ -660,6 +830,40 @@
                     'EA와 전략적 파트너십 체결',
                     'FC온라인 e스포츠 대회 개최'
                 ]
+            },
+            paper: {
+                name: '논문',
+                items: [
+                    '게임 산업 성장 동력 분석',
+                    'MMORPG 유저 행동 패턴 연구',
+                    '게임 내 경제 시스템 연구',
+                    'AI 기반 게임 콘텐츠 생성'
+                ]
+            },
+            patent: {
+                name: '특허',
+                items: [
+                    '게임 매칭 시스템 특허',
+                    'AI NPC 행동 알고리즘',
+                    '실시간 렌더링 기술',
+                    '게임 내 거래 시스템'
+                ]
+            },
+            sec: {
+                name: 'SEC',
+                items: [
+                    'Form 20-F 연차보고서',
+                    'Form 6-K 수시보고서',
+                    '주요 주주 변동 보고'
+                ]
+            },
+            edinet: {
+                name: 'EDINET',
+                items: [
+                    '유가증권보고서',
+                    '분기보고서',
+                    '대량보유보고서'
+                ]
             }
         };
 
@@ -715,7 +919,33 @@
                             ]
                         }
                     ],
-                    date: '2024-01-15'
+                    date: '2024-01-15',
+                    analysis: `## 데이터 기반 평가
+
+**실적 평가: 긍정적 (★★★★☆)**
+
+2023년 4분기 실적은 시장 예상치를 상회하는 호실적을 기록했습니다. 매출 3.2조원은 전년 동기 대비 12% 성장으로, 게임업계 평균 성장률(8%)을 크게 웃도는 수치입니다.
+
+### 핵심 지표 분석
+
+| 지표 | 실적 | 업계평균 | 평가 |
+|------|------|---------|------|
+| 매출성장률 | 12% | 8% | 우수 |
+| 영업이익률 | 26.6% | 18% | 최상위권 |
+| ROE | 18.2% | 12% | 양호 |
+
+### 성장 동력
+1. **메이플스토리**: 20주년 이벤트 효과로 복귀 유저 급증
+2. **던전앤파이터**: 중국 모바일 버전 월 매출 2,000억원 추정
+3. **FC온라인**: 시즌 전환 효과로 과금 유저 증가
+
+### 리스크 요인
+- 중국 게임 규제 불확실성 지속
+- 신작 퍼스트 디센던트 출시 지연 가능성
+- 원/엔 환율 변동에 따른 일본 매출 영향
+
+### 투자 의견
+현재 주가 대비 적정 가치 평가. 2024년 신작 출시 일정에 따라 추가 상승 여력 존재. 다만 중국 리스크 모니터링 필요.`
                 },
                 {
                     id: 'dart-2024-01-2',
@@ -776,7 +1006,28 @@
                             ]
                         }
                     ],
-                    date: '2024-02-28'
+                    date: '2024-02-28',
+                    analysis: `## 데이터 기반 평가
+
+**연간 실적 평가: 매우 긍정적 (★★★★★)**
+
+2023년 연간 실적은 역대 최고 수준을 기록했습니다. 매출 11.97조원은 전년 대비 22.2% 성장으로, 게임업계 내 압도적인 성과입니다.
+
+### 핵심 지표 분석
+
+| 지표 | 2023년 | 2022년 | 성장률 |
+|------|--------|--------|--------|
+| 매출 | 11.97조 | 9.8조 | +22.2% |
+| 영업이익 | 3.2조 | 2.5조 | +28% |
+| 해외비중 | 75% | 70% | +5%p |
+
+### 성장 포인트
+1. **글로벌 확장**: 해외 매출 비중 75%로 국내 의존도 감소
+2. **포트폴리오 다각화**: 신규 IP 투자로 리스크 분산
+3. **인력 확충**: 개발 역량 강화를 위한 적극적 채용
+
+### 향후 전망
+2024년은 퍼스트 디센던트 출시와 기존 IP 업데이트로 추가 성장 기대. 다만 인건비 상승에 따른 수익성 관리 필요.`
                 },
                 {
                     id: 'dart-2024-02-2',
@@ -830,7 +1081,28 @@
                             ]
                         }
                     ],
-                    date: '2024-04-15'
+                    date: '2024-04-15',
+                    analysis: `## 데이터 기반 평가
+
+**1분기 실적 평가: 긍정적 (★★★★☆)**
+
+2024년 1분기 실적은 전년 동기 대비 8% 성장하며 안정적인 출발을 보였습니다.
+
+### 핵심 지표 분석
+
+| 지표 | Q1 2024 | Q1 2023 | 증감 |
+|------|---------|---------|------|
+| 매출 | 3.1조 | 2.8조 | +10.7% |
+| 영업이익 | 7,800억 | 6,800억 | +14.7% |
+| 영업이익률 | 25.2% | 24.3% | +0.9%p |
+
+### 주요 분석
+1. **블루아카이브**: 일본 시장에서 지속적인 성장세
+2. **퍼스트 디센던트**: CBT 반응 긍정적, 7월 출시 예정
+3. **FC온라인**: 시즌 업데이트로 매출 유지
+
+### 투자 포인트
+신작 출시 전 안정적인 기존 IP 매출 유지. 하반기 퍼스트 디센던트 출시에 따른 실적 개선 기대.`
                 }],
                 '2024-05': [{
                     id: 'dart-2024-05-1',
@@ -909,7 +1181,28 @@
                             ]
                         }
                     ],
-                    date: '2024-07-15'
+                    date: '2024-07-15',
+                    analysis: `## 데이터 기반 평가
+
+**2분기 실적 평가: 매우 긍정적 (★★★★★)**
+
+퍼스트 디센던트 출시 효과와 중국 시장 회복으로 예상을 뛰어넘는 실적 달성.
+
+### 핵심 지표 분석
+
+| 지표 | Q2 2024 | Q1 2024 | 증감 |
+|------|---------|---------|------|
+| 매출 | 3.3조 | 3.1조 | +6.5% |
+| 영업이익 | 8,200억 | 7,800억 | +5.1% |
+| 중국 비중 | 35% | 32% | +3%p |
+
+### 성장 동력
+1. **퍼스트 디센던트**: 7월 출시 직후 글로벌 흥행
+2. **던파 중국**: 신규 직업 업데이트로 매출 급증
+3. **블루아카이브**: 2주년 이벤트 성공
+
+### 시장 반응
+출시 첫 주 스팀 동시접속 26만명 달성. 글로벌 루터슈터 시장 진입 성공으로 평가.`
                 }],
                 '2024-08': [],
                 '2024-09': [],
@@ -950,7 +1243,28 @@
                             ]
                         }
                     ],
-                    date: '2024-10-15'
+                    date: '2024-10-15',
+                    analysis: `## 데이터 기반 평가
+
+**3분기 실적 평가: 최고 수준 (★★★★★)**
+
+역대 최고 분기 영업이익 달성. 퍼스트 디센던트 누적 매출 3,000억원 돌파.
+
+### 핵심 지표 분석
+
+| 지표 | Q3 2024 | Q2 2024 | 증감 |
+|------|---------|---------|------|
+| 매출 | 3.5조 | 3.3조 | +6.1% |
+| 영업이익 | 9,100억 | 8,200억 | +11% |
+| 영업이익률 | 26.0% | 24.8% | +1.2%p |
+
+### 성공 요인
+1. **퍼스트 디센던트**: 시즌1 업데이트로 유저 리텐션 유지
+2. **블루아카이브**: 일본 매출 1위 달성
+3. **메이플스토리**: 20주년 이벤트 흥행
+
+### 신작 기여도
+퍼스트 디센던트가 전체 매출의 25%를 차지하며 신규 캐시카우로 자리매김.`
                 }],
                 '2024-11': [],
                 '2024-12': [{
@@ -995,7 +1309,28 @@
                             ]
                         }
                     ],
-                    date: '2024-12-20'
+                    date: '2024-12-20',
+                    analysis: `## 데이터 기반 평가
+
+**연간 실적 평가: 역대 최고 (★★★★★)**
+
+2024년 연간 매출 13.7조원으로 사상 최대 실적 달성 전망.
+
+### 핵심 지표 분석
+
+| 지표 | 2024년(E) | 2023년 | 증감 |
+|------|-----------|--------|------|
+| 매출 | 13.7조 | 11.97조 | +14.5% |
+| 영업이익 | 3.5조 | 3.2조 | +9.4% |
+| 영업이익률 | 26.3% | 26.7% | -0.4%p |
+
+### 2024년 성과
+1. **퍼스트 디센던트**: 신작 성공으로 글로벌 포트폴리오 다각화
+2. **기존 IP 안정성**: 메이플, 던파 등 꾸준한 매출 유지
+3. **일본 시장**: 블루아카이브 1위로 일본 내 입지 강화
+
+### 2025년 전망
+신작 라인업 발표 예정. 퍼스트 디센던트 시즌2, 메이플 신규 월드 등 기대작 다수.`
                 }]
             },
             darkReport: {
@@ -1038,7 +1373,28 @@
                             ]
                         }
                     ],
-                    date: '2024-02-05'
+                    date: '2024-02-05',
+                    analysis: `## 리스크 분석
+
+**위험도 평가: 중간 (⚠️⚠️⚠️)**
+
+메이플스토리 매출 하락은 일시적 현상으로 판단되나, 구조적 문제 가능성도 존재.
+
+### 하락 요인 분석
+
+| 요인 | 영향도 | 지속성 |
+|------|--------|--------|
+| 콘텐츠 부재 | 높음 | 단기 |
+| 경쟁작 출시 | 중간 | 중기 |
+| 유저 피로도 | 중간 | 장기 |
+
+### 모니터링 포인트
+- 20주년 이벤트 효과 확인 필요
+- DAU 추이 지속 관찰
+- 경쟁작 대비 점유율 변화
+
+### 대응 전략 제언
+신규 콘텐츠 업데이트 주기 단축 및 복귀 유저 이벤트 강화 필요.`
                 }],
                 '2024-03': [{
                     id: 'dark-2024-03-1',
@@ -1685,7 +2041,28 @@
                             ]
                         }
                     ],
-                    date: '2024-07-02'
+                    date: '2024-07-02',
+                    analysis: `## 출시 영향 분석
+
+**시장 반응: 매우 긍정적 (★★★★★)**
+
+퍼스트 디센던트의 글로벌 동시 출시는 넥슨의 AAA급 게임 개발 역량을 입증.
+
+### 출시 성과
+
+| 지표 | 수치 | 평가 |
+|------|------|------|
+| 첫날 동접 | 10만명 | 우수 |
+| 플랫폼 다운로드 | 380만건 | 초과달성 |
+| 스팀 평점 | 7.2/10 | 양호 |
+
+### 성공 요인
+1. **멀티플랫폼**: PC, PS5, Xbox 동시 출시로 접근성 극대화
+2. **F2P 모델**: 진입 장벽 낮춰 유저 유입 촉진
+3. **루터슈터 장르**: 글로벌 인기 장르 진출
+
+### 향후 전망
+지속적인 콘텐츠 업데이트가 관건. 시즌제 운영으로 장기 수익 창출 기대.`
                 },
                 {
                     id: 'news-2024-07-2',
@@ -1800,7 +2177,28 @@
                             ]
                         }
                     ],
-                    date: '2024-10-29'
+                    date: '2024-10-29',
+                    analysis: `## 이벤트 영향 분석
+
+**브랜드 가치: 최고 수준 (★★★★★)**
+
+20년간 서비스 지속은 글로벌 게임 업계에서도 이례적인 성과.
+
+### 20주년 성과
+
+| 지표 | 수치 | 의미 |
+|------|------|------|
+| 누적 유저 | 1.8억명 | 글로벌 Top 5 |
+| 서비스 기간 | 20년 | 업계 최장수 |
+| 오프라인 참여 | 1만명 | 역대 최대 |
+
+### 브랜드 파워
+1. **세대 초월**: 10대부터 30대까지 폭넓은 유저층
+2. **문화 아이콘**: 한국 게임 역사의 상징
+3. **IP 확장성**: 애니메이션, 굿즈 등 다각화
+
+### 투자 시사점
+장수 IP의 안정적 수익 창출 능력 입증. 신규 콘텐츠와 노스탤지어 마케팅 병행으로 지속 성장 가능.`
                 }],
                 '2024-11': [{
                     id: 'news-2024-11-1',
@@ -1883,8 +2281,201 @@
                     ],
                     date: '2024-12-20'
                 }]
+            },
+            paper: {
+                '2024-01': [],
+                '2024-02': [{
+                    id: 'paper-2024-02-1',
+                    title: 'MMORPG 유저 리텐션 분석',
+                    summary: ['메이플스토리 10년 유저 데이터 분석', '리텐션 핵심 요인 도출'],
+                    charts: [],
+                    date: '2024-02-15'
+                }],
+                '2024-03': [],
+                '2024-04': [],
+                '2024-05': [{
+                    id: 'paper-2024-05-1',
+                    title: '게임 내 경제 시스템 연구',
+                    summary: ['가상 경제 인플레이션 모델링', '아이템 가격 안정화 방안'],
+                    charts: [],
+                    date: '2024-05-20'
+                }],
+                '2024-06': [],
+                '2024-07': [],
+                '2024-08': [{
+                    id: 'paper-2024-08-1',
+                    title: 'AI 기반 NPC 행동 패턴 연구',
+                    summary: ['강화학습 기반 NPC 설계', '유저 몰입도 향상 효과 검증'],
+                    charts: [],
+                    date: '2024-08-10'
+                }],
+                '2024-09': [],
+                '2024-10': [],
+                '2024-11': [{
+                    id: 'paper-2024-11-1',
+                    title: '루터슈터 장르 시장 분석',
+                    summary: ['퍼스트 디센던트 성공 요인', '경쟁작 대비 차별점 분석'],
+                    charts: [],
+                    date: '2024-11-05'
+                }],
+                '2024-12': []
+            },
+            patent: {
+                '2024-01': [{
+                    id: 'patent-2024-01-1',
+                    title: '실시간 매칭 시스템 특허',
+                    summary: ['스킬 기반 매칭 알고리즘', '대기 시간 최소화 기술'],
+                    charts: [],
+                    date: '2024-01-10'
+                }],
+                '2024-02': [],
+                '2024-03': [{
+                    id: 'patent-2024-03-1',
+                    title: 'AI 기반 게임 밸런싱 특허',
+                    summary: ['실시간 밸런스 조정 시스템', '유저 피드백 반영 알고리즘'],
+                    charts: [],
+                    date: '2024-03-15'
+                }],
+                '2024-04': [],
+                '2024-05': [],
+                '2024-06': [{
+                    id: 'patent-2024-06-1',
+                    title: '크로스플랫폼 세이브 동기화',
+                    summary: ['PC-모바일-콘솔 연동 기술', '클라우드 기반 저장 시스템'],
+                    charts: [],
+                    date: '2024-06-20'
+                }],
+                '2024-07': [],
+                '2024-08': [],
+                '2024-09': [{
+                    id: 'patent-2024-09-1',
+                    title: '게임 내 거래 보안 시스템',
+                    summary: ['블록체인 기반 거래 검증', '사기 방지 알고리즘'],
+                    charts: [],
+                    date: '2024-09-05'
+                }],
+                '2024-10': [],
+                '2024-11': [],
+                '2024-12': [{
+                    id: 'patent-2024-12-1',
+                    title: '차세대 렌더링 엔진 특허',
+                    summary: ['실시간 레이트레이싱 최적화', '모바일 적용 기술'],
+                    charts: [],
+                    date: '2024-12-10'
+                }]
+            },
+            sec: {
+                '2024-01': [],
+                '2024-02': [],
+                '2024-03': [{
+                    id: 'sec-2024-03-1',
+                    title: 'Form 20-F 연차보고서',
+                    summary: ['2023 회계연도 실적 보고', 'SEC 제출 완료'],
+                    charts: [],
+                    date: '2024-03-31'
+                }],
+                '2024-04': [{
+                    id: 'sec-2024-04-1',
+                    title: 'Form 6-K 수시보고',
+                    summary: ['1분기 실적 발표', '주요 경영사항 공시'],
+                    charts: [],
+                    date: '2024-04-20'
+                }],
+                '2024-05': [],
+                '2024-06': [],
+                '2024-07': [{
+                    id: 'sec-2024-07-1',
+                    title: 'Form 6-K 수시보고',
+                    summary: ['2분기 실적 발표', '신작 출시 관련 공시'],
+                    charts: [],
+                    date: '2024-07-25'
+                }],
+                '2024-08': [],
+                '2024-09': [],
+                '2024-10': [{
+                    id: 'sec-2024-10-1',
+                    title: 'Form 6-K 수시보고',
+                    summary: ['3분기 실적 발표', '자사주 매입 계획 공시'],
+                    charts: [],
+                    date: '2024-10-28'
+                }],
+                '2024-11': [],
+                '2024-12': []
+            },
+            edinet: {
+                '2024-01': [],
+                '2024-02': [{
+                    id: 'edinet-2024-02-1',
+                    title: '유가증권보고서 (일본법인)',
+                    summary: ['넥슨 재팬 2023년 실적', '일본 시장 매출 분석'],
+                    charts: [],
+                    date: '2024-02-28'
+                }],
+                '2024-03': [],
+                '2024-04': [],
+                '2024-05': [{
+                    id: 'edinet-2024-05-1',
+                    title: '분기보고서 Q1',
+                    summary: ['일본법인 1분기 실적', '블루아카이브 매출 호조'],
+                    charts: [],
+                    date: '2024-05-15'
+                }],
+                '2024-06': [],
+                '2024-07': [],
+                '2024-08': [{
+                    id: 'edinet-2024-08-1',
+                    title: '분기보고서 Q2',
+                    summary: ['일본법인 2분기 실적', '퍼스트 디센던트 일본 출시 효과'],
+                    charts: [],
+                    date: '2024-08-14'
+                }],
+                '2024-09': [],
+                '2024-10': [],
+                '2024-11': [{
+                    id: 'edinet-2024-11-1',
+                    title: '분기보고서 Q3',
+                    summary: ['일본법인 3분기 실적', '메이플 20주년 이벤트 효과'],
+                    charts: [],
+                    date: '2024-11-14'
+                }],
+                '2024-12': []
             }
         };
+
+        // 간단한 마크다운 파서
+        function parseMarkdown(text) {
+            if (!text) return '';
+
+            let html = text
+                // 테이블 처리
+                .replace(/\|(.+)\|\n\|[-:| ]+\|\n((?:\|.+\|\n?)+)/g, (match, header, body) => {
+                    const headers = header.split('|').filter(h => h.trim());
+                    const rows = body.trim().split('\n').map(row =>
+                        row.split('|').filter(c => c.trim())
+                    );
+                    return `<table class="analysis-table">
+                        <thead><tr>${headers.map(h => `<th>${h.trim()}</th>`).join('')}</tr></thead>
+                        <tbody>${rows.map(row => `<tr>${row.map(c => `<td>${c.trim()}</td>`).join('')}</tr>`).join('')}</tbody>
+                    </table>`;
+                })
+                // h2 (##)
+                .replace(/^## (.+)$/gm, '<h4>$1</h4>')
+                // h3 (###)
+                .replace(/^### (.+)$/gm, '<h5>$1</h5>')
+                // 굵은 글씨 (**)
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                // 순서 있는 리스트
+                .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+                // 순서 없는 리스트 (-)
+                .replace(/^- (.+)$/gm, '<li>$1</li>')
+                // 연속된 li를 ul/ol로 감싸기
+                .replace(/(<li>.+<\/li>\n?)+/g, '<ul>$&</ul>')
+                // 줄바꿈
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+
+            return `<p>${html}</p>`;
+        }
 
         // 넥슨 주가 더미 데이터 생성
         function generateStockData() {
@@ -1903,37 +2494,21 @@
             return data;
         }
 
-        // 좌측 패널 아코디언 렌더링
-        function renderSourceList() {
-            const container = document.getElementById('sourceList');
-            let html = '';
+        // USD/KRW 환율 더미 데이터 생성
+        function generateExchangeRateData() {
+            const data = [];
+            const startDate = new Date('2024-01-01');
+            const endDate = new Date('2024-12-31');
+            let rate = 1320; // 시작 환율
 
-            for (const [key, source] of Object.entries(sourceData)) {
-                html += `
-                    <div class="source-group">
-                        <div class="source-header" onclick="toggleSource('${key}')">
-                            <span class="arrow">▶</span>
-                            ${source.name}
-                        </div>
-                        <div class="source-items" id="source-${key}">
-                            ${source.items.map(item =>
-                                `<a class="source-item">${item}</a>`
-                            ).join('')}
-                        </div>
-                    </div>
-                `;
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                if (d.getDay() !== 0 && d.getDay() !== 6) { // 주말 제외
+                    const change = (Math.random() - 0.5) * 15;
+                    rate = Math.max(1280, Math.min(1400, rate + change));
+                    data.push([d.getTime(), Math.round(rate * 100) / 100]);
+                }
             }
-
-            container.innerHTML = html;
-        }
-
-        // 아코디언 토글
-        function toggleSource(key) {
-            const header = document.querySelector(`#source-${key}`).previousElementSibling;
-            const items = document.getElementById(`source-${key}`);
-
-            header.classList.toggle('expanded');
-            items.classList.toggle('expanded');
+            return data;
         }
 
         // 테이블 렌더링
@@ -1990,12 +2565,15 @@
             }
 
             const table = document.getElementById('dataTable');
-            const sources = ['dart', 'darkReport', 'policy', 'news'];
+            const sources = ['dart', 'darkReport', 'policy', 'paper', 'patent', 'sec', 'edinet'];
             const sourceNamesShort = {
                 dart: '공시',
                 darkReport: '다크리포트',
                 policy: '정책/규제',
-                news: '뉴스/기타'
+                paper: '논문',
+                patent: '특허',
+                sec: 'SEC',
+                edinet: 'EDINET'
             };
 
             let html = '<thead><tr><th>출처</th>';
@@ -2005,7 +2583,7 @@
             html += '</tr></thead><tbody>';
 
             sources.forEach(src => {
-                html += `<tr><td>${sourceNamesShort[src]}</td>`;
+                html += `<tr><td class="source-name" onclick="showSourceDetail('${src}')">${sourceNamesShort[src]}</td>`;
                 columns.forEach(col => {
                     const events = getEventsForPeriod(src, col.key, grain);
                     const count = events.length;
@@ -2022,6 +2600,26 @@
 
             html += '</tbody>';
             table.innerHTML = html;
+        }
+
+        // 출처 클릭 시 보고서 목록 표시
+        function showSourceDetail(source) {
+            const container = document.getElementById('sourceDetailContainer');
+            const data = sourceData[source];
+
+            if (!data) return;
+
+            let html = `<div class="source-detail">
+                <h4>${data.name} (${data.items.length}건)</h4>
+                <ul>`;
+
+            data.items.forEach(item => {
+                html += `<li>${item}</li>`;
+            });
+
+            html += '</ul></div>';
+            container.innerHTML = html;
+            container.classList.add('active');
         }
 
         // 기간별 이벤트 조회
@@ -2069,7 +2667,10 @@
             dart: '공시(DART)',
             darkReport: '다크리포트',
             policy: '정책/규제',
-            news: '뉴스/기타'
+            paper: '논문',
+            patent: '특허',
+            sec: 'SEC',
+            edinet: 'EDINET'
         };
 
         // 셀 클릭 핸들러
@@ -2138,12 +2739,15 @@
 
         // 상세보기 표시
         let detailCharts = [];
+        let currentItem = null;
+        let currentSource = null;
 
         function showDetail(item, source) {
             const container = document.getElementById('detailContainer');
 
-            // 결과 패널도 함께 업데이트
-            updateResultSummary(item, source);
+            // 현재 항목 저장
+            currentItem = item;
+            currentSource = source;
 
             // 기존 차트 정리
             detailCharts.forEach(chart => {
@@ -2151,6 +2755,28 @@
             });
             detailCharts = [];
 
+            // 전망 포인트 생성
+            const forecastPoints = generateForecast(item, source);
+
+            // 전망 탭 내용 생성
+            const forecastHtml = `
+                <div class="forecast-container">
+                    <div class="forecast-header">
+                        <span class="forecast-title">전망</span>
+                        <span class="forecast-period">${item.date}</span>
+                    </div>
+                    <div class="forecast-content">
+                        <div class="forecast-section">
+                            <h4>전망 포인트</h4>
+                            <ul>
+                                ${forecastPoints.map(p => `<li>${p}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // 상세 탭 내용 생성
             let chartsHtml = '';
             if (item.charts && item.charts.length > 0) {
                 chartsHtml = `<div class="detail-charts">
@@ -2164,7 +2790,11 @@
                 `<ul>${item.summary.map(s => `<li>${s}</li>`).join('')}</ul>` :
                 '<p>요약 정보가 없습니다.</p>';
 
-            container.innerHTML = `
+            const analysisHtml = item.analysis ?
+                `<div class="detail-analysis">${parseMarkdown(item.analysis)}</div>` :
+                '';
+
+            const detailHtml = `
                 <div class="detail-header">
                     <div class="detail-source">${sourceNames[source]}</div>
                     <div class="detail-date">${item.date}</div>
@@ -2173,14 +2803,70 @@
                 <div class="detail-content">
                     <div class="detail-title">${item.title}</div>
                     <div class="detail-summary">${summaryHtml}</div>
+                    ${analysisHtml}
                 </div>
             `;
 
-            // 각 차트 렌더링
-            if (item.charts && item.charts.length > 0) {
-                item.charts.forEach((chartConfig, i) => {
-                    renderDetailChart(`detailChart${i}`, chartConfig);
-                });
+            // 탭 구조 생성
+            container.innerHTML = `
+                <div class="detail-tabs">
+                    <div class="detail-tab active" data-tab="detail">상세</div>
+                    <div class="detail-tab" data-tab="forecast">전망</div>
+                </div>
+                <div class="detail-tab-content" id="detailContent">
+                    ${detailHtml}
+                </div>
+                <div class="detail-tab-content" id="forecastContent" style="display:none">
+                    ${forecastHtml}
+                </div>
+            `;
+
+            // 탭 클릭 이벤트
+            container.querySelectorAll('.detail-tab').forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+
+            // 상세 탭이 기본이므로 차트 바로 렌더링
+            if (currentItem && currentItem.charts && currentItem.charts.length > 0) {
+                setTimeout(() => {
+                    currentItem.charts.forEach((chartConfig, i) => {
+                        renderDetailChart(`detailChart${i}`, chartConfig);
+                    });
+                }, 50);
+            }
+        }
+
+        // 탭 전환
+        function switchTab(tabName) {
+            const container = document.getElementById('detailContainer');
+            const tabs = container.querySelectorAll('.detail-tab');
+            const forecastContent = document.getElementById('forecastContent');
+            const detailContent = document.getElementById('detailContent');
+
+            tabs.forEach(tab => {
+                if (tab.dataset.tab === tabName) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            if (tabName === 'forecast') {
+                forecastContent.style.display = 'block';
+                detailContent.style.display = 'none';
+            } else {
+                forecastContent.style.display = 'none';
+                detailContent.style.display = 'block';
+
+                // 상세 탭 활성화 시 차트 렌더링
+                if (currentItem && currentItem.charts && currentItem.charts.length > 0) {
+                    // 이미 렌더링된 차트가 없으면 렌더링
+                    if (detailCharts.length === 0) {
+                        currentItem.charts.forEach((chartConfig, i) => {
+                            renderDetailChart(`detailChart${i}`, chartConfig);
+                        });
+                    }
+                }
             }
         }
 
@@ -2419,10 +3105,15 @@
         // 차트 초기화
         function initChart() {
             const stockData = generateStockData();
+            const exchangeRateData = generateExchangeRateData();
 
             Highcharts.stockChart('stockChart', {
                 chart: {
                     backgroundColor: 'transparent',
+                    marginLeft: 80,
+                    marginRight: 80,
+                    spacingLeft: 10,
+                    spacingRight: 10,
                     style: {
                         fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
                         fontWeight: '300'
@@ -2504,11 +3195,15 @@
                         }
                     }
                 },
-                yAxis: {
+                yAxis: [{
+                    // 주가 축 (왼쪽)
+                    opposite: false,
                     gridLineColor: '#eee',
                     labels: {
+                        align: 'right',
+                        x: -3,
                         style: {
-                            color: '#666',
+                            color: '#E57B53',
                             fontWeight: '300'
                         },
                         formatter: function() {
@@ -2516,9 +3211,43 @@
                         }
                     },
                     title: {
-                        text: ''
-                    }
-                },
+                        text: '주가 (원)',
+                        align: 'high',
+                        rotation: 0,
+                        y: -10,
+                        style: {
+                            color: '#E57B53',
+                            fontWeight: '300'
+                        }
+                    },
+                    height: '100%'
+                }, {
+                    // 환율 축 (오른쪽)
+                    opposite: true,
+                    gridLineWidth: 0,
+                    labels: {
+                        align: 'left',
+                        x: 3,
+                        style: {
+                            color: '#4ECDC4',
+                            fontWeight: '300'
+                        },
+                        formatter: function() {
+                            return this.value;
+                        }
+                    },
+                    title: {
+                        text: 'USD/KRW',
+                        align: 'high',
+                        rotation: 0,
+                        y: -10,
+                        style: {
+                            color: '#4ECDC4',
+                            fontWeight: '300'
+                        }
+                    },
+                    height: '100%'
+                }],
                 tooltip: {
                     backgroundColor: '#fff',
                     borderColor: '#E57B53',
@@ -2527,16 +3256,27 @@
                         color: '#666',
                         fontWeight: '300'
                     },
-                    valuePrefix: '₩',
-                    valueSuffix: ''
+                    shared: true
                 },
                 series: [{
                     name: '넥슨 주가',
                     data: stockData,
                     color: '#E57B53',
                     lineWidth: 2,
+                    yAxis: 0,
                     tooltip: {
-                        valueDecimals: 0
+                        valueDecimals: 0,
+                        valuePrefix: '₩'
+                    }
+                }, {
+                    name: 'USD/KRW 환율',
+                    data: exchangeRateData,
+                    color: '#4ECDC4',
+                    lineWidth: 2,
+                    yAxis: 1,
+                    tooltip: {
+                        valueDecimals: 2,
+                        valuePrefix: '₩'
                     }
                 }],
                 credits: {
@@ -2555,14 +3295,8 @@
 
         // 리사이저 기능
         function initResizers() {
-            // 좌측 패널 리사이저
-            initHorizontalResizer('resizerLeft', 'leftPanel', null, 120, 400);
-
             // 중앙-우측 리사이저
             initCenterResizer();
-
-            // 상단-하단 리사이저
-            initVerticalResizer();
         }
 
         function initHorizontalResizer(resizerId, leftPanelId, rightPanelId, minWidth, maxWidth) {
@@ -2610,18 +3344,12 @@
             const upperArea = document.getElementById('upperArea');
 
             let isResizing = false;
-            let startX, startRightWidth;
+            let startX, startCenterWidth;
 
             resizer.addEventListener('mousedown', (e) => {
                 isResizing = true;
                 startX = e.clientX;
-                startRightWidth = rightPanel.offsetWidth;
-
-                // 중앙 패널 너비를 현재 값으로 고정
-                if (!centerPanel.style.width) {
-                    centerPanel.style.flex = 'none';
-                    centerPanel.style.width = centerPanel.offsetWidth + 'px';
-                }
+                startCenterWidth = centerPanel.offsetWidth;
 
                 resizer.classList.add('active');
                 document.body.style.cursor = 'col-resize';
@@ -2632,21 +3360,25 @@
             document.addEventListener('mousemove', (e) => {
                 if (!isResizing) return;
                 const diff = e.clientX - startX;
-                let newRightWidth = startRightWidth - diff;
+                let newCenterWidth = startCenterWidth + diff;
 
-                // 우측 패널 최소/최대 너비 제한
-                const minRight = 200;
-                const maxRight = 800;
+                // 중앙 패널 최소/최대 너비 제한
+                const minCenter = 400;
+                const maxCenter = upperArea.offsetWidth - 250; // 우측 패널 최소 250px 확보
 
-                if (newRightWidth < minRight) {
-                    newRightWidth = minRight;
+                if (newCenterWidth < minCenter) {
+                    newCenterWidth = minCenter;
                 }
-                if (newRightWidth > maxRight) {
-                    newRightWidth = maxRight;
+                if (newCenterWidth > maxCenter) {
+                    newCenterWidth = maxCenter;
                 }
 
-                rightPanel.style.flex = 'none';
-                rightPanel.style.width = newRightWidth + 'px';
+                centerPanel.style.flex = 'none';
+                centerPanel.style.width = newCenterWidth + 'px';
+
+                // 우측 패널은 남은 공간 차지
+                rightPanel.style.flex = '1';
+                rightPanel.style.width = 'auto';
             });
 
             document.addEventListener('mouseup', () => {
@@ -2660,140 +3392,50 @@
             });
         }
 
-        function initVerticalResizer() {
-            const resizer = document.getElementById('resizerBottom');
-            const upperArea = document.getElementById('upperArea');
-            const bottomPanel = document.getElementById('bottomPanel');
-            const mainContent = document.querySelector('.main-content');
+        // 전망 포인트 생성
+        function generateForecast(item, source) {
+            const forecastPoints = [];
 
-            let isResizing = false;
-            let startY, startUpperHeight, startBottomHeight;
-
-            resizer.addEventListener('mousedown', (e) => {
-                isResizing = true;
-                startY = e.clientY;
-                startUpperHeight = upperArea.offsetHeight;
-                startBottomHeight = bottomPanel.offsetHeight;
-                resizer.classList.add('active');
-                document.body.style.cursor = 'row-resize';
-                document.body.style.userSelect = 'none';
-                e.preventDefault();
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (!isResizing) return;
-                const diff = e.clientY - startY;
-                const totalHeight = startUpperHeight + startBottomHeight;
-                let newUpperHeight = startUpperHeight + diff;
-                let newBottomHeight = startBottomHeight - diff;
-
-                // 최소 높이 제한
-                const minUpper = 200;
-                const minBottom = 100;
-
-                if (newUpperHeight < minUpper) {
-                    newUpperHeight = minUpper;
-                    newBottomHeight = totalHeight - minUpper;
-                }
-                if (newBottomHeight < minBottom) {
-                    newBottomHeight = minBottom;
-                    newUpperHeight = totalHeight - minBottom;
-                }
-
-                upperArea.style.flex = 'none';
-                upperArea.style.height = newUpperHeight + 'px';
-                bottomPanel.style.height = newBottomHeight + 'px';
-            });
-
-            document.addEventListener('mouseup', () => {
-                if (isResizing) {
-                    isResizing = false;
-                    resizer.classList.remove('active');
-                    document.body.style.cursor = '';
-                    document.body.style.userSelect = '';
-                    window.dispatchEvent(new Event('resize'));
-                }
-            });
-        }
-
-        // 종합 분석 요약 업데이트
-        function updateResultSummary(item, source) {
-            const container = document.getElementById('resultContainer');
-
-            if (!item) {
-                container.innerHTML = '<div class="result-placeholder">결과가 여기에 표시됩니다</div>';
-                return;
-            }
-
-            // 선택된 항목을 기반으로 종합 분석 요약 생성 (더미 데이터)
-            const insights = generateInsights(item, source);
-
-            container.innerHTML = `
-                <div class="result-header">
-                    <span class="result-title">종합 분석 요약</span>
-                    <span class="result-period">${item.date}</span>
-                </div>
-                <div class="result-content">
-                    <div class="result-summary">
-                        <h4>핵심 인사이트</h4>
-                        <ul>
-                            ${insights.map(i => `<li>${i}</li>`).join('')}
-                        </ul>
-                    </div>
-                </div>
-            `;
-        }
-
-        // 인사이트 생성 (더미 로직)
-        function generateInsights(item, source) {
-            const baseInsights = [];
-
-            // 출처별 기본 인사이트
+            // 출처별 기본 전망 포인트
             if (source === 'dart') {
-                baseInsights.push('공시 자료 기반 실적 데이터로 신뢰도 높음');
+                forecastPoints.push('공시 자료 기반 실적 데이터로 신뢰도 높음');
                 if (item.summary && item.summary.some(s => s.includes('매출'))) {
-                    baseInsights.push('매출 관련 핵심 지표 확인 필요');
+                    forecastPoints.push('매출 관련 핵심 지표 확인 필요');
                 }
                 if (item.summary && item.summary.some(s => s.includes('영업이익'))) {
-                    baseInsights.push('수익성 지표가 업계 평균 대비 양호한 수준');
+                    forecastPoints.push('수익성 지표가 업계 평균 대비 양호한 수준');
                 }
             } else if (source === 'darkReport') {
-                baseInsights.push('비공식 분석 자료로 참고용 활용 권장');
-                baseInsights.push('시장 센티먼트 파악에 유용한 데이터');
+                forecastPoints.push('비공식 분석 자료로 참고용 활용 권장');
+                forecastPoints.push('시장 센티먼트 파악에 유용한 데이터');
             } else if (source === 'policy') {
-                baseInsights.push('규제 환경 변화에 따른 사업 영향도 모니터링 필요');
-                baseInsights.push('중장기 전략 수립 시 반영 검토');
+                forecastPoints.push('규제 환경 변화에 따른 사업 영향도 모니터링 필요');
+                forecastPoints.push('중장기 전략 수립 시 반영 검토');
             } else if (source === 'news') {
-                baseInsights.push('시장 관심도 및 브랜드 인지도 관련 지표');
-                baseInsights.push('단기 주가 변동성에 영향 가능');
+                forecastPoints.push('시장 관심도 및 브랜드 인지도 관련 지표');
+                forecastPoints.push('단기 주가 변동성에 영향 가능');
             }
 
-            // 항목별 추가 인사이트
+            // 항목별 추가 전망 포인트
             if (item.charts && item.charts.length > 0) {
                 const chartTypes = item.charts.map(c => c.type);
                 if (chartTypes.includes('waterfall')) {
-                    baseInsights.push('누적 흐름 분석을 통한 성장 동인 파악 가능');
+                    forecastPoints.push('누적 흐름 분석을 통한 성장 동인 파악 가능');
                 }
                 if (chartTypes.includes('comparison')) {
-                    baseInsights.push('경쟁사 대비 상대적 위치 확인 필요');
+                    forecastPoints.push('경쟁사 대비 상대적 위치 확인 필요');
                 }
                 if (chartTypes.includes('pie')) {
-                    baseInsights.push('포트폴리오 구성 및 집중도 리스크 검토');
+                    forecastPoints.push('포트폴리오 구성 및 집중도 리스크 검토');
                 }
             }
 
-            return baseInsights.slice(0, 4); // 최대 4개 인사이트
+            return forecastPoints.slice(0, 4); // 최대 4개 전망 포인트
         }
 
         // 초기화
-        renderSourceList();
         initChart();
         initResizers();
-
-        // 모든 아코디언 펼치기 (초기 상태)
-        Object.keys(sourceData).forEach(key => {
-            toggleSource(key);
-        });
     </script>
 </body>
 </html>
