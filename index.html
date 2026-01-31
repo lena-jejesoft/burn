@@ -2485,11 +2485,11 @@
         }
         .notification-badge {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 6px;
+            right: 6px;
             width: 8px;
             height: 8px;
-            background: #e74c3c;
+            background: var(--claude-orange);
             border-radius: 50%;
             display: none;
         }
@@ -2544,7 +2544,7 @@
             flex-shrink: 0;
         }
         .notification-radio-item input[type="radio"]:checked {
-            border-color: #4a9eff;
+            border-color: var(--claude-orange);
         }
         .notification-radio-item input[type="radio"]:checked::after {
             content: '';
@@ -2554,7 +2554,7 @@
             transform: translate(-50%, -50%);
             width: 8px;
             height: 8px;
-            background: #4a9eff;
+            background: var(--claude-orange);
             border-radius: 50%;
         }
         .notification-radio-item label {
@@ -2577,6 +2577,223 @@
             background: var(--bg-main);
             color: var(--text-primary);
             font-size: 12px;
+        }
+
+        /* 관심회사 모달 */
+        .watchlist-modal {
+            position: fixed;
+            width: 380px;
+            max-height: 520px;
+            background: var(--bg-medium);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .watchlist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .watchlist-header h3 {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .watchlist-header h3 svg {
+            width: 16px;
+            height: 16px;
+            color: var(--claude-orange);
+        }
+        .watchlist-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px;
+            line-height: 1;
+        }
+        .watchlist-close:hover {
+            color: var(--text-primary);
+        }
+        .watchlist-search {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .watchlist-search input {
+            width: 100%;
+            padding: 10px 12px;
+            padding-left: 36px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            font-size: 13px;
+            outline: none;
+        }
+        .watchlist-search input::placeholder {
+            color: var(--text-dim);
+        }
+        .watchlist-search input:focus {
+            border-color: var(--claude-orange);
+        }
+        .watchlist-search-wrapper {
+            position: relative;
+        }
+        .watchlist-search-wrapper svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            color: var(--text-dim);
+        }
+        .watchlist-tabs {
+            display: flex;
+            gap: 6px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+        .watchlist-tab {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 4px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .watchlist-tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .watchlist-tab.active {
+            background: #555;
+            border-color: #555;
+            color: #fff;
+        }
+        .watchlist-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 16px;
+            font-size: 11px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-dark);
+        }
+        .watchlist-info-title {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .watchlist-company-list {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 280px;
+        }
+        .watchlist-company-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .watchlist-company-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .watchlist-company-list::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+        .watchlist-company-list::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        .watchlist-company-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .watchlist-company-item:hover {
+            background: var(--bg-hover);
+        }
+        .watchlist-company-item.selected {
+            background: rgba(85, 85, 85, 0.3);
+        }
+        .watchlist-company-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.15s;
+        }
+        .watchlist-company-item.selected .watchlist-company-checkbox {
+            background: #555;
+            border-color: #555;
+        }
+        .watchlist-company-checkbox svg {
+            width: 12px;
+            height: 12px;
+            color: #fff;
+            opacity: 0;
+        }
+        .watchlist-company-item.selected .watchlist-company-checkbox svg {
+            opacity: 1;
+        }
+        .watchlist-company-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .watchlist-company-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+        .watchlist-company-ticker {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+        .watchlist-company-change {
+            font-size: 13px;
+            font-weight: 500;
+            text-align: right;
+        }
+        .watchlist-company-change.positive {
+            color: #22c55e;
+        }
+        .watchlist-company-change.negative {
+            color: #ef4444;
+        }
+        .watchlist-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+        .watchlist-empty svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+        .watchlist-empty p {
+            font-size: 13px;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -2627,7 +2844,7 @@
                     <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
                 </svg>
             </div>
-            <div class="icon-sidebar-item" title="왓치리스트" onclick="showWatchlist()">
+            <div class="icon-sidebar-item" title="관심회사" onclick="showWatchlist()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                 </svg>
@@ -9351,6 +9568,190 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 updateThemeIcon(savedTheme);
             }
         })();
+
+        // 관심회사 데이터
+        const watchlistData = {
+            myList: [],
+            categories: ['전체', 'KOSPI', 'KOSDAQ', '게임', '상승', '하락']
+        };
+
+        const availableStocks = [
+            { id: 1, name: '넥슨', ticker: 'NEXON', change: '+3.32%', category: ['KOSPI', '게임', '상승'] },
+            { id: 2, name: '크래프톤', ticker: 'KRAFTON', change: '+2.35%', category: ['KOSPI', '게임', '상승'] },
+            { id: 3, name: '엔씨소프트', ticker: 'NCSOFT', change: '-1.24%', category: ['KOSPI', '게임', '하락'] },
+            { id: 4, name: '넷마블', ticker: 'NETMARBLE', change: '+0.85%', category: ['KOSPI', '게임', '상승'] },
+            { id: 5, name: '펄어비스', ticker: 'PEARL ABYSS', change: '-2.15%', category: ['KOSDAQ', '게임', '하락'] },
+            { id: 6, name: '컴투스', ticker: 'COM2US', change: '+1.45%', category: ['KOSDAQ', '게임', '상승'] },
+            { id: 7, name: '위메이드', ticker: 'WEMADE', change: '-0.67%', category: ['KOSDAQ', '게임', '하락'] },
+            { id: 8, name: '카카오게임즈', ticker: 'KAKAOGAMES', change: '+0.23%', category: ['KOSDAQ', '게임', '상승'] },
+            { id: 9, name: '데브시스터즈', ticker: 'DEVSISTERS', change: '+4.12%', category: ['KOSDAQ', '게임', '상승'] },
+            { id: 10, name: '스마일게이트', ticker: 'SMILEGATE', change: '-0.45%', category: ['KOSPI', '게임', '하락'] },
+            { id: 11, name: '삼성전자', ticker: 'SAMSUNG', change: '+1.23%', category: ['KOSPI', '상승'] },
+            { id: 12, name: 'SK하이닉스', ticker: 'SK HYNIX', change: '+2.87%', category: ['KOSPI', '상승'] },
+            { id: 13, name: 'LG에너지솔루션', ticker: 'LG ENERGY', change: '-0.92%', category: ['KOSPI', '하락'] },
+            { id: 14, name: '현대자동차', ticker: 'HYUNDAI', change: '+0.56%', category: ['KOSPI', '상승'] },
+            { id: 15, name: '카카오', ticker: 'KAKAO', change: '-1.78%', category: ['KOSPI', '하락'] }
+        ];
+
+        let currentWatchlistCategory = '전체';
+        let watchlistSearchQuery = '';
+
+        function showWatchlist() {
+            const existing = document.getElementById('watchlistModal');
+            if (existing) {
+                closeWatchlistModal();
+                return;
+            }
+
+            const iconEl = document.querySelector('.icon-sidebar-item[title="관심회사"]');
+            const rect = iconEl.getBoundingClientRect();
+
+            const modal = document.createElement('div');
+            modal.id = 'watchlistModal';
+            modal.className = 'watchlist-modal';
+            modal.style.left = (rect.right + 8) + 'px';
+            modal.style.top = Math.min(rect.top, window.innerHeight - 540) + 'px';
+            modal.innerHTML = renderWatchlistContent();
+            modal.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            document.body.appendChild(modal);
+
+            setTimeout(() => {
+                document.addEventListener('click', handleWatchlistOutsideClick);
+            }, 10);
+        }
+
+        function closeWatchlistModal() {
+            const modal = document.getElementById('watchlistModal');
+            if (modal) {
+                modal.remove();
+            }
+            document.removeEventListener('click', handleWatchlistOutsideClick);
+        }
+
+        function handleWatchlistOutsideClick(e) {
+            const modal = document.getElementById('watchlistModal');
+            const iconEl = document.querySelector('.icon-sidebar-item[title="관심회사"]');
+            if (modal && !modal.contains(e.target) && !iconEl.contains(e.target)) {
+                closeWatchlistModal();
+            }
+        }
+
+        function renderWatchlistContent() {
+            const filteredStocks = getFilteredStocks();
+            const selectedCount = watchlistData.myList.length;
+
+            let html = `
+                <div class="watchlist-header">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        관심회사
+                    </h3>
+                    <button class="watchlist-close" onclick="event.stopPropagation(); closeWatchlistModal()">×</button>
+                </div>
+                <div class="watchlist-search">
+                    <div class="watchlist-search-wrapper">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" placeholder="회사, 종목 검색..." value="${watchlistSearchQuery}" oninput="searchWatchlistCompany(event.target.value)" onclick="event.stopPropagation()" />
+                    </div>
+                </div>
+                <div class="watchlist-tabs">
+                    ${watchlistData.categories.map(cat => `
+                        <div class="watchlist-tab ${currentWatchlistCategory === cat ? 'active' : ''}" onclick="event.stopPropagation(); filterWatchlistByCategory('${cat}')">${cat}</div>
+                    `).join('')}
+                </div>
+                <div class="watchlist-info">
+                    <span class="watchlist-info-title">내 관심 회사에 추가</span>
+                    <span>${filteredStocks.length}개 회사 &nbsp;|&nbsp; 오늘 변동률</span>
+                </div>
+                <div class="watchlist-company-list">
+            `;
+
+            if (filteredStocks.length === 0) {
+                html += `
+                    <div class="watchlist-empty">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <p>검색 결과가 없습니다</p>
+                    </div>
+                `;
+            } else {
+                filteredStocks.forEach(stock => {
+                    const isSelected = watchlistData.myList.includes(stock.id);
+                    const changeClass = stock.change.startsWith('+') ? 'positive' : 'negative';
+                    html += `
+                        <div class="watchlist-company-item ${isSelected ? 'selected' : ''}" onclick="event.stopPropagation(); toggleWatchlistItem(${stock.id})">
+                            <div class="watchlist-company-checkbox">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                            <div class="watchlist-company-info">
+                                <div class="watchlist-company-name">${stock.name}</div>
+                                <div class="watchlist-company-ticker">${stock.ticker}</div>
+                            </div>
+                            <div class="watchlist-company-change ${changeClass}">${stock.change}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            html += '</div>';
+            return html;
+        }
+
+        function getFilteredStocks() {
+            let stocks = [...availableStocks];
+
+            if (currentWatchlistCategory !== '전체') {
+                stocks = stocks.filter(stock => stock.category.includes(currentWatchlistCategory));
+            }
+
+            if (watchlistSearchQuery) {
+                const query = watchlistSearchQuery.toLowerCase();
+                stocks = stocks.filter(stock =>
+                    stock.name.toLowerCase().includes(query) ||
+                    stock.ticker.toLowerCase().includes(query)
+                );
+            }
+
+            return stocks;
+        }
+
+        function searchWatchlistCompany(query) {
+            watchlistSearchQuery = query;
+            refreshWatchlistContent();
+        }
+
+        function toggleWatchlistItem(id) {
+            const index = watchlistData.myList.indexOf(id);
+            if (index > -1) {
+                watchlistData.myList.splice(index, 1);
+            } else {
+                watchlistData.myList.push(id);
+            }
+            refreshWatchlistContent();
+        }
+
+        function filterWatchlistByCategory(category) {
+            currentWatchlistCategory = category;
+            refreshWatchlistContent();
+        }
+
+        function refreshWatchlistContent() {
+            const modal = document.getElementById('watchlistModal');
+            if (modal) {
+                modal.innerHTML = renderWatchlistContent();
+            }
+        }
 
         // 사용자 매뉴얼 표시 함수
         function showUserManual() {
