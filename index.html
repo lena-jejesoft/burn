@@ -20,6 +20,18 @@
             --text-secondary: #cccccc;
             --text-muted: #888888;
             --text-dim: #666666;
+
+            /* 차트랩 전용 색상 변수 */
+            --chartlab-primary: #C15F3C;
+            --chartlab-highlight: #4a4a4a;
+            --chartlab-active-bg: #3a3a3a;
+            --chartlab-gray-warm: #B1ADA1;
+            --chartlab-terra: #da7756;
+            --chartlab-sage: #7D8471;
+            --chartlab-lavender: #9B8AA6;
+            --chartlab-tan: #D4A574;
+            --chartlab-slate: #6B7B8C;
+            --chartlab-coffee: #A67B5B;
         }
 
         [data-theme="light"] {
@@ -423,15 +435,143 @@
             background: var(--bg-light);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 12px;
-            min-width: 200px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.4);
             z-index: 1000;
             display: none;
+            overflow: hidden;
         }
 
         .source-manager-panel.visible {
-            display: block;
+            display: flex;
+        }
+
+        .source-manager-main {
+            padding: 12px;
+            min-width: 200px;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .source-manager-panel:not(.expanded) .source-manager-main {
+            border-right: none;
+        }
+
+        /* 피드 소스 컬럼 (파인더 스타일) */
+        .feed-source-column {
+            width: 0;
+            overflow: hidden;
+            transition: width 0.2s ease;
+            background: var(--bg-secondary);
+        }
+
+        .source-manager-panel.expanded .feed-source-column {
+            width: 200px;
+        }
+
+        .feed-source-column-inner {
+            padding: 12px;
+            width: 200px;
+            box-sizing: border-box;
+        }
+
+        .feed-source-column-title {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .feed-source-column-search {
+            width: 100%;
+            padding: 5px 8px;
+            font-size: 11px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            outline: none;
+            box-sizing: border-box;
+            margin-bottom: 8px;
+        }
+
+        .feed-source-column-search:focus {
+            border-color: var(--claude-orange);
+        }
+
+        .feed-source-column-search::placeholder {
+            color: var(--text-muted);
+        }
+
+        .feed-source-column-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .feed-source-column-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 8px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .feed-source-column-item:hover:not(.disabled) {
+            background: #3a3a3a;
+        }
+
+        .feed-source-column-item.selected {
+            background: #444;
+        }
+
+        .feed-source-column-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .feed-source-column-item input[type="checkbox"] {
+            width: 12px;
+            height: 12px;
+            accent-color: #666;
+        }
+
+        .feed-source-column-actions {
+            margin-top: 10px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .feed-source-column-actions button {
+            flex: 1;
+            padding: 5px 8px;
+            font-size: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            background: var(--bg-light);
+            color: var(--text-secondary);
+            transition: all 0.15s;
+        }
+
+        .feed-source-column-actions button:hover {
+            background: var(--bg-secondary);
+        }
+
+        .feed-source-column-actions button.primary {
+            background: #555;
+            border-color: #555;
+            color: white;
+        }
+
+        .feed-source-column-actions button.primary:hover {
+            background: #666;
         }
 
         .source-manager-section {
@@ -730,6 +870,92 @@
             border-color: var(--border-color);
             color: var(--text-muted);
             cursor: not-allowed;
+        }
+
+        /* 피드 소스 선택 모달 */
+        .feed-source-modal {
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            padding: 14px;
+            width: 320px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .feed-source-modal h3 {
+            margin: 0 0 8px 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .feed-source-search {
+            width: 100%;
+            padding: 6px 10px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .feed-source-search:focus {
+            border-color: var(--claude-orange);
+        }
+
+        .feed-source-search::placeholder {
+            color: var(--text-muted);
+        }
+
+        .feed-source-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin: 10px 0;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .feed-source-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 12px;
+        }
+
+        .feed-source-item:hover:not(.disabled) {
+            border-color: var(--claude-orange);
+        }
+
+        .feed-source-item.selected {
+            border-color: var(--claude-orange);
+            background: rgba(255, 152, 0, 0.1);
+        }
+
+        .feed-source-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .feed-source-item input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            accent-color: var(--claude-orange);
+        }
+
+        .feed-source-modal-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            margin-top: 12px;
         }
 
         /* 우측 패널 */
@@ -2877,7 +3103,7 @@
         .forum-header {
             padding: 16px;
             border-bottom: 1px solid var(--border-color);
-            background: var(--bg-medium);
+            background: transparent;
         }
 
         .forum-tabs {
@@ -2891,7 +3117,7 @@
             align-items: center;
             gap: 8px;
             padding: 6px 12px;
-            background: var(--bg-light);
+            background: transparent;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             flex: 1;
@@ -3959,6 +4185,1399 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ===== 차트랩 스타일 ===== */
+        .chartlab-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: var(--bg-dark);
+        }
+
+        .chartlab-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            background: transparent;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .chartlab-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .chartlab-datasource-select {
+            padding: 8px 12px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            min-width: 180px;
+        }
+
+        .chartlab-datasource-select:hover {
+            border-color: var(--chartlab-highlight);
+        }
+
+        .chartlab-filter-chips {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chartlab-filter-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .chartlab-filter-chip .remove-btn {
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.15s;
+        }
+
+        .chartlab-filter-chip .remove-btn:hover {
+            opacity: 1;
+        }
+
+        .chartlab-add-filter-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px dashed var(--border-color);
+            border-radius: 16px;
+            color: var(--text-muted);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .chartlab-add-filter-btn:hover {
+            border-color: var(--chartlab-highlight);
+            color: var(--text-secondary);
+        }
+
+        .chartlab-header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chartlab-btn {
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chartlab-btn-secondary {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .chartlab-btn-secondary:hover {
+            background: var(--bg-medium);
+            border-color: #4a4a4a;
+        }
+
+        .chartlab-btn-primary {
+            background: var(--claude-orange);
+            border: none;
+            color: #fff;
+        }
+
+        .chartlab-btn-primary:hover {
+            background: #e07b00;
+        }
+
+        .chartlab-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .chartlab-sidebar {
+            width: 280px;
+            min-width: 280px;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            background: var(--bg-medium);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chartlab-type-selector {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chartlab-type-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .chartlab-type-dropdown {
+            width: 100%;
+            padding: 6px 8px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            color: var(--text-primary);
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .chartlab-type-dropdown:hover {
+            border-color: var(--chartlab-highlight);
+        }
+
+        /* 커스텀 드롭다운 스타일 */
+        .chartlab-custom-dropdown {
+            position: relative;
+        }
+
+        .chartlab-dropdown-selected {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .chartlab-dropdown-selected:hover {
+            border-color: var(--chartlab-highlight);
+        }
+
+        .chartlab-dropdown-text {
+            flex: 1;
+        }
+
+        .chartlab-dropdown-arrow {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s;
+        }
+
+        .chartlab-custom-dropdown.open .chartlab-dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .chartlab-dropdown-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 2px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .chartlab-custom-dropdown.open .chartlab-dropdown-options {
+            display: block;
+        }
+
+        .chartlab-dropdown-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .chartlab-dropdown-option:hover {
+            background: var(--bg-light);
+        }
+
+        .chartlab-dropdown-option.selected {
+            background: var(--chartlab-highlight);
+        }
+
+        .chartlab-dropdown-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chartlab-dropdown-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .chartlab-dropdown-check {
+            width: 14px;
+            height: 14px;
+            margin-left: auto;
+        }
+
+        .chartlab-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chartlab-tab {
+            flex: 1;
+            padding: 10px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .chartlab-tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-light);
+        }
+
+        .chartlab-tab.active {
+            color: var(--text-primary);
+        }
+
+        .chartlab-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--chartlab-highlight);
+        }
+
+        .chartlab-tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 6px 0;
+        }
+
+        .chartlab-section {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chartlab-section:last-child {
+            border-bottom: none;
+        }
+
+        .chartlab-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s;
+        }
+
+        .chartlab-section-header:hover {
+            background: var(--bg-light);
+        }
+
+        .chartlab-section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .chartlab-section-toggle {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .chartlab-section.collapsed .chartlab-section-toggle {
+            transform: rotate(-90deg);
+        }
+
+        .chartlab-section-content {
+            padding: 0 12px 10px;
+        }
+
+        .chartlab-section.collapsed .chartlab-section-content {
+            display: none;
+        }
+
+        .chartlab-field-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 10px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .chartlab-field-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .chartlab-field-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .chartlab-field-name {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .chartlab-field-meta {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .chartlab-field-remove {
+            padding: 4px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.15s;
+        }
+
+        .chartlab-field-remove:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .chartlab-field-dropdown {
+            width: 100%;
+            padding: 6px 8px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            color: var(--text-primary);
+            font-size: 11px;
+            margin-top: 6px;
+        }
+
+        .chartlab-add-field-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: transparent;
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            color: var(--text-muted);
+            font-size: 11px;
+            cursor: pointer;
+            width: 100%;
+            justify-content: center;
+            transition: all 0.15s;
+            margin-top: 6px;
+        }
+
+        .chartlab-add-field-btn:hover {
+            border-color: var(--chartlab-highlight);
+            color: #ccc;
+        }
+
+        .chartlab-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow: auto;
+            background: var(--bg-dark);
+        }
+
+        .chartlab-chart-wrapper {
+            flex: 1;
+            min-height: 400px;
+            background: var(--bg-medium);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chartlab-chart-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        #chartlab-chart {
+            flex: 1;
+            min-height: 350px;
+        }
+
+        .chartlab-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .chartlab-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .chartlab-legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+
+        .chartlab-upload-area {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chartlab-upload-dropzone {
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .chartlab-upload-dropzone:hover,
+        .chartlab-upload-dropzone.dragover {
+            border-color: var(--chartlab-highlight);
+            background: rgba(74, 74, 74, 0.1);
+        }
+
+        .chartlab-upload-icon {
+            width: 32px;
+            height: 32px;
+            margin: 0 auto 8px;
+            color: var(--text-muted);
+        }
+
+        .chartlab-upload-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .chartlab-upload-hint {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .chartlab-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 300px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .chartlab-empty-icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .chartlab-empty-text {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .chartlab-empty-hint {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        /* 스타일 탭 관련 */
+        .chartlab-style-section {
+            padding: 12px 16px;
+        }
+
+        .chartlab-style-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .chartlab-style-input {
+            width: 100%;
+            padding: 6px 8px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 11px;
+        }
+
+        .chartlab-style-input:focus {
+            outline: none;
+            border-color: var(--chartlab-highlight);
+        }
+
+        .chartlab-color-palette {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .chartlab-color-swatch {
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.15s;
+        }
+
+        .chartlab-color-swatch:hover {
+            transform: scale(1.1);
+        }
+
+        .chartlab-color-swatch.selected {
+            border-color: #fff;
+            box-shadow: 0 0 0 2px var(--chartlab-highlight);
+        }
+
+        .chartlab-radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .chartlab-radio-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .chartlab-radio-item input[type="radio"] {
+            accent-color: var(--chartlab-highlight);
+        }
+
+        /* 필터 모달 */
+        .chartlab-filter-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .chartlab-filter-modal-content {
+            background: var(--bg-medium);
+            border-radius: 12px;
+            width: 400px;
+            max-width: 90vw;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .chartlab-filter-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chartlab-filter-modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .chartlab-filter-modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .chartlab-filter-modal-body {
+            padding: 16px;
+        }
+
+        .chartlab-filter-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .chartlab-filter-select {
+            flex: 1;
+            padding: 8px 10px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+
+        .chartlab-filter-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* 필드 선택 드롭다운 */
+        .chartlab-field-select {
+            position: relative;
+        }
+
+        .chartlab-field-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .chartlab-field-select-trigger:hover {
+            border-color: var(--chartlab-highlight);
+        }
+
+        .chartlab-field-select-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-medium);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-top: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .chartlab-field-select-option {
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: background 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chartlab-field-select-option:hover {
+            background: var(--bg-light);
+        }
+
+        .chartlab-field-select-option.selected {
+            background: rgba(74, 74, 74, 0.2);
+            color: var(--text-primary);
+        }
+
+        .chartlab-field-type-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            background: var(--bg-dark);
+            border-radius: 3px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        /* Faceting 그리드 */
+        .chartlab-facet-grid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .chartlab-facet-chart {
+            background: var(--bg-medium);
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .chartlab-facet-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        /* 토스트 알림 */
+        .chartlab-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-medium);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            z-index: 2000;
+            animation: slideInUp 0.3s ease;
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .chartlab-toast-success {
+            border-left: 3px solid #22c55e;
+        }
+
+        .chartlab-toast-error {
+            border-left: 3px solid #ef4444;
+        }
+
+        .chartlab-toast-info {
+            border-left: 3px solid #3b82f6;
+        }
+
+        /* ===== 다중 차트 스타일 (Livedocs 스타일) ===== */
+
+        /* 차트랩 스크롤 컨테이너 */
+        .chartlab-scroll-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* 개별 차트 블록 (Livedocs 스타일) */
+        .chartlab-chart-block {
+            background: var(--bg-medium);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .chartlab-chart-block.collapsed .chartlab-block-body {
+            display: none;
+        }
+
+        .chartlab-chart-block.active {
+            border-color: var(--chartlab-highlight);
+        }
+
+        /* 차트 블록 헤더 (Cell title 스타일) */
+        .chartlab-block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            background: var(--bg-dark);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chartlab-block-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chartlab-block-title-input {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 12px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            min-width: 100px;
+        }
+
+        .chartlab-block-title-input:hover,
+        .chartlab-block-title-input:focus {
+            background: var(--bg-light);
+            outline: none;
+        }
+
+        .chartlab-block-datasource {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .chartlab-block-datasource-select {
+            padding: 3px 6px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-size: 11px;
+            max-width: 130px;
+            cursor: pointer;
+        }
+
+        .chartlab-block-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chartlab-block-action-btn {
+            padding: 3px 5px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 10px;
+            transition: all 0.15s;
+        }
+
+        .chartlab-block-action-btn:hover {
+            background: var(--bg-light);
+            color: var(--text-primary);
+        }
+
+        /* 차트 블록 바디 */
+        .chartlab-block-body {
+            display: flex;
+            min-height: 180px;
+        }
+
+        /* Data/Style 탭 토글 (Livedocs 스타일) */
+        .chartlab-tab-toggle {
+            display: flex;
+            background: var(--bg-dark);
+            border-radius: 4px;
+            padding: 2px;
+            margin: 10px;
+        }
+
+        .chartlab-tab-toggle-btn {
+            flex: 1;
+            padding: 6px 12px;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
+            color: var(--text-muted);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .chartlab-tab-toggle-btn.active {
+            background: var(--chartlab-highlight);
+            color: #fff;
+        }
+
+        /* X-axis 추가 설정 (Scale, Sort) */
+        .chartlab-axis-options {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .chartlab-axis-option {
+            flex: 1;
+        }
+
+        .chartlab-axis-option-label {
+            font-size: 10px;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+
+        .chartlab-axis-option-select {
+            width: 100%;
+            padding: 5px 6px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            color: var(--text-primary);
+            font-size: 10px;
+        }
+
+        /* Y-axis 안내 메시지 */
+        .chartlab-axis-hint {
+            padding: 10px 12px;
+            background: var(--bg-light);
+            border: 1px dashed var(--border-color);
+            border-radius: 4px;
+            color: var(--text-dim);
+            font-size: 11px;
+            text-align: center;
+        }
+
+        /* Style 탭 아코디언 섹션 */
+        .chartlab-style-accordion {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chartlab-style-accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 11px;
+            color: var(--text-primary);
+        }
+
+        .chartlab-style-accordion-header:hover {
+            background: var(--bg-light);
+        }
+
+        .chartlab-style-accordion-content {
+            padding: 0 12px 10px;
+        }
+
+        .chartlab-style-accordion.collapsed .chartlab-style-accordion-content {
+            display: none;
+        }
+
+        .chartlab-style-accordion.collapsed .chartlab-accordion-icon {
+            transform: rotate(-90deg);
+        }
+
+        .chartlab-accordion-icon {
+            transition: transform 0.2s;
+        }
+
+        /* Style 탭 내 행 */
+        .chartlab-style-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .chartlab-style-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .chartlab-style-number-input {
+            width: 50px;
+            padding: 5px 6px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-size: 10px;
+            text-align: center;
+        }
+
+        /* 새 차트 추가 버튼 (중앙) */
+        .chartlab-add-chart-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 24px;
+            background: transparent;
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 12px;
+        }
+
+        .chartlab-add-chart-btn:hover {
+            border-color: var(--chartlab-highlight);
+            color: #ccc;
+        }
+
+        /* 데이터소스 선택 모달 */
+        .chartlab-datasource-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .chartlab-datasource-modal-content {
+            background: var(--bg-dark);
+            border-radius: 6px;
+            width: 480px;
+            max-width: 90vw;
+            max-height: 80vh;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chartlab-ds-search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chartlab-ds-search input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+
+        .chartlab-ds-search input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .chartlab-ds-sections {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chartlab-ds-section {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chartlab-ds-section-title {
+            padding: 10px 16px 6px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--chartlab-highlight);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .chartlab-ds-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-primary);
+            transition: background 0.1s;
+        }
+
+        .chartlab-ds-item:hover {
+            background: var(--bg-light);
+        }
+
+        .chartlab-ds-item.selected {
+            background: var(--chartlab-highlight);
+        }
+
+        .chartlab-ds-item-icon {
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--chartlab-highlight);
+        }
+
+        .chartlab-ds-item-arrow {
+            margin-left: auto;
+            color: var(--text-dim);
+        }
+
+        .chartlab-ds-footer {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 16px;
+            border-top: 1px solid var(--border-color);
+            font-size: 10px;
+            color: var(--text-dim);
+        }
+
+        .chartlab-ds-footer-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .chartlab-ds-footer-key {
+            padding: 2px 6px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 3px;
+            font-size: 9px;
+        }
+
+        /* 토글 스위치 */
+        .chartlab-toggle {
+            position: relative;
+            display: inline-block;
+            width: 28px;
+            height: 14px;
+        }
+
+        .chartlab-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .chartlab-toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            transition: 0.2s;
+        }
+
+        .chartlab-toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 10px;
+            width: 10px;
+            left: 1px;
+            bottom: 1px;
+            background-color: var(--text-muted);
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+
+        .chartlab-toggle input:checked + .chartlab-toggle-slider {
+            background-color: var(--chartlab-highlight);
+            border-color: var(--chartlab-highlight);
+        }
+
+        .chartlab-toggle input:checked + .chartlab-toggle-slider:before {
+            transform: translateX(14px);
+            background-color: white;
+        }
+
+        /* 미니 드롭다운 (Legend Position 등) */
+        .chartlab-mini-dropdown {
+            padding: 4px 8px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            color: var(--text-primary);
+            font-size: 10px;
+            cursor: pointer;
+            min-width: 70px;
+        }
+
+        .chartlab-mini-dropdown:hover {
+            border-color: var(--chartlab-highlight);
+        }
+
+        /* 우측 패널 - 차트 목록 */
+        .chartlab-list-panel {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: transparent;
+        }
+
+        .chartlab-list-header {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chartlab-list-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chartlab-list-item {
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .chartlab-list-item:hover {
+            border-color: #4a4a4a;
+        }
+
+        .chartlab-list-item.active {
+            border-color: var(--chartlab-highlight);
+            background: rgba(74, 74, 74, 0.1);
+        }
+
+        .chartlab-list-item-title {
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chartlab-list-item-preview {
+            height: 60px;
+            background: var(--bg-dark);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-size: 10px;
+            overflow: hidden;
+        }
+
+        .chartlab-list-item-meta {
+            margin-top: 6px;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .chartlab-list-add-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 12px;
+            background: transparent;
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.15s;
+        }
+
+        .chartlab-list-add-btn:hover {
+            border-color: var(--chartlab-highlight);
+            color: #ccc;
+        }
+
+        /* 차트 블록 내 사이드바 */
+        .chartlab-block-sidebar {
+            width: 240px;
+            min-width: 240px;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            background: var(--bg-medium);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 차트 블록 내 메인 영역 */
+        .chartlab-block-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            overflow: auto;
+            background: var(--bg-dark);
+        }
+
+        .chartlab-block-chart-wrapper {
+            flex: 1;
+            min-height: 192px;
+            background: var(--bg-medium);
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Y-axis 추가 링크 */
+        .chartlab-add-link {
+            font-size: 11px;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .chartlab-add-link:hover {
+            text-decoration: underline;
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 <body>
@@ -3993,16 +5612,11 @@
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                 </svg>
             </div>
-            <div class="icon-sidebar-item" title="차트분석">
+            <div class="icon-sidebar-item" title="차트랩" onclick="showChartLab()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <!-- L자 프레임 -->
-                    <polyline points="3 3 3 21 21 21"></polyline>
-                    <!-- 상승 화살표 -->
-                    <line x1="6" y1="18" x2="14" y2="10"></line>
-                    <polyline points="10 10 14 10 14 14"></polyline>
-                    <!-- 돋보기 -->
-                    <circle cx="17" cy="7" r="4"></circle>
-                    <line x1="20" y1="10" x2="22" y2="12"></line>
+                    <!-- 심플 플라스크 아이콘 -->
+                    <path d="M9 3h6v5l5 10a2 2 0 0 1-1.8 3H5.8a2 2 0 0 1-1.8-3l5-10V3z"></path>
+                    <line x1="9" y1="3" x2="15" y2="3"></line>
                 </svg>
             </div>
             <div class="icon-sidebar-spacer"></div>
@@ -7404,7 +9018,26 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             const panel = document.getElementById('sourceManagerPanel');
             if (!panel) return;
 
-            let html = `
+            // 피드 소스 카테고리
+            const feedCategories = [
+                { key: 'disclosure', name: '공시' },
+                { key: 'sec', name: 'SEC' },
+                { key: 'edinet', name: 'EDINET' },
+                { key: 'legislation', name: '법령' },
+                { key: 'policy', name: '정책' },
+                { key: 'macro', name: '거시지표' },
+                { key: 'patent', name: '특허' },
+                { key: 'research', name: '논문' },
+                { key: 'bloomberg', name: 'Bloomberg' },
+                { key: 'nytimes', name: 'NY Times' },
+                { key: 'reuters', name: 'Reuters' },
+                { key: 'wsj', name: 'WSJ' }
+            ];
+
+            // 이미 추가된 피드 소스 확인
+            const addedFeedSources = Object.keys(customSources).filter(key => key.startsWith('feed_'));
+
+            let mainHtml = `
                 <div class="source-manager-section">
                     <div class="source-manager-section-title">기본 출처</div>
                     ${defaultSources.map(src => `
@@ -7420,7 +9053,7 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             // 커스텀 출처가 있으면 표시
             const customKeys = Object.keys(customSources);
             if (customKeys.length > 0) {
-                html += `
+                mainHtml += `
                     <div class="source-manager-divider"></div>
                     <div class="source-manager-section">
                         <div class="source-manager-section-title">커스텀 출처</div>
@@ -7438,11 +9071,11 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 `;
             }
 
-            html += `
+            mainHtml += `
                 <div class="source-manager-divider"></div>
-                <button class="upload-btn" onclick="event.stopPropagation(); showUploadModal()">
+                <button class="upload-btn" onclick="event.stopPropagation(); toggleFeedSourceColumn()">
                     <span>+</span>
-                    <span>데이터 업로드</span>
+                    <span>피드 소스 추가</span>
                 </button>
                 <div class="source-manager-divider"></div>
                 <button class="source-apply-btn" onclick="event.stopPropagation(); applySourceChanges()">
@@ -7450,7 +9083,39 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 </button>
             `;
 
-            panel.innerHTML = html;
+            // 피드 소스 컬럼 HTML
+            const feedColumnHtml = `
+                <div class="feed-source-column-inner">
+                    <div class="feed-source-column-title">피드 소스</div>
+                    <input type="text" class="feed-source-column-search"
+                           placeholder="검색..."
+                           oninput="filterFeedSourcesColumn(this.value)"
+                           onclick="event.stopPropagation()">
+                    <div class="feed-source-column-list">
+                        ${feedCategories.map(cat => {
+                            const feedKey = 'feed_' + cat.key;
+                            const isAdded = addedFeedSources.includes(feedKey);
+                            return `
+                                <div class="feed-source-column-item ${isAdded ? 'disabled' : ''}"
+                                     data-key="${cat.key}"
+                                     onclick="event.stopPropagation(); ${isAdded ? '' : 'toggleFeedSourceColumnItem(this)'}">
+                                    <input type="checkbox" ${isAdded ? 'disabled checked' : ''} onclick="event.stopPropagation()">
+                                    <span>${cat.name}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div class="feed-source-column-actions">
+                        <button onclick="event.stopPropagation(); closeFeedSourceColumn()">취소</button>
+                        <button class="primary" onclick="event.stopPropagation(); submitFeedSourcesColumn()">추가</button>
+                    </div>
+                </div>
+            `;
+
+            panel.innerHTML = `
+                <div class="source-manager-main">${mainHtml}</div>
+                <div class="feed-source-column">${feedColumnHtml}</div>
+            `;
         }
 
         // 출처 직접 토글 (체크박스 변경 시 바로 적용)
@@ -7640,6 +9305,97 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             if (modal) {
                 modal.classList.remove('visible');
             }
+        }
+
+        // 피드 소스 컬럼 토글 (파인더 스타일)
+        function toggleFeedSourceColumn() {
+            const panel = document.getElementById('sourceManagerPanel');
+            if (panel) {
+                panel.classList.toggle('expanded');
+            }
+        }
+
+        // 피드 소스 컬럼 닫기
+        function closeFeedSourceColumn() {
+            const panel = document.getElementById('sourceManagerPanel');
+            if (panel) {
+                panel.classList.remove('expanded');
+                // 선택 초기화
+                const items = panel.querySelectorAll('.feed-source-column-item.selected');
+                items.forEach(item => {
+                    item.classList.remove('selected');
+                    const checkbox = item.querySelector('input[type="checkbox"]');
+                    if (checkbox && !checkbox.disabled) checkbox.checked = false;
+                });
+                // 검색창 초기화
+                const searchInput = panel.querySelector('.feed-source-column-search');
+                if (searchInput) {
+                    searchInput.value = '';
+                    filterFeedSourcesColumn('');
+                }
+            }
+        }
+
+        // 피드 소스 컬럼 검색 필터
+        function filterFeedSourcesColumn(query) {
+            const items = document.querySelectorAll('.feed-source-column-item');
+            const lowerQuery = query.toLowerCase();
+            items.forEach(item => {
+                const name = item.querySelector('span').textContent.toLowerCase();
+                item.style.display = name.includes(lowerQuery) ? '' : 'none';
+            });
+        }
+
+        // 피드 소스 컬럼 아이템 토글
+        function toggleFeedSourceColumnItem(element) {
+            if (element.classList.contains('disabled')) return;
+            element.classList.toggle('selected');
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.checked = !checkbox.checked;
+        }
+
+        // 피드 소스 컬럼에서 추가
+        function submitFeedSourcesColumn() {
+            const selectedItems = document.querySelectorAll('.feed-source-column-item.selected');
+            if (selectedItems.length === 0) {
+                alert('추가할 소스를 선택해주세요.');
+                return;
+            }
+
+            selectedItems.forEach(item => {
+                const key = item.dataset.key;
+                addFeedSourceToTable(key);
+            });
+
+            // 패널 업데이트 및 컬럼 닫기
+            closeFeedSourceColumn();
+            renderSourceManagerPanel();
+        }
+
+        // 피드 소스를 테이블에 추가
+        function addFeedSourceToTable(feedKey) {
+            const feedData = feedSourceData[feedKey];
+            if (!feedData) return;
+
+            const sourceKey = 'feed_' + feedKey;
+            const sourceName = feedData.title;
+
+            // feedSourceData의 items를 이벤트 형식으로 변환
+            const events = feedData.items.map((item, index) => {
+                // time 형식: "2026.01.31 16:30" → "2026-01-31"
+                const dateParts = item.time.split(' ')[0].split('.');
+                const date = `${dateParts[0]}-${dateParts[1]}-${dateParts[2]}`;
+
+                return {
+                    id: `${sourceKey}-${index}`,
+                    date: date,
+                    title: item.title,
+                    summary: [item.source, item.time]
+                };
+            });
+
+            // 기존 addCustomSource 함수 활용
+            addCustomSource(sourceKey, sourceName, events);
         }
 
         // 선택된 파일 정보 저장
@@ -11402,6 +13158,7 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                                 '<strong>포럼</strong>: 투자자 커뮤니티 및 토론',
                                 '<strong>캘린더</strong>: 실적 발표, 배당, IR 일정',
                                 '<strong>관심회사</strong>: 관심 종목 관리',
+                                '<strong>차트랩</strong>: 데이터 검색/업로드, 차트 생성 및 편집',
                                 '<strong>알림</strong>: 가격/이벤트 알림 설정',
                                 '<strong>테마</strong>: 다크/라이트 모드 전환'
                             ]
@@ -11664,6 +13421,47 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                         {
                             subtitle: '종목 제거',
                             text: '관심 종목을 제거하려면 목록에서 해당 종목의 X 버튼을 클릭하거나, 차트 화면에서 별표를 다시 클릭하세요.'
+                        }
+                    ]
+                }
+            },
+            'chart-lab': {
+                title: '차트랩',
+                icon: '🧪',
+                description: '데이터 검색/업로드, 차트 생성 및 편집',
+                content: {
+                    title: '차트랩',
+                    description: '외부 데이터를 검색하거나 직접 업로드하여 나만의 차트를 만들고 편집할 수 있는 실험 공간입니다.',
+                    sections: [
+                        {
+                            subtitle: '데이터 가져오기',
+                            text: '다양한 방법으로 차트에 사용할 데이터를 준비할 수 있습니다.',
+                            list: [
+                                '<strong>검색으로 불러오기</strong>: 주식, 경제지표, 통계 데이터를 검색하여 바로 불러옵니다.',
+                                '<strong>파일 업로드</strong>: CSV, Excel, JSON 형식의 데이터를 직접 업로드합니다.',
+                                '<strong>API 연동</strong>: 외부 데이터 소스와 연결하여 실시간 데이터를 가져옵니다.'
+                            ]
+                        },
+                        {
+                            subtitle: '차트 만들기',
+                            text: '불러온 데이터를 바탕으로 다양한 차트를 생성할 수 있습니다.',
+                            list: [
+                                '<strong>라인 차트</strong>: 시계열 데이터의 추세 표현',
+                                '<strong>바 차트</strong>: 항목별 비교',
+                                '<strong>파이 차트</strong>: 구성 비율 표현',
+                                '<strong>산점도</strong>: 두 변수 간의 관계 분석'
+                            ]
+                        },
+                        {
+                            subtitle: '차트 편집하기',
+                            text: '생성한 차트를 자유롭게 수정하고 꾸밀 수 있습니다.',
+                            list: [
+                                '색상, 라벨, 범례 등 스타일 변경',
+                                '축 범위 및 눈금 조정',
+                                '여러 데이터를 하나의 차트에 겹쳐서 비교',
+                                '차트 이미지로 내보내기'
+                            ],
+                            tip: '실험한 차트는 저장하여 나중에 다시 불러올 수 있습니다.'
                         }
                     ]
                 }
@@ -13600,6 +15398,2443 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             renderForumPosts();
             selectForumPost(newPost.id);
         }
+
+        // ===== 차트랩 기능 =====
+
+        // 개별 차트 상태 생성 함수 (Livedocs 스타일)
+        function createChartLabChartState(id) {
+            return {
+                id: id,
+                dataSource: 'sample_sales',
+                chartType: 'grouped-column',  // Livedocs 기본값
+                xAxis: {
+                    field: 'month',
+                    scaleType: 'datetime',
+                    timeUnit: 'year',
+                    sort: 'ascending'  // ascending, descending
+                },
+                yAxis: [{ field: 'orders', aggregate: 'sum' }],
+                colorBy: { field: 'category' },
+                faceting: { field: null },
+                tooltips: { includeXYColor: true, custom: [] },
+                filters: [],
+                style: {
+                    title: '',
+                    fontSize: 10,
+                    colors: ['#C15F3C', '#B1ADA1', '#da7756', '#7D8471', '#9B8AA6', '#D4A574', '#6B7B8C', '#A67B5B'],
+                    legendPosition: 'right',
+                    showOutliers: true,
+                    showTooltip: true
+                },
+                activeTab: 'data',
+                collapsed: false
+            };
+        }
+
+        // 차트 목록
+        let chartLabCharts = [createChartLabChartState(1)];
+        let chartLabNextId = 2;
+        let chartLabActiveChartId = 1;  // 현재 선택된 차트
+
+        // 특정 차트 상태 가져오기
+        function getChartLabChart(id) {
+            return chartLabCharts.find(c => c.id === id);
+        }
+
+        // 현재 활성 차트 가져오기
+        function getActiveChartLabChart() {
+            return getChartLabChart(chartLabActiveChartId);
+        }
+
+        // 하위 호환성을 위한 chartLabState (첫 번째 차트 참조)
+        const chartLabState = createChartLabChartState(1);
+        chartLabCharts[0] = chartLabState;
+
+        // 샘플 데이터소스
+        const chartLabDataSources = {
+            sample_sales: {
+                name: '매출 데이터 (샘플)',
+                fields: [
+                    { id: 'month', name: '월', type: 'datetime' },
+                    { id: 'category', name: '카테고리', type: 'string' },
+                    { id: 'orders', name: '주문수', type: 'number' },
+                    { id: 'revenue', name: '매출', type: 'number' }
+                ],
+                data: [
+                    // 2019
+                    { month: '2019-01-01', category: 'Dumplings', orders: 1200, revenue: 24000 },
+                    { month: '2019-01-01', category: 'Noodles', orders: 800, revenue: 16000 },
+                    { month: '2019-01-01', category: 'Quick Bites', orders: 1500, revenue: 22500 },
+                    { month: '2019-01-01', category: 'Sweets', orders: 600, revenue: 9000 },
+                    { month: '2019-01-01', category: 'Veggies', orders: 400, revenue: 8000 },
+                    // 2020
+                    { month: '2020-01-01', category: 'Dumplings', orders: 1400, revenue: 28000 },
+                    { month: '2020-01-01', category: 'Noodles', orders: 1000, revenue: 20000 },
+                    { month: '2020-01-01', category: 'Quick Bites', orders: 1800, revenue: 27000 },
+                    { month: '2020-01-01', category: 'Sweets', orders: 750, revenue: 11250 },
+                    { month: '2020-01-01', category: 'Veggies', orders: 500, revenue: 10000 },
+                    // 2021
+                    { month: '2021-01-01', category: 'Dumplings', orders: 1800, revenue: 36000 },
+                    { month: '2021-01-01', category: 'Noodles', orders: 1200, revenue: 24000 },
+                    { month: '2021-01-01', category: 'Quick Bites', orders: 2200, revenue: 33000 },
+                    { month: '2021-01-01', category: 'Sweets', orders: 900, revenue: 13500 },
+                    { month: '2021-01-01', category: 'Veggies', orders: 650, revenue: 13000 },
+                    // 2022
+                    { month: '2022-01-01', category: 'Dumplings', orders: 2100, revenue: 42000 },
+                    { month: '2022-01-01', category: 'Noodles', orders: 1500, revenue: 30000 },
+                    { month: '2022-01-01', category: 'Quick Bites', orders: 2600, revenue: 39000 },
+                    { month: '2022-01-01', category: 'Sweets', orders: 1100, revenue: 16500 },
+                    { month: '2022-01-01', category: 'Veggies', orders: 800, revenue: 16000 },
+                    // 2023
+                    { month: '2023-01-01', category: 'Dumplings', orders: 2400, revenue: 48000 },
+                    { month: '2023-01-01', category: 'Noodles', orders: 1800, revenue: 36000 },
+                    { month: '2023-01-01', category: 'Quick Bites', orders: 3000, revenue: 45000 },
+                    { month: '2023-01-01', category: 'Sweets', orders: 1300, revenue: 19500 },
+                    { month: '2023-01-01', category: 'Veggies', orders: 950, revenue: 19000 },
+                    // 2024
+                    { month: '2024-01-01', category: 'Dumplings', orders: 2700, revenue: 54000 },
+                    { month: '2024-01-01', category: 'Noodles', orders: 2000, revenue: 40000 },
+                    { month: '2024-01-01', category: 'Quick Bites', orders: 3300, revenue: 49500 },
+                    { month: '2024-01-01', category: 'Sweets', orders: 1500, revenue: 22500 },
+                    { month: '2024-01-01', category: 'Veggies', orders: 1100, revenue: 22000 },
+                    // 2025
+                    { month: '2025-01-01', category: 'Dumplings', orders: 2900, revenue: 58000 },
+                    { month: '2025-01-01', category: 'Noodles', orders: 2200, revenue: 44000 },
+                    { month: '2025-01-01', category: 'Quick Bites', orders: 3500, revenue: 52500 },
+                    { month: '2025-01-01', category: 'Sweets', orders: 1650, revenue: 24750 },
+                    { month: '2025-01-01', category: 'Veggies', orders: 1250, revenue: 25000 },
+                    // 2026
+                    { month: '2026-01-01', category: 'Dumplings', orders: 3100, revenue: 62000 },
+                    { month: '2026-01-01', category: 'Noodles', orders: 2400, revenue: 48000 },
+                    { month: '2026-01-01', category: 'Quick Bites', orders: 3700, revenue: 55500 },
+                    { month: '2026-01-01', category: 'Sweets', orders: 1800, revenue: 27000 },
+                    { month: '2026-01-01', category: 'Veggies', orders: 1400, revenue: 28000 }
+                ]
+            },
+            sample_stock: {
+                name: '주가 데이터 (샘플)',
+                fields: [
+                    { id: 'date', name: '날짜', type: 'datetime' },
+                    { id: 'symbol', name: '종목', type: 'string' },
+                    { id: 'close', name: '종가', type: 'number' },
+                    { id: 'volume', name: '거래량', type: 'number' },
+                    { id: 'sector', name: '섹터', type: 'string' }
+                ],
+                data: [
+                    { date: '2024-01-01', symbol: 'AAPL', close: 185.5, volume: 45000000, sector: 'Technology' },
+                    { date: '2024-02-01', symbol: 'AAPL', close: 182.3, volume: 42000000, sector: 'Technology' },
+                    { date: '2024-03-01', symbol: 'AAPL', close: 178.7, volume: 48000000, sector: 'Technology' },
+                    { date: '2024-04-01', symbol: 'AAPL', close: 170.2, volume: 51000000, sector: 'Technology' },
+                    { date: '2024-05-01', symbol: 'AAPL', close: 189.8, volume: 39000000, sector: 'Technology' },
+                    { date: '2024-06-01', symbol: 'AAPL', close: 195.2, volume: 44000000, sector: 'Technology' },
+                    { date: '2024-01-01', symbol: 'GOOGL', close: 140.2, volume: 28000000, sector: 'Technology' },
+                    { date: '2024-02-01', symbol: 'GOOGL', close: 138.5, volume: 26000000, sector: 'Technology' },
+                    { date: '2024-03-01', symbol: 'GOOGL', close: 155.8, volume: 32000000, sector: 'Technology' },
+                    { date: '2024-04-01', symbol: 'GOOGL', close: 160.3, volume: 29000000, sector: 'Technology' },
+                    { date: '2024-05-01', symbol: 'GOOGL', close: 175.4, volume: 35000000, sector: 'Technology' },
+                    { date: '2024-06-01', symbol: 'GOOGL', close: 182.1, volume: 31000000, sector: 'Technology' },
+                    { date: '2024-01-01', symbol: 'MSFT', close: 375.2, volume: 22000000, sector: 'Technology' },
+                    { date: '2024-02-01', symbol: 'MSFT', close: 402.5, volume: 25000000, sector: 'Technology' },
+                    { date: '2024-03-01', symbol: 'MSFT', close: 415.8, volume: 21000000, sector: 'Technology' },
+                    { date: '2024-04-01', symbol: 'MSFT', close: 408.3, volume: 24000000, sector: 'Technology' },
+                    { date: '2024-05-01', symbol: 'MSFT', close: 420.7, volume: 20000000, sector: 'Technology' },
+                    { date: '2024-06-01', symbol: 'MSFT', close: 445.2, volume: 23000000, sector: 'Technology' }
+                ]
+            },
+            sample_economic: {
+                name: '경제 지표 (샘플)',
+                fields: [
+                    { id: 'date', name: '날짜', type: 'datetime' },
+                    { id: 'indicator', name: '지표', type: 'string' },
+                    { id: 'value', name: '값', type: 'number' },
+                    { id: 'country', name: '국가', type: 'string' }
+                ],
+                data: [
+                    { date: '2023-Q1', indicator: 'GDP Growth', value: 2.1, country: 'USA' },
+                    { date: '2023-Q2', indicator: 'GDP Growth', value: 2.4, country: 'USA' },
+                    { date: '2023-Q3', indicator: 'GDP Growth', value: 4.9, country: 'USA' },
+                    { date: '2023-Q4', indicator: 'GDP Growth', value: 3.3, country: 'USA' },
+                    { date: '2024-Q1', indicator: 'GDP Growth', value: 1.6, country: 'USA' },
+                    { date: '2023-Q1', indicator: 'Inflation', value: 6.0, country: 'USA' },
+                    { date: '2023-Q2', indicator: 'Inflation', value: 4.0, country: 'USA' },
+                    { date: '2023-Q3', indicator: 'Inflation', value: 3.7, country: 'USA' },
+                    { date: '2023-Q4', indicator: 'Inflation', value: 3.4, country: 'USA' },
+                    { date: '2024-Q1', indicator: 'Inflation', value: 3.5, country: 'USA' },
+                    { date: '2023-Q1', indicator: 'Unemployment', value: 3.5, country: 'USA' },
+                    { date: '2023-Q2', indicator: 'Unemployment', value: 3.6, country: 'USA' },
+                    { date: '2023-Q3', indicator: 'Unemployment', value: 3.8, country: 'USA' },
+                    { date: '2023-Q4', indicator: 'Unemployment', value: 3.7, country: 'USA' },
+                    { date: '2024-Q1', indicator: 'Unemployment', value: 3.9, country: 'USA' }
+                ]
+            },
+            custom: {
+                name: '사용자 데이터',
+                fields: [],
+                data: []
+            }
+        };
+
+        // 차트 유형 정의 (Livedocs 스타일) - SVG 아이콘
+        const chartLabChartTypes = [
+            { id: 'grouped-column', name: 'Grouped column', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="10" width="4" height="10" rx="0.5"/><rect x="10" y="6" width="4" height="14" rx="0.5"/><rect x="16" y="12" width="4" height="8" rx="0.5"/></svg>` },
+            { id: 'stacked-column', name: 'Stacked column', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="14" width="4" height="6" rx="0.5"/><rect x="4" y="8" width="4" height="5" rx="0.5" opacity="0.6"/><rect x="10" y="10" width="4" height="10" rx="0.5"/><rect x="10" y="4" width="4" height="5" rx="0.5" opacity="0.6"/><rect x="16" y="12" width="4" height="8" rx="0.5"/><rect x="16" y="6" width="4" height="5" rx="0.5" opacity="0.6"/></svg>` },
+            { id: '100-stacked-column', name: '100% stacked column', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="4" height="16" rx="0.5"/><rect x="10" y="4" width="4" height="16" rx="0.5"/><rect x="16" y="4" width="4" height="16" rx="0.5"/></svg>` },
+            { id: 'grouped-bar', name: 'Grouped bar', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="10" height="4" rx="0.5"/><rect x="4" y="10" width="14" height="4" rx="0.5"/><rect x="4" y="16" width="8" height="4" rx="0.5"/></svg>` },
+            { id: 'stacked-bar', name: 'Stacked bar', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="6" height="4" rx="0.5"/><rect x="11" y="4" width="5" height="4" rx="0.5" opacity="0.6"/><rect x="4" y="10" width="8" height="4" rx="0.5"/><rect x="13" y="10" width="5" height="4" rx="0.5" opacity="0.6"/><rect x="4" y="16" width="10" height="4" rx="0.5"/><rect x="15" y="16" width="4" height="4" rx="0.5" opacity="0.6"/></svg>` },
+            { id: '100-stacked-bar', name: '100% stacked bar', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="4" rx="0.5"/><rect x="4" y="10" width="16" height="4" rx="0.5"/><rect x="4" y="16" width="16" height="4" rx="0.5"/></svg>` },
+            { id: 'line', name: 'Line chart', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4,18 8,12 12,15 16,8 20,10"/></svg>` },
+            { id: 'stacked-area', name: 'Stacked area', icon: `<svg viewBox="0 0 24 24" fill="currentColor" opacity="0.7"><path d="M4,20 L4,14 L8,10 L12,13 L16,8 L20,11 L20,20 Z"/></svg>` },
+            { id: '100-stacked-area', name: '100% stacked area', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4,20 L4,4 L8,8 L12,5 L16,9 L20,4 L20,20 Z" opacity="0.7"/></svg>` },
+            { id: 'histogram', name: 'Histogram', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="14" width="3" height="6" rx="0.5"/><rect x="7" y="10" width="3" height="10" rx="0.5"/><rect x="11" y="6" width="3" height="14" rx="0.5"/><rect x="15" y="10" width="3" height="10" rx="0.5"/><rect x="19" y="14" width="3" height="6" rx="0.5"/></svg>` },
+            { id: 'scatter', name: 'Scatterplot', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="16" r="2"/><circle cx="10" cy="10" r="2"/><circle cx="14" cy="14" r="2"/><circle cx="18" cy="8" r="2"/></svg>` },
+            { id: 'pie', name: 'Pie chart', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2 A10,10 0 1,1 2,12 L12,12 Z"/><path d="M14,2.5 A10,10 0 0,1 21.5,10 L12,12 Z" opacity="0.6"/></svg>` }
+        ];
+
+        // 집계 함수
+        const chartLabAggregations = [
+            { id: 'sum', name: 'Sum' },
+            { id: 'avg', name: 'Average' },
+            { id: 'min', name: 'Min' },
+            { id: 'max', name: 'Max' },
+            { id: 'count', name: 'Count' }
+        ];
+
+        // 시간 단위
+        const chartLabTimeUnits = [
+            { id: 'day', name: 'Day' },
+            { id: 'week', name: 'Week' },
+            { id: 'month', name: 'Month' },
+            { id: 'quarter', name: 'Quarter' },
+            { id: 'year', name: 'Year' }
+        ];
+
+        // 메인 차트랩 표시 함수
+        function showChartLab() {
+            // 사이드바 아이콘 활성화
+            document.querySelectorAll('.icon-sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector('.icon-sidebar-item[title="차트랩"]').classList.add('active');
+
+            // center-panel에 차트 편집 영역 렌더링
+            const centerPanel = document.querySelector('.center-panel');
+            centerPanel.innerHTML = renderChartLabUI();
+
+            // right-panel에 차트 목록 렌더링
+            const rightPanel = document.querySelector('.right-panel');
+            rightPanel.style.display = 'block';
+            rightPanel.innerHTML = renderChartLabListPanel();
+
+            // 이벤트 리스너 등록
+            attachChartLabEventListeners();
+
+            // 모든 차트 렌더링
+            chartLabCharts.filter(c => !c.collapsed).forEach(chart => {
+                setTimeout(() => updateChartLabChartById(chart.id), 100);
+            });
+        }
+
+        // UI 렌더링 (다중 차트 지원)
+        function renderChartLabUI() {
+            return `
+                <div class="chartlab-container">
+                    ${renderChartLabGlobalHeader()}
+                    <div class="chartlab-scroll-container">
+                        ${chartLabCharts.map(chart => renderChartLabBlock(chart)).join('')}
+                        <button class="chartlab-add-chart-btn" onclick="addChartLabChart()" style="font-size: 12px; padding: 24px;">
+                            + 새 차트 추가
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 글로벌 헤더 렌더링
+        function renderChartLabGlobalHeader() {
+            return `
+                <div class="chartlab-header">
+                    <div class="chartlab-header-left">
+                        <span style="font-size: 12px; color: var(--text-secondary);">
+                            데이터를 시각화하여 인사이트를 발견하세요
+                        </span>
+                    </div>
+                    <div class="chartlab-header-right">
+                    </div>
+                </div>
+            `;
+        }
+
+        // 개별 차트 블록 렌더링 (Livedocs 스타일)
+        function renderChartLabBlock(chart) {
+            const ds = chartLabDataSources[chart.dataSource];
+            const isActive = chart.id === chartLabActiveChartId;
+            const chartType = chartLabChartTypes.find(t => t.id === chart.chartType);
+            return `
+                <div class="chartlab-chart-block ${chart.collapsed ? 'collapsed' : ''} ${isActive ? 'active' : ''}"
+                     data-chart-id="${chart.id}" onclick="selectChartLabChart(${chart.id})">
+                    <!-- Livedocs 스타일 헤더: Cell title + 데이터소스 -->
+                    <div class="chartlab-block-header">
+                        <div class="chartlab-block-title">
+                            <input type="text" class="chartlab-block-title-input"
+                                   value="${chart.style.title || '차트 #' + chart.id}"
+                                   placeholder="차트 제목"
+                                   onchange="handleChartLabTitleChangeById(${chart.id}, this.value)"
+                                   onclick="event.stopPropagation()"
+                                   style="font-size: 12px;">
+                        </div>
+                        <div class="chartlab-block-datasource">
+                            <select class="chartlab-block-datasource-select"
+                                    onchange="handleChartLabDataSourceChangeById(${chart.id}, this.value)"
+                                    onclick="event.stopPropagation()"
+                                    style="font-size: 11px;">
+                                ${Object.entries(chartLabDataSources).map(([id, d]) => `
+                                    <option value="${id}" ${chart.dataSource === id ? 'selected' : ''}>${d.name}</option>
+                                `).join('')}
+                            </select>
+                            <div class="chartlab-block-actions">
+                                <button class="chartlab-block-action-btn" onclick="event.stopPropagation(); toggleChartLabBlockCollapse(${chart.id})" title="${chart.collapsed ? '펼치기' : '접기'}" style="font-size: 10px;">
+                                    ${chart.collapsed ? '▶' : '▼'}
+                                </button>
+                                <button class="chartlab-block-action-btn" onclick="event.stopPropagation(); duplicateChartLabChart(${chart.id})" title="복제" style="font-size: 10px;">복제</button>
+                                <button class="chartlab-block-action-btn" onclick="event.stopPropagation(); exportChartLabChartById(${chart.id})" title="내보내기" style="font-size: 10px;">내보내기</button>
+                                <button class="chartlab-block-action-btn chartlab-delete-btn" onclick="event.stopPropagation(); removeChartLabChart(${chart.id})" title="삭제" style="font-size: 10px;">삭제</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chartlab-block-body">
+                        ${renderChartLabBlockSidebar(chart)}
+                        ${renderChartLabBlockMain(chart)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 차트 블록 사이드바 렌더링 (Livedocs Data/Style 탭)
+        function renderChartLabBlockSidebar(chart) {
+            const dataSource = chartLabDataSources[chart.dataSource];
+            return `
+                <div class="chartlab-block-sidebar">
+                    <!-- Data/Style 토글 (Livedocs 스타일) -->
+                    <div class="chartlab-tab-toggle">
+                        <button class="chartlab-tab-toggle-btn ${chart.activeTab === 'data' ? 'active' : ''}"
+                                onclick="event.stopPropagation(); switchChartLabTabById(${chart.id}, 'data')">데이터</button>
+                        <button class="chartlab-tab-toggle-btn ${chart.activeTab === 'style' ? 'active' : ''}"
+                                onclick="event.stopPropagation(); switchChartLabTabById(${chart.id}, 'style')">스타일</button>
+                    </div>
+                    <div class="chartlab-tab-content">
+                        ${chart.activeTab === 'data' ? renderChartLabBlockDataTab(chart, dataSource) : renderChartLabBlockStyleTab(chart)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Data 탭 렌더링 (차트별)
+        function renderChartLabBlockDataTab(chart, dataSource) {
+            if (!dataSource) dataSource = { fields: [], data: [] };
+            return `
+                ${renderChartLabBlockTypeSelector(chart)}
+                ${renderChartLabBlockXAxis(chart, dataSource)}
+                ${renderChartLabBlockYAxis(chart, dataSource)}
+            `;
+        }
+
+        // 차트 유형 선택기 (차트별) - 커스텀 드롭다운
+        function renderChartLabBlockTypeSelector(chart) {
+            const currentType = chartLabChartTypes.find(t => t.id === chart.chartType);
+            return `
+                <div class="chartlab-section">
+                    <div class="chartlab-section-header">
+                        <div class="chartlab-section-title">차트 유형</div>
+                    </div>
+                    <div class="chartlab-section-content">
+                        <div class="chartlab-custom-dropdown" data-chart-id="${chart.id}">
+                            <div class="chartlab-dropdown-selected" onclick="event.stopPropagation(); toggleChartTypeDropdown(${chart.id})">
+                                <span class="chartlab-dropdown-icon">${currentType.icon}</span>
+                                <span class="chartlab-dropdown-text">${currentType.name}</span>
+                                <svg class="chartlab-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6,9 12,15 18,9"/>
+                                </svg>
+                            </div>
+                            <div class="chartlab-dropdown-options">
+                                ${chartLabChartTypes.map(type => `
+                                    <div class="chartlab-dropdown-option ${chart.chartType === type.id ? 'selected' : ''}"
+                                         onclick="event.stopPropagation(); selectChartType(${chart.id}, '${type.id}')">
+                                        <span class="chartlab-dropdown-icon">${type.icon}</span>
+                                        <span>${type.name}</span>
+                                        ${chart.chartType === type.id ? `<svg class="chartlab-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 커스텀 드롭다운 토글
+        function toggleChartTypeDropdown(chartId) {
+            const dropdown = document.querySelector(`.chartlab-custom-dropdown[data-chart-id="${chartId}"]`);
+            if (dropdown) {
+                // 다른 열린 드롭다운 닫기
+                document.querySelectorAll('.chartlab-custom-dropdown.open').forEach(d => {
+                    if (d !== dropdown) d.classList.remove('open');
+                });
+                dropdown.classList.toggle('open');
+            }
+        }
+
+        // 차트 유형 선택
+        function selectChartType(chartId, typeId) {
+            handleChartLabChartTypeChangeById(chartId, typeId);
+            const dropdown = document.querySelector(`.chartlab-custom-dropdown[data-chart-id="${chartId}"]`);
+            if (dropdown) {
+                dropdown.classList.remove('open');
+            }
+        }
+
+        // 드롭다운 외부 클릭 시 닫기
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.chartlab-custom-dropdown')) {
+                document.querySelectorAll('.chartlab-custom-dropdown.open').forEach(d => d.classList.remove('open'));
+            }
+        });
+
+        // X축 설정 (차트별, Livedocs 스타일)
+        function renderChartLabBlockXAxis(chart, dataSource) {
+            const xField = dataSource.fields.find(f => f.id === chart.xAxis.field);
+            const isDatetime = xField && xField.type === 'datetime';
+            return `
+                <div class="chartlab-section">
+                    <div class="chartlab-section-header">
+                        <div class="chartlab-section-title">X축</div>
+                    </div>
+                    <div class="chartlab-section-content">
+                        <select class="chartlab-field-dropdown" onchange="handleChartLabXAxisChangeById(${chart.id}, this.value)" onclick="event.stopPropagation()">
+                            <option value="">컬럼 선택...</option>
+                            ${dataSource.fields.map(field => `
+                                <option value="${field.id}" ${chart.xAxis.field === field.id ? 'selected' : ''}>${field.name} (${field.type})</option>
+                            `).join('')}
+                        </select>
+                        ${chart.xAxis.field ? `
+                            <!-- Scale type & Sort (Livedocs 스타일) -->
+                            <div class="chartlab-axis-options">
+                                <div class="chartlab-axis-option">
+                                    <div class="chartlab-axis-option-label">스케일 유형</div>
+                                    <select class="chartlab-axis-option-select" onchange="handleChartLabScaleTypeChange(${chart.id}, this.value)" onclick="event.stopPropagation()">
+                                        <option value="linear" ${chart.xAxis.scaleType === 'linear' ? 'selected' : ''}>숫자</option>
+                                        <option value="datetime" ${chart.xAxis.scaleType === 'datetime' ? 'selected' : ''}>날짜/시간</option>
+                                    </select>
+                                </div>
+                                <div class="chartlab-axis-option">
+                                    <div class="chartlab-axis-option-label">정렬</div>
+                                    <select class="chartlab-axis-option-select" onchange="handleChartLabSortChange(${chart.id}, this.value)" onclick="event.stopPropagation()">
+                                        <option value="ascending" ${chart.xAxis.sort === 'ascending' ? 'selected' : ''}>오름차순</option>
+                                        <option value="descending" ${chart.xAxis.sort === 'descending' ? 'selected' : ''}>내림차순</option>
+                                    </select>
+                                </div>
+                            </div>
+                            ${isDatetime ? `
+                                <div style="margin-top: 6px;">
+                                    <div class="chartlab-axis-option-label">시간 단위</div>
+                                    <select class="chartlab-axis-option-select" onchange="handleChartLabTimeUnitChangeById(${chart.id}, this.value)" onclick="event.stopPropagation()">
+                                        ${chartLabTimeUnits.map(unit => `
+                                            <option value="${unit.id}" ${chart.xAxis.timeUnit === unit.id ? 'selected' : ''}>${unit.name}</option>
+                                        `).join('')}
+                                    </select>
+                                </div>
+                            ` : ''}
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Y축 설정 (차트별, Livedocs 스타일)
+        function renderChartLabBlockYAxis(chart, dataSource) {
+            const hasXAxis = !!chart.xAxis.field;
+            return `
+                <div class="chartlab-section">
+                    <div class="chartlab-section-header">
+                        <div class="chartlab-section-title">Y축</div>
+                        ${hasXAxis ? `<span class="chartlab-add-link" onclick="event.stopPropagation(); addChartLabYAxisById(${chart.id})">+ 추가</span>` : ''}
+                    </div>
+                    <div class="chartlab-section-content">
+                        ${!hasXAxis ? `
+                            <div class="chartlab-axis-hint">X축을 먼저 추가하세요</div>
+                        ` : `
+                            ${chart.yAxis.map((yConfig, idx) => {
+                                const yField = dataSource.fields.find(f => f.id === yConfig.field);
+                                return yConfig.field ? `
+                                    <div class="chartlab-field-item">
+                                        <div class="chartlab-field-info">
+                                            <div class="chartlab-field-name">${yField ? yField.name : yConfig.field}</div>
+                                            <div class="chartlab-field-meta">집계: ${yConfig.aggregate}</div>
+                                        </div>
+                                        <button class="chartlab-field-remove" onclick="event.stopPropagation(); removeChartLabYAxisById(${chart.id}, ${idx})">✕</button>
+                                    </div>
+                                    <select class="chartlab-field-dropdown" onchange="handleChartLabYAxisAggregateChangeById(${chart.id}, ${idx}, this.value)" onclick="event.stopPropagation()">
+                                        ${chartLabAggregations.map(agg => `
+                                            <option value="${agg.id}" ${yConfig.aggregate === agg.id ? 'selected' : ''}>${agg.name}</option>
+                                        `).join('')}
+                                    </select>
+                                ` : `
+                                    <select class="chartlab-field-dropdown" onchange="handleChartLabYAxisChangeById(${chart.id}, ${idx}, this.value)" onclick="event.stopPropagation()">
+                                        <option value="">컬럼 선택...</option>
+                                        ${dataSource.fields.filter(f => f.type === 'number').map(field => `
+                                            <option value="${field.id}">${field.name}</option>
+                                        `).join('')}
+                                    </select>
+                                `;
+                            }).join('')}
+                            <button class="chartlab-add-field-btn" onclick="event.stopPropagation(); addChartLabYAxisById(${chart.id})">
+                                + 시리즈 추가
+                            </button>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Color by 설정 (차트별)
+        function renderChartLabBlockColorBy(chart, dataSource) {
+            const colorField = dataSource.fields.find(f => f.id === chart.colorBy.field);
+            return `
+                <div class="chartlab-section">
+                    <div class="chartlab-section-header">
+                        <div class="chartlab-section-title">색상 기준</div>
+                    </div>
+                    <div class="chartlab-section-content">
+                        ${chart.colorBy.field ? `
+                            <div class="chartlab-field-item">
+                                <div class="chartlab-field-info">
+                                    <div class="chartlab-field-name">${colorField ? colorField.name : chart.colorBy.field}</div>
+                                    <div class="chartlab-field-meta">시리즈</div>
+                                </div>
+                                <button class="chartlab-field-remove" onclick="event.stopPropagation(); removeChartLabColorByById(${chart.id})">✕</button>
+                            </div>
+                        ` : `
+                            <select class="chartlab-field-dropdown" onchange="handleChartLabColorByChangeById(${chart.id}, this.value)" onclick="event.stopPropagation()">
+                                <option value="">컬럼 선택...</option>
+                                ${dataSource.fields.filter(f => f.type === 'string').map(field => `
+                                    <option value="${field.id}">${field.name}</option>
+                                `).join('')}
+                            </select>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Style 탭 렌더링 (차트별, Livedocs 아코디언)
+        function renderChartLabBlockStyleTab(chart) {
+            return `
+                <!-- General 섹션 -->
+                <div class="chartlab-style-accordion">
+                    <div class="chartlab-style-accordion-header" onclick="event.stopPropagation(); toggleStyleAccordion(this)">
+                        <span style="font-size: 11px;">일반</span>
+                        <svg class="chartlab-accordion-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="chartlab-style-accordion-content">
+                        <div class="chartlab-style-row">
+                            <span class="chartlab-style-label" style="margin-bottom: 0; font-size: 10px;">글꼴 크기</span>
+                            <input type="number" class="chartlab-style-number-input" value="${chart.style.fontSize || 10}"
+                                   onchange="handleChartLabFontSizeChange(${chart.id}, this.value)" onclick="event.stopPropagation()" min="8" max="24" style="font-size: 10px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 색상 팔레트 섹션 -->
+                <div class="chartlab-style-accordion">
+                    <div class="chartlab-style-accordion-header" onclick="event.stopPropagation(); toggleStyleAccordion(this)">
+                        <span style="font-size: 11px;">색상</span>
+                        <svg class="chartlab-accordion-icon" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="chartlab-style-accordion-content">
+                        <div class="chartlab-color-palette">
+                            ${chart.style.colors.map((color, idx) => `
+                                <div class="chartlab-color-swatch"
+                                    style="background: ${color}; width: 24px; height: 24px;"
+                                    onclick="event.stopPropagation(); editChartLabColorById(${chart.id}, ${idx})"
+                                    title="${color}">
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Legend 섹션 -->
+                <div class="chartlab-style-accordion ${chart.style.legendPosition !== 'none' ? '' : 'collapsed'}">
+                    <div class="chartlab-style-accordion-header" style="cursor: default;">
+                        <span style="font-size: 11px;">범례</span>
+                        <label class="chartlab-toggle" onclick="event.stopPropagation()">
+                            <input type="checkbox"
+                                   ${chart.style.legendPosition !== 'none' ? 'checked' : ''}
+                                   onchange="handleChartLabLegendToggle(${chart.id}, this.checked)"
+                                   onclick="event.stopPropagation()">
+                            <span class="chartlab-toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="chartlab-style-accordion-content" style="${chart.style.legendPosition !== 'none' ? '' : 'display: none;'}">
+                        <div class="chartlab-style-row">
+                            <span class="chartlab-style-label" style="font-size: 10px;">위치</span>
+                            <select class="chartlab-mini-dropdown" onchange="handleChartLabLegendPositionChangeById(${chart.id}, this.value)" onclick="event.stopPropagation()">
+                                <option value="right" ${chart.style.legendPosition === 'right' ? 'selected' : ''}>오른쪽</option>
+                                <option value="bottom" ${chart.style.legendPosition === 'bottom' ? 'selected' : ''}>아래</option>
+                                <option value="top" ${chart.style.legendPosition === 'top' ? 'selected' : ''}>위</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tooltip 섹션 -->
+                <div class="chartlab-style-accordion">
+                    <div class="chartlab-style-accordion-header" style="cursor: default;">
+                        <span style="font-size: 11px;">툴팁</span>
+                        <label class="chartlab-toggle" onclick="event.stopPropagation()">
+                            <input type="checkbox"
+                                   ${chart.style.showTooltip ? 'checked' : ''}
+                                   onchange="handleChartLabTooltipToggle(${chart.id}, this.checked)"
+                                   onclick="event.stopPropagation()">
+                            <span class="chartlab-toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 이상치 섹션 -->
+                <div class="chartlab-style-accordion">
+                    <div class="chartlab-style-accordion-header" style="cursor: default;">
+                        <span style="font-size: 11px;">이상치</span>
+                        <label class="chartlab-toggle" onclick="event.stopPropagation()">
+                            <input type="checkbox"
+                                   ${chart.style.showOutliers ? 'checked' : ''}
+                                   onchange="handleChartLabOutlierToggle(${chart.id}, this.checked)"
+                                   onclick="event.stopPropagation()">
+                            <span class="chartlab-toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Style 아코디언 토글
+        function toggleStyleAccordion(header) {
+            header.parentElement.classList.toggle('collapsed');
+        }
+
+        // 이상치 표시 토글 핸들러
+        function handleChartLabOutlierToggle(chartId, show) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.style.showOutliers = show;
+            updateChartLabChartById(chartId);
+        }
+
+        // 툴팁 표시 토글 핸들러
+        function handleChartLabTooltipToggle(chartId, show) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.style.showTooltip = show;
+            updateChartLabChartById(chartId);
+        }
+
+        // 차트 블록 메인 영역 렌더링
+        function renderChartLabBlockMain(chart) {
+            return `
+                <div class="chartlab-block-main">
+                    <div class="chartlab-block-chart-wrapper">
+                        ${chart.style.title ? `<div class="chartlab-chart-title">${chart.style.title}</div>` : ''}
+                        <div id="chartlab-chart-${chart.id}" style="flex: 1; min-height: 180px;"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 우측 패널 (차트 목록) 렌더링
+        function renderChartLabListPanel() {
+            // 최근 작업 차트 (현재 세션의 차트들)
+            const recentCharts = chartLabCharts;
+
+            // 저장된 차트 (샘플 데이터)
+            const savedCharts = [
+                { id: 'saved-1', title: '삼성전자 2024년 실적 전망', dataSource: '재무 데이터' },
+                { id: 'saved-2', title: 'LG화학 매출액 분석 보고서', dataSource: '매출 데이터' },
+                { id: 'saved-3', title: '반도체 vs 배터리 산업 비교', dataSource: '산업 데이터' },
+                { id: 'saved-4', title: '네이버 분기별 성장률 추이', dataSource: '성장 데이터' }
+            ];
+
+            return `
+                <div class="chartlab-list-panel" style="display: flex; flex-direction: column; height: 100%;">
+                    <!-- 최근 작업한 차트 섹션 (50%) -->
+                    <div class="chartlab-list-section" style="flex: 1; max-height: 50%; overflow: hidden; display: flex; flex-direction: column;">
+                        <div class="chartlab-list-header" style="font-size: 12px; flex-shrink: 0;">
+                            <span>최근 작업한 차트</span>
+                            <span style="color: var(--text-muted); font-size: 11px;">${recentCharts.length}개</span>
+                        </div>
+                        <div class="chartlab-list-content" style="flex: 1; overflow-y: auto;">
+                            ${recentCharts.map(chart => renderChartLabListItem(chart)).join('')}
+                        </div>
+                    </div>
+
+                    <!-- 저장된 차트 섹션 (50%) -->
+                    <div class="chartlab-list-section" style="flex: 1; max-height: 50%; overflow: hidden; display: flex; flex-direction: column; border-top: 1px solid var(--border-color); padding-top: 12px;">
+                        <div class="chartlab-list-header" style="font-size: 12px; flex-shrink: 0;">
+                            <span>저장된 차트</span>
+                            <span style="color: var(--text-muted); font-size: 11px;">${savedCharts.length}개</span>
+                        </div>
+                        <div class="chartlab-list-content" style="flex: 1; overflow-y: auto;">
+                            ${savedCharts.map(chart => renderSavedChartItem(chart)).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 저장된 차트 아이템 렌더링
+        function renderSavedChartItem(chart) {
+            return `
+                <div class="chartlab-list-item" style="padding: 10px; cursor: pointer;" onclick="alert('저장된 차트를 불러옵니다: ${chart.title}')">
+                    <div class="chartlab-list-item-title" style="font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>${chart.title}</span>
+                        <button class="chartlab-block-action-btn chartlab-delete-btn"
+                                onclick="event.stopPropagation(); alert('저장된 차트 삭제: ${chart.title}')"
+                                title="삭제" style="font-size: 10px; padding: 2px 6px;">삭제</button>
+                    </div>
+                    <div class="chartlab-list-item-meta" style="font-size: 10px; margin-top: 4px;">
+                        ${chart.dataSource}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 차트 목록 아이템 렌더링
+        function renderChartLabListItem(chart) {
+            const isActive = chart.id === chartLabActiveChartId;
+            const chartType = chartLabChartTypes.find(t => t.id === chart.chartType);
+            return `
+                <div class="chartlab-list-item ${isActive ? 'active' : ''}" onclick="selectChartLabChart(${chart.id})" style="padding: 10px;">
+                    <div class="chartlab-list-item-title" style="font-size: 11px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>${chart.style.title || '차트 #' + chart.id}</span>
+                        <button class="chartlab-block-action-btn chartlab-delete-btn"
+                                onclick="event.stopPropagation(); removeChartLabChart(${chart.id})"
+                                title="삭제" style="font-size: 10px; padding: 2px 6px;">삭제</button>
+                    </div>
+                    <div class="chartlab-list-item-preview" id="chartlab-preview-${chart.id}" style="height: 60px; font-size: 10px;">
+                        미리보기
+                    </div>
+                    <div class="chartlab-list-item-meta" style="font-size: 10px;">
+                        ${chartLabDataSources[chart.dataSource]?.name || chart.dataSource}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 차트 선택
+        function selectChartLabChart(chartId) {
+            chartLabActiveChartId = chartId;
+            refreshChartLabUI();
+            setTimeout(() => {
+                const block = document.querySelector(`[data-chart-id="${chartId}"]`);
+                if (block) {
+                    block.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+
+        // === 차트 관리 함수들 ===
+
+        // 차트 추가 (빈 차트 바로 생성)
+        function addChartLabChart() {
+            const newChart = createChartLabChartState(chartLabNextId++);
+            newChart.dataSource = '';  // 데이터 소스 미선택 상태
+            newChart.xAxis.field = '';
+            newChart.yAxis = [{ field: '', aggregate: 'sum' }];
+            newChart.colorBy = { field: '' };
+            chartLabCharts.push(newChart);
+            chartLabActiveChartId = newChart.id;
+            refreshChartLabUI();
+            setTimeout(() => {
+                const block = document.querySelector(`[data-chart-id="${newChart.id}"]`);
+                if (block) block.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        // 데이터소스 선택 모달 표시
+        function showDataSourceModal(chartId) {
+            // 샘플 데이터프레임 목록
+            const dataframes = [
+                { id: 'results', name: 'results' },
+                { id: 'sales_data', name: 'sales_data' },
+                { id: 'dataframe_2', name: 'dataframe_2' },
+                { id: 'dataframe_0', name: 'dataframe_0' }
+            ];
+
+            const modal = document.createElement('div');
+            modal.className = 'chartlab-datasource-modal';
+            modal.onclick = (e) => { if (e.target === modal) closeDataSourceModal(); };
+            modal.innerHTML = `
+                <div class="chartlab-datasource-modal-content">
+                    <div class="chartlab-ds-search">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <input type="text" placeholder="Search..." id="dsSearchInput" oninput="filterDataSourceItems(this.value)" autofocus>
+                    </div>
+                    <div class="chartlab-ds-sections">
+                        <!-- DATA SOURCES -->
+                        <div class="chartlab-ds-section" data-section="datasources">
+                            <div class="chartlab-ds-section-title">DATA SOURCES</div>
+                            ${Object.entries(chartLabDataSources).map(([id, ds]) => `
+                                <div class="chartlab-ds-item" onclick="selectDataSourceForChart(${chartId}, '${id}')" data-name="${ds.name.toLowerCase()}">
+                                    <span class="chartlab-ds-item-icon">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                                            <rect x="4" y="4" width="3" height="16" rx="0.5"/>
+                                            <rect x="10" y="8" width="3" height="12" rx="0.5"/>
+                                            <rect x="16" y="6" width="3" height="14" rx="0.5"/>
+                                        </svg>
+                                    </span>
+                                    <span>${ds.name}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <!-- DATAFRAMES -->
+                        <div class="chartlab-ds-section" data-section="dataframes">
+                            <div class="chartlab-ds-section-title">DATAFRAMES</div>
+                            ${dataframes.map(df => `
+                                <div class="chartlab-ds-item" onclick="selectDataSourceForChart(${chartId}, 'sample_sales')" data-name="${df.name.toLowerCase()}">
+                                    <span class="chartlab-ds-item-icon">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                            <line x1="3" y1="9" x2="21" y2="9"/>
+                                            <line x1="9" y1="21" x2="9" y2="9"/>
+                                        </svg>
+                                    </span>
+                                    <span>${df.name}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <!-- FILES -->
+                        <div class="chartlab-ds-section" data-section="files">
+                            <div class="chartlab-ds-section-title">FILES</div>
+                            <div class="chartlab-ds-item" onclick="alert('파일 탐색 기능 준비 중')" data-name="workspace files">
+                                <span class="chartlab-ds-item-icon">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </span>
+                                <span>Workspace Files</span>
+                                <span class="chartlab-ds-item-arrow">›</span>
+                            </div>
+                            <div class="chartlab-ds-item" onclick="alert('파일 탐색 기능 준비 중')" data-name="local files">
+                                <span class="chartlab-ds-item-icon">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                </span>
+                                <span>Local Files</span>
+                                <span class="chartlab-ds-item-arrow">›</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chartlab-ds-footer">
+                        <div class="chartlab-ds-footer-item">
+                            <span class="chartlab-ds-footer-key">↑</span>
+                            <span class="chartlab-ds-footer-key">↓</span>
+                            <span>NAVIGATE</span>
+                        </div>
+                        <div class="chartlab-ds-footer-item">
+                            <span class="chartlab-ds-footer-key">↵</span>
+                            <span>SELECT</span>
+                        </div>
+                        <div class="chartlab-ds-footer-item">
+                            <span class="chartlab-ds-footer-key">ESC</span>
+                            <span>CLOSE</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // ESC 키로 닫기
+            const handleKeydown = (e) => {
+                if (e.key === 'Escape') {
+                    closeDataSourceModal();
+                    document.removeEventListener('keydown', handleKeydown);
+                }
+            };
+            document.addEventListener('keydown', handleKeydown);
+        }
+
+        // 데이터소스 검색 필터
+        function filterDataSourceItems(query) {
+            const items = document.querySelectorAll('.chartlab-ds-item');
+            const lowerQuery = query.toLowerCase();
+            items.forEach(item => {
+                const name = item.dataset.name || '';
+                item.style.display = name.includes(lowerQuery) ? '' : 'none';
+            });
+        }
+
+        // 차트에 데이터소스 선택
+        function selectDataSourceForChart(chartId, dataSourceId) {
+            closeDataSourceModal();
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.dataSource = dataSourceId;
+            chart.xAxis.field = '';
+            chart.yAxis = [{ field: '', aggregate: 'sum' }];
+            chart.colorBy = { field: '' };
+            refreshChartLabUI();
+            setTimeout(() => updateChartLabChartById(chartId), 100);
+        }
+
+        // 데이터소스 선택 모달 닫기
+        function closeDataSourceModal() {
+            const modal = document.querySelector('.chartlab-datasource-modal');
+            if (modal) modal.remove();
+        }
+
+        // 차트 삭제
+        function removeChartLabChart(chartId) {
+            if (!confirm('이 차트를 삭제하시겠습니까?')) return;
+            chartLabCharts = chartLabCharts.filter(c => c.id !== chartId);
+
+            // 마지막 차트 삭제 시 빈 상태로 전환
+            if (chartLabCharts.length === 0) {
+                chartLabActiveChartId = null;
+            } else if (chartLabActiveChartId === chartId) {
+                chartLabActiveChartId = chartLabCharts[0].id;
+            }
+            refreshChartLabUI();
+        }
+
+        // 차트 복제
+        function duplicateChartLabChart(chartId) {
+            const source = getChartLabChart(chartId);
+            if (!source) return;
+            const newChart = JSON.parse(JSON.stringify(source));
+            newChart.id = chartLabNextId++;
+            newChart.style.title = (source.style.title || 'Chart #' + source.id) + ' (복사본)';
+            chartLabCharts.push(newChart);
+            chartLabActiveChartId = newChart.id;
+            refreshChartLabUI();
+            setTimeout(() => updateChartLabChartById(newChart.id), 100);
+        }
+
+        // 차트 블록 접기/펼치기
+        function toggleChartLabBlockCollapse(chartId) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.collapsed = !chart.collapsed;
+            refreshChartLabUI();
+            if (!chart.collapsed) {
+                setTimeout(() => updateChartLabChartById(chartId), 100);
+            }
+        }
+
+        // UI 전체 새로고침
+        function refreshChartLabUI() {
+            const centerPanel = document.querySelector('.center-panel');
+            const rightPanel = document.querySelector('.right-panel');
+            if (centerPanel) centerPanel.innerHTML = renderChartLabUI();
+            if (rightPanel) rightPanel.innerHTML = renderChartLabListPanel();
+            attachChartLabEventListeners();
+            chartLabCharts.filter(c => !c.collapsed).forEach(chart => {
+                setTimeout(() => updateChartLabChartById(chart.id), 100);
+            });
+        }
+
+        // 특정 차트 블록 사이드바 새로고침
+        function refreshChartLabBlockSidebar(chartId) {
+            const block = document.querySelector(`[data-chart-id="${chartId}"]`);
+            if (!block) return;
+            const chart = getChartLabChart(chartId);
+            const sidebar = block.querySelector('.chartlab-block-sidebar');
+            if (sidebar && chart) {
+                sidebar.outerHTML = renderChartLabBlockSidebar(chart);
+            }
+            attachChartLabEventListeners();
+        }
+
+        // 우측 패널만 새로고침
+        function refreshChartLabListPanel() {
+            const rightPanel = document.querySelector('.right-panel');
+            if (rightPanel) rightPanel.innerHTML = renderChartLabListPanel();
+        }
+
+        // === ID 기반 핸들러 함수들 ===
+
+        // 데이터소스 변경 (차트별)
+        function handleChartLabDataSourceChangeById(chartId, sourceId) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.dataSource = sourceId;
+            // 필드 초기화
+            const ds = chartLabDataSources[sourceId];
+            if (ds.fields.length > 0) {
+                const dateField = ds.fields.find(f => f.type === 'datetime');
+                const numField = ds.fields.find(f => f.type === 'number');
+                const strField = ds.fields.find(f => f.type === 'string');
+                chart.xAxis.field = dateField ? dateField.id : (ds.fields[0] ? ds.fields[0].id : null);
+                chart.yAxis = [{ field: numField ? numField.id : null, aggregate: 'sum' }];
+                chart.colorBy.field = strField ? strField.id : null;
+            } else {
+                chart.xAxis.field = null;
+                chart.yAxis = [{ field: null, aggregate: 'sum' }];
+                chart.colorBy.field = null;
+            }
+            chart.filters = [];
+            refreshChartLabBlockSidebar(chartId);
+            updateChartLabChartById(chartId);
+            refreshChartLabListPanel();
+        }
+
+        // 차트 유형 변경 (차트별)
+        function handleChartLabChartTypeChangeById(chartId, type) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.chartType = type;
+            updateChartLabChartById(chartId);
+            refreshChartLabListPanel();
+        }
+
+        // X축 변경 (차트별)
+        function handleChartLabXAxisChangeById(chartId, fieldId) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.xAxis.field = fieldId || null;
+            const ds = chartLabDataSources[chart.dataSource];
+            const field = ds.fields.find(f => f.id === fieldId);
+            chart.xAxis.scaleType = field && field.type === 'datetime' ? 'datetime' : 'linear';
+            refreshChartLabBlockSidebar(chartId);
+            updateChartLabChartById(chartId);
+        }
+
+        // Scale type 변경 (차트별)
+        function handleChartLabScaleTypeChange(chartId, scaleType) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.xAxis.scaleType = scaleType;
+            updateChartLabChartById(chartId);
+        }
+
+        // Sort 변경 (차트별)
+        function handleChartLabSortChange(chartId, sort) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.xAxis.sort = sort;
+            updateChartLabChartById(chartId);
+        }
+
+        // 시간 단위 변경 (차트별)
+        function handleChartLabTimeUnitChangeById(chartId, unit) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.xAxis.timeUnit = unit;
+            updateChartLabChartById(chartId);
+        }
+
+        // Y축 추가 (차트별)
+        function addChartLabYAxisById(chartId) {
+            const chart = getChartLabChart(chartId);
+            if (!chart || !chart.xAxis.field) return;
+            chart.yAxis.push({ field: null, aggregate: 'sum' });
+            refreshChartLabBlockSidebar(chartId);
+        }
+
+        // Y축 변경 (차트별)
+        function handleChartLabYAxisChangeById(chartId, index, fieldId) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.yAxis[index].field = fieldId || null;
+            refreshChartLabBlockSidebar(chartId);
+            updateChartLabChartById(chartId);
+        }
+
+        // Y축 집계 변경 (차트별)
+        function handleChartLabYAxisAggregateChangeById(chartId, index, aggregate) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.yAxis[index].aggregate = aggregate;
+            updateChartLabChartById(chartId);
+        }
+
+        // Y축 제거 (차트별)
+        function removeChartLabYAxisById(chartId, index) {
+            const chart = getChartLabChart(chartId);
+            if (!chart || chart.yAxis.length <= 1) return;
+            chart.yAxis.splice(index, 1);
+            refreshChartLabBlockSidebar(chartId);
+            updateChartLabChartById(chartId);
+        }
+
+        // Color by 변경 (차트별)
+        function handleChartLabColorByChangeById(chartId, fieldId) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.colorBy.field = fieldId || null;
+            refreshChartLabBlockSidebar(chartId);
+            updateChartLabChartById(chartId);
+        }
+
+        // Color by 제거 (차트별)
+        function removeChartLabColorByById(chartId) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.colorBy.field = null;
+            refreshChartLabBlockSidebar(chartId);
+            updateChartLabChartById(chartId);
+        }
+
+        // 탭 전환 (차트별)
+        function switchChartLabTabById(chartId, tab) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.activeTab = tab;
+            refreshChartLabBlockSidebar(chartId);
+        }
+
+        // 제목 변경 (차트별)
+        function handleChartLabTitleChangeById(chartId, title) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.style.title = title;
+            // 차트 영역의 제목도 업데이트
+            const block = document.querySelector(`[data-chart-id="${chartId}"]`);
+            if (block) {
+                const titleEl = block.querySelector('.chartlab-chart-title');
+                if (titleEl) {
+                    titleEl.textContent = title;
+                } else if (title) {
+                    const wrapper = block.querySelector('.chartlab-block-chart-wrapper');
+                    if (wrapper) {
+                        const chartEl = wrapper.querySelector(`#chartlab-chart-${chartId}`);
+                        if (chartEl) {
+                            const newTitleEl = document.createElement('div');
+                            newTitleEl.className = 'chartlab-chart-title';
+                            newTitleEl.textContent = title;
+                            wrapper.insertBefore(newTitleEl, chartEl);
+                        }
+                    }
+                }
+            }
+            refreshChartLabListPanel();
+        }
+
+        // 폰트 크기 변경 (차트별)
+        function handleChartLabFontSizeChange(chartId, size) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.style.fontSize = parseInt(size) || 10;
+            updateChartLabChartById(chartId);
+        }
+
+        // 범례 위치 변경 (차트별)
+        function handleChartLabLegendPositionChangeById(chartId, position) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            chart.style.legendPosition = position;
+            updateChartLabChartById(chartId);
+        }
+
+        // 범례 토글 (차트별)
+        function handleChartLabLegendToggle(chartId, enabled) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            if (enabled) {
+                // 켜면 이전 위치 또는 기본값 'right'
+                chart.style.legendPosition = chart.style._lastLegendPosition || 'right';
+            } else {
+                // 끄면 현재 위치 저장 후 'none'
+                chart.style._lastLegendPosition = chart.style.legendPosition;
+                chart.style.legendPosition = 'none';
+            }
+            refreshChartLabBlockSidebar(chartId);
+            updateChartLabChartById(chartId);
+        }
+
+        // 색상 편집 (차트별)
+        function editChartLabColorById(chartId, index) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+            const newColor = prompt('새 색상 (HEX 형식):', chart.style.colors[index]);
+            if (newColor && /^#[0-9A-Fa-f]{6}$/.test(newColor)) {
+                chart.style.colors[index] = newColor;
+                refreshChartLabBlockSidebar(chartId);
+                updateChartLabChartById(chartId);
+            }
+        }
+
+        // 차트 내보내기 (차트별)
+        function exportChartLabChartById(chartId) {
+            const charts = Highcharts.charts.filter(c => c && c.renderTo && c.renderTo.id === `chartlab-chart-${chartId}`);
+            if (charts.length > 0) {
+                charts[0].exportChart({ type: 'image/png' });
+            } else {
+                showChartLabToast('내보낼 차트가 없습니다.', 'error');
+            }
+        }
+
+        // 모든 차트 내보내기
+        function exportAllChartLabCharts() {
+            const chart = Highcharts.charts.find(c => c && c.renderTo && c.renderTo.id && c.renderTo.id.startsWith('chartlab-chart-'));
+            if (chart) {
+                chart.exportChart({ type: 'image/png' });
+            } else {
+                showChartLabToast('내보낼 차트가 없습니다.', 'error');
+            }
+        }
+
+        // 특정 차트 업데이트
+        function updateChartLabChartById(chartId) {
+            const chart = getChartLabChart(chartId);
+            if (!chart) return;
+
+            const chartEl = document.getElementById(`chartlab-chart-${chartId}`);
+            if (!chartEl) return;
+
+            const ds = chartLabDataSources[chart.dataSource];
+
+            // 데이터 소스가 선택되지 않은 경우
+            if (!ds) {
+                chartEl.innerHTML = `
+                    <div class="chartlab-empty-state" style="cursor: pointer;" onclick="showDataSourceModal(${chartId})">
+                        <svg class="chartlab-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                        <div class="chartlab-empty-text" style="text-decoration: underline;">Start by selecting a data source</div>
+                        <div class="chartlab-empty-hint">클릭하여 데이터 소스를 선택하세요</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // X축이 선택되지 않은 경우
+            if (!ds.data || ds.data.length === 0 || !chart.xAxis.field) {
+                chartEl.innerHTML = `
+                    <div class="chartlab-empty-state">
+                        <svg class="chartlab-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                        <div class="chartlab-empty-text">차트 구성을 완료하세요</div>
+                        <div class="chartlab-empty-hint">좌측 패널에서 X축, Y축 필드를 선택하세요</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 차트 렌더링
+            const processedData = processChartLabData(ds.data, chart);
+            const options = buildHighchartsOptions(chart, processedData);
+            Highcharts.chart(`chartlab-chart-${chartId}`, options);
+        }
+
+        // 헤더 렌더링 (하위 호환성 유지)
+        function renderChartLabHeader() {
+            const dataSource = chartLabDataSources[chartLabState.dataSource];
+            return `
+                <div class="chartlab-header">
+                    <div class="chartlab-header-left">
+                        <select class="chartlab-datasource-select" id="chartlabDataSource" onchange="handleChartLabDataSourceChange(this.value)">
+                            ${Object.entries(chartLabDataSources).map(([id, ds]) => `
+                                <option value="${id}" ${chartLabState.dataSource === id ? 'selected' : ''}>${ds.name}</option>
+                            `).join('')}
+                        </select>
+                        <div class="chartlab-filter-chips">
+                            ${chartLabState.filters.map((filter, idx) => `
+                                <div class="chartlab-filter-chip">
+                                    ${filter.field} ${filter.operator} ${filter.value}
+                                    <span class="remove-btn" onclick="removeChartLabFilter(${idx})">✕</span>
+                                </div>
+                            `).join('')}
+                            <button class="chartlab-add-filter-btn" onclick="showChartLabFilterModal()">
+                                + 필터 추가
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chartlab-header-right">
+                        <button class="chartlab-btn chartlab-btn-secondary" onclick="saveChartLabConfig()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            저장
+                        </button>
+                        <button class="chartlab-btn chartlab-btn-primary" onclick="exportChartLabAsImage()">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            이미지 내보내기
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 사이드바 렌더링
+        function renderChartLabSidebar() {
+            const dataSource = chartLabDataSources[chartLabState.dataSource];
+            return `
+                <div class="chartlab-sidebar">
+                    ${renderChartLabTypeSelector()}
+                    ${renderChartLabTabs()}
+                    <div class="chartlab-tab-content">
+                        ${chartLabState.activeTab === 'data' ? renderChartLabDataTab(dataSource) : renderChartLabStyleTab()}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 차트 유형 선택기
+        function renderChartLabTypeSelector() {
+            const currentType = chartLabChartTypes.find(t => t.id === chartLabState.chartType);
+            return `
+                <div class="chartlab-type-selector">
+                    <div class="chartlab-type-label">Type</div>
+                    <select class="chartlab-type-dropdown" id="chartlabChartType" onchange="handleChartLabChartTypeChange(this.value)">
+                        ${chartLabChartTypes.map(type => `
+                            <option value="${type.id}" ${chartLabState.chartType === type.id ? 'selected' : ''}>
+                                ${type.icon} ${type.name}
+                            </option>
+                        `).join('')}
+                    </select>
+                </div>
+            `;
+        }
+
+        // 탭 렌더링
+        function renderChartLabTabs() {
+            return `
+                <div class="chartlab-tabs">
+                    <button class="chartlab-tab ${chartLabState.activeTab === 'data' ? 'active' : ''}" onclick="switchChartLabTab('data')">Data</button>
+                    <button class="chartlab-tab ${chartLabState.activeTab === 'style' ? 'active' : ''}" onclick="switchChartLabTab('style')">Style</button>
+                </div>
+            `;
+        }
+
+        // Data 탭 렌더링
+        function renderChartLabDataTab(dataSource) {
+            return `
+                ${renderChartLabUploadArea()}
+                ${renderChartLabXAxis(dataSource)}
+                ${renderChartLabYAxis(dataSource)}
+                ${renderChartLabColorBy(dataSource)}
+                ${renderChartLabFaceting(dataSource)}
+                ${renderChartLabTooltips(dataSource)}
+            `;
+        }
+
+        // 파일 업로드 영역
+        function renderChartLabUploadArea() {
+            return `
+                <div class="chartlab-upload-area">
+                    <div class="chartlab-upload-dropzone" id="chartlabDropzone">
+                        <svg class="chartlab-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <div class="chartlab-upload-text">파일을 드래그하거나 클릭하여 업로드</div>
+                        <div class="chartlab-upload-hint">CSV, JSON 파일 지원</div>
+                        <input type="file" id="chartlabFileInput" accept=".csv,.json" style="display:none" onchange="handleChartLabFileSelect(event)">
+                    </div>
+                </div>
+            `;
+        }
+
+        // X축 설정
+        function renderChartLabXAxis(dataSource) {
+            const xField = dataSource.fields.find(f => f.id === chartLabState.xAxis.field);
+            const isDatetime = xField && xField.type === 'datetime';
+
+            return `
+                <div class="chartlab-section" id="chartlab-xaxis-section">
+                    <div class="chartlab-section-header" onclick="toggleChartLabSection('chartlab-xaxis-section')">
+                        <div class="chartlab-section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                            X-axis
+                        </div>
+                        <svg class="chartlab-section-toggle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="chartlab-section-content">
+                        ${chartLabState.xAxis.field ? `
+                            <div class="chartlab-field-item">
+                                <div class="chartlab-field-info">
+                                    <div class="chartlab-field-name">${xField ? xField.name : chartLabState.xAxis.field}</div>
+                                    <div class="chartlab-field-meta">Scale: ${isDatetime ? 'Date' : 'Linear'}</div>
+                                </div>
+                                <button class="chartlab-field-remove" onclick="removeChartLabXAxis()">✕</button>
+                            </div>
+                            ${isDatetime ? `
+                                <select class="chartlab-field-dropdown" onchange="handleChartLabTimeUnitChange(this.value)">
+                                    ${chartLabTimeUnits.map(unit => `
+                                        <option value="${unit.id}" ${chartLabState.xAxis.timeUnit === unit.id ? 'selected' : ''}>${unit.name}</option>
+                                    `).join('')}
+                                </select>
+                            ` : ''}
+                        ` : `
+                            <select class="chartlab-field-dropdown" onchange="handleChartLabXAxisChange(this.value)">
+                                <option value="">필드 선택...</option>
+                                ${dataSource.fields.map(field => `
+                                    <option value="${field.id}">${field.name} (${field.type})</option>
+                                `).join('')}
+                            </select>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Y축 설정
+        function renderChartLabYAxis(dataSource) {
+            return `
+                <div class="chartlab-section" id="chartlab-yaxis-section">
+                    <div class="chartlab-section-header" onclick="toggleChartLabSection('chartlab-yaxis-section')">
+                        <div class="chartlab-section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="19" x2="12" y2="5"></line>
+                                <polyline points="5 12 12 5 19 12"></polyline>
+                            </svg>
+                            Y-axis
+                        </div>
+                        <svg class="chartlab-section-toggle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="chartlab-section-content">
+                        ${chartLabState.yAxis.map((yConfig, idx) => {
+                            const yField = dataSource.fields.find(f => f.id === yConfig.field);
+                            return yConfig.field ? `
+                                <div class="chartlab-field-item">
+                                    <div class="chartlab-field-info">
+                                        <div class="chartlab-field-name">${yField ? yField.name : yConfig.field}</div>
+                                        <div class="chartlab-field-meta">Aggregate: ${yConfig.aggregate}</div>
+                                    </div>
+                                    <button class="chartlab-field-remove" onclick="removeChartLabYAxis(${idx})">✕</button>
+                                </div>
+                                <select class="chartlab-field-dropdown" onchange="handleChartLabYAxisAggregateChange(${idx}, this.value)">
+                                    ${chartLabAggregations.map(agg => `
+                                        <option value="${agg.id}" ${yConfig.aggregate === agg.id ? 'selected' : ''}>${agg.name}</option>
+                                    `).join('')}
+                                </select>
+                            ` : `
+                                <select class="chartlab-field-dropdown" onchange="handleChartLabYAxisChange(${idx}, this.value)">
+                                    <option value="">필드 선택...</option>
+                                    ${dataSource.fields.filter(f => f.type === 'number').map(field => `
+                                        <option value="${field.id}">${field.name}</option>
+                                    `).join('')}
+                                </select>
+                            `;
+                        }).join('')}
+                        <button class="chartlab-add-field-btn" onclick="addChartLabYAxis()">
+                            + Y-axis 추가
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Color by 설정
+        function renderChartLabColorBy(dataSource) {
+            const colorField = dataSource.fields.find(f => f.id === chartLabState.colorBy.field);
+            return `
+                <div class="chartlab-section" id="chartlab-color-section">
+                    <div class="chartlab-section-header" onclick="toggleChartLabSection('chartlab-color-section')">
+                        <div class="chartlab-section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="13.5" cy="6.5" r="2.5"></circle>
+                                <circle cx="6.5" cy="17.5" r="2.5"></circle>
+                                <circle cx="17.5" cy="17.5" r="2.5"></circle>
+                            </svg>
+                            Color by
+                        </div>
+                        <svg class="chartlab-section-toggle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="chartlab-section-content">
+                        ${chartLabState.colorBy.field ? `
+                            <div class="chartlab-field-item">
+                                <div class="chartlab-field-info">
+                                    <div class="chartlab-field-name">${colorField ? colorField.name : chartLabState.colorBy.field}</div>
+                                    <div class="chartlab-field-meta">Series</div>
+                                </div>
+                                <button class="chartlab-field-remove" onclick="removeChartLabColorBy()">✕</button>
+                            </div>
+                        ` : `
+                            <select class="chartlab-field-dropdown" onchange="handleChartLabColorByChange(this.value)">
+                                <option value="">필드 선택...</option>
+                                ${dataSource.fields.filter(f => f.type === 'string').map(field => `
+                                    <option value="${field.id}">${field.name}</option>
+                                `).join('')}
+                            </select>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Faceting 설정
+        function renderChartLabFaceting(dataSource) {
+            const facetField = dataSource.fields.find(f => f.id === chartLabState.faceting.field);
+            return `
+                <div class="chartlab-section" id="chartlab-facet-section">
+                    <div class="chartlab-section-header" onclick="toggleChartLabSection('chartlab-facet-section')">
+                        <div class="chartlab-section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                            </svg>
+                            Faceting
+                        </div>
+                        <svg class="chartlab-section-toggle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="chartlab-section-content">
+                        ${chartLabState.faceting.field ? `
+                            <div class="chartlab-field-item">
+                                <div class="chartlab-field-info">
+                                    <div class="chartlab-field-name">${facetField ? facetField.name : chartLabState.faceting.field}</div>
+                                    <div class="chartlab-field-meta">분할 기준</div>
+                                </div>
+                                <button class="chartlab-field-remove" onclick="removeChartLabFaceting()">✕</button>
+                            </div>
+                        ` : `
+                            <select class="chartlab-field-dropdown" onchange="handleChartLabFacetingChange(this.value)">
+                                <option value="">필드 선택 (선택사항)...</option>
+                                ${dataSource.fields.filter(f => f.type === 'string').map(field => `
+                                    <option value="${field.id}">${field.name}</option>
+                                `).join('')}
+                            </select>
+                        `}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Tooltips 설정
+        function renderChartLabTooltips(dataSource) {
+            return `
+                <div class="chartlab-section" id="chartlab-tooltip-section">
+                    <div class="chartlab-section-header" onclick="toggleChartLabSection('chartlab-tooltip-section')">
+                        <div class="chartlab-section-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="9" y1="9" x2="15" y2="9"></line>
+                                <line x1="9" y1="13" x2="15" y2="13"></line>
+                            </svg>
+                            Tooltips
+                        </div>
+                        <svg class="chartlab-section-toggle" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="chartlab-section-content">
+                        <div class="chartlab-field-item">
+                            <div class="chartlab-field-info">
+                                <div class="chartlab-field-name">기본 정보</div>
+                                <div class="chartlab-field-meta">X, Y, Color 값 표시</div>
+                            </div>
+                            <input type="checkbox" checked disabled style="accent-color: var(--claude-orange);">
+                        </div>
+                        <button class="chartlab-add-field-btn" onclick="addChartLabTooltipField()">
+                            + 추가 필드
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Style 탭 렌더링
+        function renderChartLabStyleTab() {
+            return `
+                <div class="chartlab-style-section">
+                    <div class="chartlab-style-label">차트 제목</div>
+                    <input type="text" class="chartlab-style-input" id="chartlabTitle"
+                        value="${chartLabState.style.title}"
+                        placeholder="제목을 입력하세요..."
+                        onchange="handleChartLabTitleChange(this.value)">
+                </div>
+                <div class="chartlab-style-section">
+                    <div class="chartlab-style-label">색상 팔레트</div>
+                    <div class="chartlab-color-palette">
+                        ${chartLabState.style.colors.map((color, idx) => `
+                            <div class="chartlab-color-swatch"
+                                style="background: ${color}"
+                                onclick="editChartLabColor(${idx})"
+                                title="${color}">
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="chartlab-style-section">
+                    <div class="chartlab-style-label">범례 위치</div>
+                    <div class="chartlab-radio-group">
+                        <label class="chartlab-radio-item">
+                            <input type="radio" name="legendPosition" value="right"
+                                ${chartLabState.style.legendPosition === 'right' ? 'checked' : ''}
+                                onchange="handleChartLabLegendPositionChange(this.value)">
+                            오른쪽
+                        </label>
+                        <label class="chartlab-radio-item">
+                            <input type="radio" name="legendPosition" value="bottom"
+                                ${chartLabState.style.legendPosition === 'bottom' ? 'checked' : ''}
+                                onchange="handleChartLabLegendPositionChange(this.value)">
+                            아래
+                        </label>
+                        <label class="chartlab-radio-item">
+                            <input type="radio" name="legendPosition" value="top"
+                                ${chartLabState.style.legendPosition === 'top' ? 'checked' : ''}
+                                onchange="handleChartLabLegendPositionChange(this.value)">
+                            위
+                        </label>
+                        <label class="chartlab-radio-item">
+                            <input type="radio" name="legendPosition" value="none"
+                                ${chartLabState.style.legendPosition === 'none' ? 'checked' : ''}
+                                onchange="handleChartLabLegendPositionChange(this.value)">
+                            숨김
+                        </label>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 메인 차트 영역 렌더링
+        function renderChartLabMain() {
+            return `
+                <div class="chartlab-main">
+                    <div class="chartlab-chart-wrapper">
+                        ${chartLabState.style.title ? `<div class="chartlab-chart-title">${chartLabState.style.title}</div>` : ''}
+                        <div id="chartlab-chart"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 이벤트 리스너 등록
+        function attachChartLabEventListeners() {
+            // 파일 드롭존 이벤트
+            const dropzone = document.getElementById('chartlabDropzone');
+            if (dropzone) {
+                dropzone.addEventListener('click', () => {
+                    document.getElementById('chartlabFileInput').click();
+                });
+
+                dropzone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropzone.classList.add('dragover');
+                });
+
+                dropzone.addEventListener('dragleave', () => {
+                    dropzone.classList.remove('dragover');
+                });
+
+                dropzone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropzone.classList.remove('dragover');
+                    const file = e.dataTransfer.files[0];
+                    if (file) handleChartLabFileUpload(file);
+                });
+            }
+        }
+
+        // 탭 전환
+        function switchChartLabTab(tab) {
+            chartLabState.activeTab = tab;
+            refreshChartLabSidebar();
+        }
+
+        // 섹션 토글
+        function toggleChartLabSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.classList.toggle('collapsed');
+            }
+        }
+
+        // 사이드바 새로고침
+        function refreshChartLabSidebar() {
+            const sidebar = document.querySelector('.chartlab-sidebar');
+            if (sidebar) {
+                const dataSource = chartLabDataSources[chartLabState.dataSource];
+                sidebar.innerHTML = `
+                    ${renderChartLabTypeSelector()}
+                    ${renderChartLabTabs()}
+                    <div class="chartlab-tab-content">
+                        ${chartLabState.activeTab === 'data' ? renderChartLabDataTab(dataSource) : renderChartLabStyleTab()}
+                    </div>
+                `;
+                attachChartLabEventListeners();
+            }
+        }
+
+        // 데이터소스 변경
+        function handleChartLabDataSourceChange(sourceId) {
+            chartLabState.dataSource = sourceId;
+            // 필드 초기화
+            const ds = chartLabDataSources[sourceId];
+            if (ds.fields.length > 0) {
+                const dateField = ds.fields.find(f => f.type === 'datetime');
+                const numField = ds.fields.find(f => f.type === 'number');
+                const strField = ds.fields.find(f => f.type === 'string');
+
+                chartLabState.xAxis.field = dateField ? dateField.id : (ds.fields[0] ? ds.fields[0].id : null);
+                chartLabState.yAxis = [{ field: numField ? numField.id : null, aggregate: 'sum' }];
+                chartLabState.colorBy.field = strField ? strField.id : null;
+            } else {
+                chartLabState.xAxis.field = null;
+                chartLabState.yAxis = [{ field: null, aggregate: 'sum' }];
+                chartLabState.colorBy.field = null;
+            }
+            chartLabState.faceting.field = null;
+            chartLabState.filters = [];
+
+            refreshChartLabSidebar();
+            updateChartLabChart();
+        }
+
+        // 차트 유형 변경
+        function handleChartLabChartTypeChange(type) {
+            chartLabState.chartType = type;
+            updateChartLabChart();
+        }
+
+        // X축 변경
+        function handleChartLabXAxisChange(fieldId) {
+            chartLabState.xAxis.field = fieldId;
+            const ds = chartLabDataSources[chartLabState.dataSource];
+            const field = ds.fields.find(f => f.id === fieldId);
+            chartLabState.xAxis.scaleType = field && field.type === 'datetime' ? 'datetime' : 'linear';
+            refreshChartLabSidebar();
+            updateChartLabChart();
+        }
+
+        // X축 제거
+        function removeChartLabXAxis() {
+            chartLabState.xAxis.field = null;
+            refreshChartLabSidebar();
+            updateChartLabChart();
+        }
+
+        // 시간 단위 변경
+        function handleChartLabTimeUnitChange(unit) {
+            chartLabState.xAxis.timeUnit = unit;
+            updateChartLabChart();
+        }
+
+        // Y축 변경
+        function handleChartLabYAxisChange(index, fieldId) {
+            chartLabState.yAxis[index].field = fieldId;
+            refreshChartLabSidebar();
+            updateChartLabChart();
+        }
+
+        // Y축 집계 변경
+        function handleChartLabYAxisAggregateChange(index, aggregate) {
+            chartLabState.yAxis[index].aggregate = aggregate;
+            updateChartLabChart();
+        }
+
+        // Y축 추가
+        function addChartLabYAxis() {
+            chartLabState.yAxis.push({ field: null, aggregate: 'sum' });
+            refreshChartLabSidebar();
+        }
+
+        // Y축 제거
+        function removeChartLabYAxis(index) {
+            if (chartLabState.yAxis.length > 1) {
+                chartLabState.yAxis.splice(index, 1);
+                refreshChartLabSidebar();
+                updateChartLabChart();
+            }
+        }
+
+        // Color by 변경
+        function handleChartLabColorByChange(fieldId) {
+            chartLabState.colorBy.field = fieldId;
+            refreshChartLabSidebar();
+            updateChartLabChart();
+        }
+
+        // Color by 제거
+        function removeChartLabColorBy() {
+            chartLabState.colorBy.field = null;
+            refreshChartLabSidebar();
+            updateChartLabChart();
+        }
+
+        // Faceting 변경
+        function handleChartLabFacetingChange(fieldId) {
+            chartLabState.faceting.field = fieldId;
+            refreshChartLabSidebar();
+            updateChartLabChart();
+        }
+
+        // Faceting 제거
+        function removeChartLabFaceting() {
+            chartLabState.faceting.field = null;
+            refreshChartLabSidebar();
+            updateChartLabChart();
+        }
+
+        // 제목 변경
+        function handleChartLabTitleChange(title) {
+            chartLabState.style.title = title;
+            const titleEl = document.querySelector('.chartlab-chart-title');
+            if (titleEl) {
+                titleEl.textContent = title;
+            } else if (title) {
+                const wrapper = document.querySelector('.chartlab-chart-wrapper');
+                const chartEl = document.getElementById('chartlab-chart');
+                if (wrapper && chartEl) {
+                    const titleDiv = document.createElement('div');
+                    titleDiv.className = 'chartlab-chart-title';
+                    titleDiv.textContent = title;
+                    wrapper.insertBefore(titleDiv, chartEl);
+                }
+            }
+        }
+
+        // 범례 위치 변경
+        function handleChartLabLegendPositionChange(position) {
+            chartLabState.style.legendPosition = position;
+            updateChartLabChart();
+        }
+
+        // 색상 편집
+        function editChartLabColor(index) {
+            const newColor = prompt('새 색상 (HEX 형식):', chartLabState.style.colors[index]);
+            if (newColor && /^#[0-9A-Fa-f]{6}$/.test(newColor)) {
+                chartLabState.style.colors[index] = newColor;
+                refreshChartLabSidebar();
+                updateChartLabChart();
+            }
+        }
+
+        // 필터 모달 표시
+        function showChartLabFilterModal() {
+            const ds = chartLabDataSources[chartLabState.dataSource];
+            const modalHtml = `
+                <div class="chartlab-filter-modal" onclick="if(event.target===this)closeChartLabFilterModal()">
+                    <div class="chartlab-filter-modal-content">
+                        <div class="chartlab-filter-modal-header">
+                            <div class="chartlab-filter-modal-title">필터 추가</div>
+                            <button class="chartlab-filter-modal-close" onclick="closeChartLabFilterModal()">✕</button>
+                        </div>
+                        <div class="chartlab-filter-modal-body">
+                            <div class="chartlab-filter-row">
+                                <select class="chartlab-filter-select" id="filterField">
+                                    <option value="">필드 선택...</option>
+                                    ${ds.fields.map(f => `<option value="${f.id}">${f.name}</option>`).join('')}
+                                </select>
+                            </div>
+                            <div class="chartlab-filter-row">
+                                <select class="chartlab-filter-select" id="filterOperator">
+                                    <option value="=">=</option>
+                                    <option value="!=">!=</option>
+                                    <option value=">">&gt;</option>
+                                    <option value="<">&lt;</option>
+                                    <option value=">=">>=</option>
+                                    <option value="<="><=</option>
+                                    <option value="contains">포함</option>
+                                </select>
+                            </div>
+                            <div class="chartlab-filter-row">
+                                <input type="text" class="chartlab-style-input" id="filterValue" placeholder="값 입력...">
+                            </div>
+                        </div>
+                        <div class="chartlab-filter-modal-footer">
+                            <button class="chartlab-btn chartlab-btn-secondary" onclick="closeChartLabFilterModal()">취소</button>
+                            <button class="chartlab-btn chartlab-btn-primary" onclick="applyChartLabFilter()">적용</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        // 필터 모달 닫기
+        function closeChartLabFilterModal() {
+            const modal = document.querySelector('.chartlab-filter-modal');
+            if (modal) modal.remove();
+        }
+
+        // 필터 적용
+        function applyChartLabFilter() {
+            const field = document.getElementById('filterField').value;
+            const operator = document.getElementById('filterOperator').value;
+            const value = document.getElementById('filterValue').value;
+
+            if (field && value) {
+                chartLabState.filters.push({ field, operator, value });
+                closeChartLabFilterModal();
+                refreshChartLabHeader();
+                updateChartLabChart();
+            }
+        }
+
+        // 헤더 새로고침
+        function refreshChartLabHeader() {
+            const header = document.querySelector('.chartlab-header');
+            if (header) {
+                header.outerHTML = renderChartLabHeader();
+            }
+        }
+
+        // 필터 제거
+        function removeChartLabFilter(index) {
+            chartLabState.filters.splice(index, 1);
+            refreshChartLabHeader();
+            updateChartLabChart();
+        }
+
+        // 툴팁 필드 추가
+        function addChartLabTooltipField() {
+            showChartLabToast('툴팁 커스터마이징 기능은 추후 업데이트 예정입니다.', 'info');
+        }
+
+        // 토스트 알림
+        function showChartLabToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `chartlab-toast chartlab-toast-${type}`;
+            toast.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    ${type === 'success' ? '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline>' :
+                    '<circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line>'}
+                </svg>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // 파일 선택 핸들러
+        function handleChartLabFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) handleChartLabFileUpload(file);
+        }
+
+        // 파일 업로드 처리
+        function handleChartLabFileUpload(file) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const content = e.target.result;
+                let data, fields;
+
+                try {
+                    if (file.name.endsWith('.csv')) {
+                        const result = parseChartLabCSV(content);
+                        data = result.data;
+                        fields = result.fields;
+                    } else if (file.name.endsWith('.json')) {
+                        const result = parseChartLabJSON(content);
+                        data = result.data;
+                        fields = result.fields;
+                    } else {
+                        showChartLabToast('지원하지 않는 파일 형식입니다.', 'error');
+                        return;
+                    }
+
+                    chartLabDataSources.custom = {
+                        name: file.name,
+                        fields: fields,
+                        data: data
+                    };
+
+                    chartLabState.dataSource = 'custom';
+
+                    // 필드 자동 설정
+                    const dateField = fields.find(f => f.type === 'datetime');
+                    const numField = fields.find(f => f.type === 'number');
+                    const strField = fields.find(f => f.type === 'string');
+
+                    chartLabState.xAxis.field = dateField ? dateField.id : (fields[0] ? fields[0].id : null);
+                    chartLabState.yAxis = [{ field: numField ? numField.id : null, aggregate: 'sum' }];
+                    chartLabState.colorBy.field = strField ? strField.id : null;
+                    chartLabState.faceting.field = null;
+                    chartLabState.filters = [];
+
+                    // UI 업데이트
+                    refreshChartLabHeader();
+                    refreshChartLabSidebar();
+                    updateChartLabChart();
+
+                    showChartLabToast(`${file.name} 파일이 업로드되었습니다.`, 'success');
+                } catch (err) {
+                    showChartLabToast('파일 파싱 중 오류가 발생했습니다: ' + err.message, 'error');
+                }
+            };
+
+            reader.readAsText(file);
+        }
+
+        // CSV 파싱
+        function parseChartLabCSV(content) {
+            const lines = content.trim().split('\n');
+            const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
+
+            const data = [];
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => v.trim().replace(/^["']|["']$/g, ''));
+                const row = {};
+                headers.forEach((header, idx) => {
+                    row[header] = values[idx] || '';
+                });
+                data.push(row);
+            }
+
+            // 필드 타입 추론
+            const fields = headers.map(header => {
+                const sampleValues = data.slice(0, 10).map(row => row[header]).filter(v => v);
+                let type = 'string';
+
+                if (sampleValues.every(v => !isNaN(parseFloat(v)))) {
+                    type = 'number';
+                } else if (sampleValues.every(v => !isNaN(Date.parse(v)))) {
+                    type = 'datetime';
+                }
+
+                return { id: header, name: header, type };
+            });
+
+            // 숫자 변환
+            data.forEach(row => {
+                fields.forEach(field => {
+                    if (field.type === 'number') {
+                        row[field.id] = parseFloat(row[field.id]) || 0;
+                    }
+                });
+            });
+
+            return { data, fields };
+        }
+
+        // JSON 파싱
+        function parseChartLabJSON(content) {
+            const json = JSON.parse(content);
+            const data = Array.isArray(json) ? json : (json.data || []);
+
+            if (data.length === 0) {
+                return { data: [], fields: [] };
+            }
+
+            // 필드 추론
+            const sampleRow = data[0];
+            const fields = Object.keys(sampleRow).map(key => {
+                const sampleValues = data.slice(0, 10).map(row => row[key]).filter(v => v !== null && v !== undefined);
+                let type = 'string';
+
+                if (sampleValues.every(v => typeof v === 'number')) {
+                    type = 'number';
+                } else if (sampleValues.every(v => !isNaN(Date.parse(v)))) {
+                    type = 'datetime';
+                }
+
+                return { id: key, name: key, type };
+            });
+
+            return { data, fields };
+        }
+
+        // 데이터 처리
+        function processChartLabData(data, state) {
+            const ds = chartLabDataSources[state.dataSource];
+            let processedData = [...data];
+
+            // 필터 적용
+            if (state.filters.length > 0) {
+                processedData = processedData.filter(row => {
+                    return state.filters.every(filter => {
+                        const value = row[filter.field];
+                        const filterVal = filter.value;
+
+                        switch (filter.operator) {
+                            case '=': return String(value) === filterVal;
+                            case '!=': return String(value) !== filterVal;
+                            case '>': return parseFloat(value) > parseFloat(filterVal);
+                            case '<': return parseFloat(value) < parseFloat(filterVal);
+                            case '>=': return parseFloat(value) >= parseFloat(filterVal);
+                            case '<=': return parseFloat(value) <= parseFloat(filterVal);
+                            case 'contains': return String(value).toLowerCase().includes(filterVal.toLowerCase());
+                            default: return true;
+                        }
+                    });
+                });
+            }
+
+            // X축 필드가 없으면 빈 배열 반환
+            if (!state.xAxis.field) return { series: [], categories: [] };
+
+            // X축 그룹화 키 생성 함수
+            const getXKey = (row) => {
+                const val = row[state.xAxis.field];
+                if (state.xAxis.scaleType === 'datetime') {
+                    const date = new Date(val);
+                    switch (state.xAxis.timeUnit) {
+                        case 'year': return date.getFullYear().toString();
+                        case 'quarter': return `${date.getFullYear()}-Q${Math.floor(date.getMonth() / 3) + 1}`;
+                        case 'month': return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                        case 'week': return `${date.getFullYear()}-W${getWeekNumber(date)}`;
+                        case 'day': return date.toISOString().split('T')[0];
+                        default: return date.getFullYear().toString();
+                    }
+                }
+                return String(val);
+            };
+
+            // Color by가 있으면 시리즈 분리
+            if (state.colorBy.field) {
+                const seriesMap = {};
+                const categories = new Set();
+
+                processedData.forEach(row => {
+                    const xKey = getXKey(row);
+                    const seriesKey = row[state.colorBy.field];
+                    categories.add(xKey);
+
+                    if (!seriesMap[seriesKey]) {
+                        seriesMap[seriesKey] = {};
+                    }
+                    if (!seriesMap[seriesKey][xKey]) {
+                        seriesMap[seriesKey][xKey] = [];
+                    }
+                    seriesMap[seriesKey][xKey].push(row);
+                });
+
+                const sortedCategories = Array.from(categories).sort();
+                const yConfig = state.yAxis[0] || { field: null, aggregate: 'sum' };
+
+                const series = Object.entries(seriesMap).map(([name, xData]) => ({
+                    name,
+                    data: sortedCategories.map(cat => {
+                        const rows = xData[cat] || [];
+                        return aggregateValue(rows, yConfig.field, yConfig.aggregate);
+                    })
+                }));
+
+                return { series, categories: sortedCategories };
+            } else {
+                // 단일 시리즈
+                const grouped = {};
+                processedData.forEach(row => {
+                    const xKey = getXKey(row);
+                    if (!grouped[xKey]) grouped[xKey] = [];
+                    grouped[xKey].push(row);
+                });
+
+                const categories = Object.keys(grouped).sort();
+                const yConfig = state.yAxis[0] || { field: null, aggregate: 'sum' };
+
+                const series = [{
+                    name: yConfig.field || 'Value',
+                    data: categories.map(cat => aggregateValue(grouped[cat], yConfig.field, yConfig.aggregate))
+                }];
+
+                return { series, categories };
+            }
+        }
+
+        // 주차 계산
+        function getWeekNumber(date) {
+            const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            const dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        }
+
+        // 집계 계산
+        function aggregateValue(rows, field, aggregate) {
+            if (!field || rows.length === 0) return 0;
+
+            const values = rows.map(r => parseFloat(r[field]) || 0);
+
+            switch (aggregate) {
+                case 'sum': return values.reduce((a, b) => a + b, 0);
+                case 'avg': return values.reduce((a, b) => a + b, 0) / values.length;
+                case 'min': return Math.min(...values);
+                case 'max': return Math.max(...values);
+                case 'count': return rows.length;
+                default: return values.reduce((a, b) => a + b, 0);
+            }
+        }
+
+        // Highcharts 옵션 생성 (Livedocs 스타일 차트 유형 지원)
+        function buildHighchartsOptions(state, processedData) {
+            const chartType = state.chartType;
+
+            // Livedocs 스타일 차트 유형 매핑
+            let highchartsType = 'column';
+            let isStacked = false;
+            let isPercent = false;
+
+            // 차트 유형 파싱
+            if (chartType === 'grouped-column' || chartType === 'column') {
+                highchartsType = 'column';
+            } else if (chartType === 'stacked-column') {
+                highchartsType = 'column';
+                isStacked = true;
+            } else if (chartType === '100-stacked-column') {
+                highchartsType = 'column';
+                isStacked = true;
+                isPercent = true;
+            } else if (chartType === 'grouped-bar' || chartType === 'bar') {
+                highchartsType = 'bar';
+            } else if (chartType === 'stacked-bar') {
+                highchartsType = 'bar';
+                isStacked = true;
+            } else if (chartType === '100-stacked-bar') {
+                highchartsType = 'bar';
+                isStacked = true;
+                isPercent = true;
+            } else if (chartType === 'line') {
+                highchartsType = 'line';
+            } else if (chartType === 'stacked-area' || chartType === 'area') {
+                highchartsType = 'area';
+                isStacked = chartType.includes('stacked');
+            } else if (chartType === '100-stacked-area') {
+                highchartsType = 'area';
+                isStacked = true;
+                isPercent = true;
+            } else if (chartType === 'histogram') {
+                highchartsType = 'column';
+            } else if (chartType === 'scatter') {
+                highchartsType = 'scatter';
+            } else if (chartType === 'pie') {
+                highchartsType = 'pie';
+            }
+
+            const legendAlign = state.style.legendPosition === 'right' ? 'right' :
+                               state.style.legendPosition === 'bottom' ? 'center' : 'center';
+            const legendVerticalAlign = state.style.legendPosition === 'right' ? 'middle' :
+                                        state.style.legendPosition === 'bottom' ? 'bottom' : 'top';
+            const legendLayout = state.style.legendPosition === 'right' ? 'vertical' : 'horizontal';
+
+            const fontSize = state.style.fontSize || 10;
+
+            const options = {
+                chart: {
+                    type: highchartsType,
+                    backgroundColor: 'transparent',
+                    style: {
+                        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                        fontSize: fontSize + 'px'
+                    }
+                },
+                title: { text: null },
+                colors: state.style.colors,
+                xAxis: {
+                    categories: processedData.categories,
+                    labels: {
+                        style: { color: '#888', fontSize: fontSize + 'px' }
+                    },
+                    lineColor: '#444',
+                    tickColor: '#444'
+                },
+                yAxis: {
+                    title: { text: null },
+                    labels: {
+                        style: { color: '#888', fontSize: fontSize + 'px' },
+                        format: isPercent ? '{value}%' : '{value}'
+                    },
+                    gridLineColor: '#333',
+                    max: isPercent ? 100 : undefined
+                },
+                legend: {
+                    enabled: state.style.legendPosition !== 'none',
+                    align: legendAlign,
+                    verticalAlign: legendVerticalAlign,
+                    layout: legendLayout,
+                    itemStyle: { color: '#ccc', fontSize: fontSize + 'px' },
+                    itemHoverStyle: { color: '#fff' }
+                },
+                tooltip: {
+                    enabled: state.style.showTooltip !== false,
+                    backgroundColor: '#1a1a1a',
+                    borderColor: '#333',
+                    style: { color: '#fff', fontSize: fontSize + 'px' },
+                    shared: true,
+                    pointFormat: isPercent ?
+                        '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.percentage:.1f}%</b><br/>' :
+                        '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
+                },
+                plotOptions: {
+                    series: {
+                        stacking: isStacked ? (isPercent ? 'percent' : 'normal') : undefined
+                    },
+                    column: {
+                        borderRadius: 1,
+                        borderWidth: 0
+                    },
+                    bar: {
+                        borderRadius: 1,
+                        borderWidth: 0
+                    },
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            color: '#ccc',
+                            format: '<b>{point.name}</b>: {point.percentage:.1f}%',
+                            style: { fontSize: fontSize + 'px' }
+                        }
+                    }
+                },
+                series: processedData.series,
+                credits: { enabled: false }
+            };
+
+            // 파이 차트 특수 처리
+            if (highchartsType === 'pie') {
+                const pieData = processedData.categories.map((cat, i) => ({
+                    name: cat,
+                    y: processedData.series[0] ? processedData.series[0].data[i] : 0
+                }));
+                options.series = [{ name: 'Data', data: pieData }];
+            }
+
+            return options;
+        }
+
+        // 차트 업데이트
+        function updateChartLabChart() {
+            const chartEl = document.getElementById('chartlab-chart');
+            if (!chartEl) return;
+
+            const ds = chartLabDataSources[chartLabState.dataSource];
+
+            // 데이터가 없으면 빈 상태 표시
+            if (!ds.data || ds.data.length === 0 || !chartLabState.xAxis.field) {
+                chartEl.innerHTML = `
+                    <div class="chartlab-empty-state">
+                        <svg class="chartlab-empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                        <div class="chartlab-empty-text">차트를 생성하려면 데이터와 축을 설정하세요</div>
+                        <div class="chartlab-empty-hint">좌측 패널에서 X축, Y축 필드를 선택하세요</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Faceting 처리
+            if (chartLabState.faceting.field) {
+                renderFacetedCharts(ds);
+            } else {
+                const processedData = processChartLabData(ds.data, chartLabState);
+                const options = buildHighchartsOptions(chartLabState, processedData);
+                Highcharts.chart('chartlab-chart', options);
+            }
+        }
+
+        // Faceted 차트 렌더링
+        function renderFacetedCharts(ds) {
+            const facetField = chartLabState.faceting.field;
+            const facetValues = [...new Set(ds.data.map(row => row[facetField]))];
+
+            const chartEl = document.getElementById('chartlab-chart');
+            chartEl.innerHTML = `
+                <div class="chartlab-facet-grid">
+                    ${facetValues.map((val, idx) => `
+                        <div class="chartlab-facet-chart">
+                            <div class="chartlab-facet-title">${val}</div>
+                            <div id="chartlab-facet-${idx}" style="height: 200px;"></div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            // 각 facet에 대해 차트 렌더링
+            facetValues.forEach((val, idx) => {
+                const filteredData = ds.data.filter(row => row[facetField] === val);
+                const tempState = { ...chartLabState, faceting: { field: null } };
+                const processedData = processChartLabData(filteredData, tempState);
+                const options = buildHighchartsOptions(tempState, processedData);
+                options.chart.height = 200;
+                Highcharts.chart(`chartlab-facet-${idx}`, options);
+            });
+        }
+
+        // 설정 저장 (모든 차트)
+        function saveChartLabConfig() {
+            const configToSave = {
+                charts: chartLabCharts,
+                nextId: chartLabNextId,
+                activeChartId: chartLabActiveChartId
+            };
+            localStorage.setItem('chartlab_config_v2', JSON.stringify(configToSave));
+            showChartLabToast('모든 차트가 저장되었습니다.', 'success');
+        }
+
+        // 설정 불러오기 (모든 차트)
+        function loadChartLabConfig() {
+            // 새 버전 설정 먼저 시도
+            const savedV2 = localStorage.getItem('chartlab_config_v2');
+            if (savedV2) {
+                try {
+                    const config = JSON.parse(savedV2);
+                    if (config.charts && config.charts.length > 0) {
+                        chartLabCharts = config.charts;
+                        chartLabNextId = config.nextId || (Math.max(...config.charts.map(c => c.id)) + 1);
+                        chartLabActiveChartId = config.activeChartId || config.charts[0].id;
+                        // chartLabState도 첫 번째 차트로 업데이트 (하위 호환성)
+                        Object.assign(chartLabState, chartLabCharts[0]);
+                    }
+                    return;
+                } catch (e) {
+                    console.error('Failed to load chartlab config v2:', e);
+                }
+            }
+
+            // 이전 버전 설정 불러오기 (하위 호환성)
+            const saved = localStorage.getItem('chartlab_config');
+            if (saved) {
+                try {
+                    const config = JSON.parse(saved);
+                    Object.assign(chartLabState, config);
+                    chartLabCharts[0] = chartLabState;
+                } catch (e) {
+                    console.error('Failed to load chartlab config:', e);
+                }
+            }
+        }
+
+        // 이미지 내보내기
+        function exportChartLabAsImage() {
+            const charts = Highcharts.charts.filter(c => c && c.renderTo && c.renderTo.id && c.renderTo.id.startsWith('chartlab'));
+            if (charts.length > 0) {
+                charts[0].exportChart({ type: 'image/png' });
+            } else {
+                showChartLabToast('내보낼 차트가 없습니다.', 'error');
+            }
+        }
+
+        // 페이지 로드시 설정 불러오기
+        loadChartLabConfig();
 
         // 초기화
         initChart();
