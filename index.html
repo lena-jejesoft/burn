@@ -163,11 +163,360 @@
             color: var(--claude-orange);
         }
 
-        .chart-container {
+        /* Chart Area with Sidebar - ChartLab Style */
+        .chart-area {
+            display: flex;
+            flex: 0 0 auto;
+            min-height: 0;
             height: 55vh;
             min-height: 500px;
-            padding: 8px;
+            margin: 40px 8px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #1a1a1a;
+        }
+
+        .chart-sidebar {
+            width: 200px;
+            min-width: 200px;
+            border-right: 1px solid var(--border-color);
+            background: #1a1a1a;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px 0 0 8px;
+        }
+
+        /* 탭 토글 */
+        .chart-sidebar .tab-toggle {
+            display: flex;
+            padding: 12px 12px 0;
+            gap: 0;
+        }
+
+        .chart-sidebar .tab-btn {
+            flex: 1;
+            padding: 8px 12px;
+            background: transparent;
+            border: 1px solid #3a3a3a;
+            color: #888;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.15s;
+        }
+
+        .chart-sidebar .tab-btn:first-child {
+            border-radius: 4px 0 0 4px;
+            border-right: none;
+        }
+
+        .chart-sidebar .tab-btn:last-child {
+            border-radius: 0 4px 4px 0;
+        }
+
+        .chart-sidebar .tab-btn.active {
+            background: #3a3a3a;
+            color: #fff;
+            font-weight: 300;
+        }
+
+        .chart-sidebar .tab-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* 섹션 */
+        .chart-sidebar .sidebar-section {
+            padding: 16px 12px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .chart-sidebar .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .chart-sidebar .section-title {
+            font-size: 11px;
+            font-weight: 500;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .chart-sidebar .section-add-btn {
+            font-size: 11px;
+            color: #888;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .chart-sidebar .section-add-btn:hover {
+            color: #fff;
+        }
+
+        /* 드롭다운 */
+        .chart-sidebar .sidebar-dropdown {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .chart-sidebar .sidebar-dropdown:last-child {
+            margin-bottom: 0;
+        }
+
+        .chart-sidebar .dropdown-label {
+            font-size: 10px;
+            color: #888;
+            margin-bottom: 6px;
+        }
+
+        .chart-sidebar .dropdown-select {
+            width: 100%;
+            padding: 8px 28px 8px 10px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 300;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        .chart-sidebar .dropdown-select option {
+            font-weight: 300;
+            background: #2a2a2a;
+            color: #fff;
+        }
+
+        .chart-sidebar .dropdown-select:hover {
+            border-color: #666;
+            background: #333;
+        }
+
+        .chart-sidebar .dropdown-select:focus {
+            outline: none;
+            border-color: #666;
+        }
+
+        /* select 드롭다운 화살표 - dropdown-with-icon이 없는 경우만 */
+        .chart-sidebar .sidebar-dropdown:not(:has(.dropdown-with-icon))::after {
+            content: '';
+            position: absolute;
+            right: 10px;
+            bottom: 13px;
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid #888;
+            pointer-events: none;
+        }
+
+        .chart-sidebar .dropdown-with-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 28px 8px 10px;
+            background: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .chart-sidebar .dropdown-with-icon::after {
+            content: '';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-top: 5px solid #888;
+            pointer-events: none;
+        }
+
+        .chart-sidebar .dropdown-with-icon:hover {
+            border-color: #666;
+            background: #333;
+        }
+
+        .chart-sidebar .dropdown-icon {
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 드롭다운 그리드 */
+        .chart-sidebar .dropdown-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .chart-sidebar .dropdown-row .sidebar-dropdown {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        /* 시리즈 아이템 - 레전드 스타일 */
+        .chart-sidebar .series-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            transition: opacity 0.2s;
+        }
+
+        .chart-sidebar .series-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .chart-sidebar .series-item.hidden {
+            opacity: 0.4;
+        }
+
+        .chart-sidebar .series-item.hidden .series-line {
+            opacity: 0.4;
+        }
+
+        /* 시리즈 색상 라인 */
+        .chart-sidebar .series-line {
+            width: 18px;
+            height: 3px;
+            border-radius: 2px;
             flex-shrink: 0;
+        }
+
+        /* 시리즈 이름 */
+        .chart-sidebar .series-name {
+            font-size: 12px;
+            color: #ccc;
+            font-weight: 300;
+            flex: 1;
+        }
+
+        .chart-sidebar .series-remove {
+            background: none;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 2px;
+            line-height: 1;
+        }
+
+        .chart-sidebar .series-remove:hover {
+            color: #fff;
+        }
+
+        /* 시리즈 추가 버튼 */
+        .chart-sidebar .add-series-btn {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            background: transparent;
+            border: 1px dashed #555;
+            border-radius: 4px;
+            color: #888;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .chart-sidebar .add-series-btn:hover {
+            border-color: #777;
+            color: #aaa;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* 지표 선택 모달 */
+        /* 지표 추가 팝오버 */
+        .indicator-popover {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            width: 180px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            z-index: 100;
+            display: none;
+            max-height: 240px;
+            overflow-y: auto;
+        }
+
+        .indicator-popover.visible {
+            display: block;
+        }
+
+        .indicator-popover-list {
+            padding: 4px;
+        }
+
+        .indicator-popover-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: background 0.15s;
+        }
+
+        .indicator-popover-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .indicator-popover-empty {
+            padding: 12px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .indicator-select-item .indicator-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .indicator-select-item .indicator-name {
+            flex: 1;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .indicator-select-item .indicator-unit {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .chart-container {
+            flex: 1;
+            min-width: 0;
+            padding: 8px;
+            background: transparent;
+            border-radius: 0 8px 8px 0;
         }
 
         #stockChart {
@@ -178,16 +527,20 @@
         .table-container {
             flex: 1;
             min-width: 0;  /* flex 아이템 축소 허용 */
-            width: 100%;   /* 부모 너비에 맞춤 */
+            min-height: 200px;
+            width: calc(100% - 16px);   /* 부모 너비에 맞춤 */
             overflow-x: auto;
             overflow-y: auto;
-            padding: 8px;
-            min-height: 500px;
+            padding: 0;
+            margin: 20px 8px 8px;  /* 차트-테이블 사이 여백 0.5cm(20px) */
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: #1a1a1a;
         }
 
         .data-table {
-            width: 100%;
-            min-width: max-content;
+            width: max-content;
+            min-width: 100%;
             border-collapse: collapse;
             font-size: 12px;
         }
@@ -198,8 +551,37 @@
             padding: 6px 8px;
             text-align: center;
             white-space: nowrap;
+            width: 45px;
             min-width: 45px;
             box-sizing: border-box;
+        }
+
+        /* 출처 이름 열 고정 너비 - 차트 사이드바(200px)와 정렬 */
+        .data-table td.source-name {
+            width: 200px;
+            min-width: 200px;
+            max-width: 200px;
+        }
+
+        /* rowspan 있는 첫 번째 헤더 셀 - 차트 사이드바(200px)와 정렬 */
+        .data-table th[rowspan] {
+            width: 200px;
+            min-width: 200px;
+            max-width: 200px;
+        }
+
+        /* 테이블 마지막 행 하단 border 유지 */
+        .data-table tr:last-child td {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th:last-child,
+        .data-table td:last-child {
+            border-right: none;
+        }
+
+        .data-table tr:first-child th {
+            border-top: none;
         }
 
         .data-table th {
@@ -220,13 +602,33 @@
             color: var(--claude-orange);
         }
 
-        .data-table th:first-child {
+        .data-table th.year-header {
+            background: var(--bg-medium);
+            font-weight: 300;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2px 8px;
+            font-size: 11px;
+        }
+
+        .data-table th.month-header {
+            padding: 2px 8px;
+            font-size: 11px;
+            min-width: 45px;
+            width: 45px;
+            text-align: center !important;
+        }
+
+        .data-table thead tr:first-child th:first-child,
+        .data-table tbody td:first-child {
             text-align: left;
-            width: 80px;
+            width: 200px;
+            min-width: 200px;
+            max-width: 200px;
+            border-left: none;
         }
 
         .data-table td:first-child {
-            text-align: left;
             font-weight: 400;
             color: var(--text-muted);
         }
@@ -241,49 +643,84 @@
             color: var(--claude-orange);
         }
 
-        .source-detail-container {
+        /* 목록 뷰 스타일 */
+        .list-view {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .list-header {
             padding: 16px;
-            background: var(--bg-medium);
-            margin-top: 10px;
-            border-radius: 4px;
-            display: none;
-        }
-
-        .source-detail-container.active {
-            display: block;
-        }
-
-        .source-detail h4 {
+            border-bottom: 1px solid var(--border-color);
             font-size: 14px;
             font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 12px;
         }
 
-        .source-detail ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        .list-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px 0;
         }
 
-        .source-detail li {
-            padding: 6px 0;
-            padding-left: 16px;
-            position: relative;
-            font-size: 13px;
-            color: var(--text-secondary);
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
             border-bottom: 1px solid var(--border-color);
         }
 
-        .source-detail li:last-child {
-            border-bottom: none;
+        .list-item:hover {
+            background: var(--bg-hover);
         }
 
-        .source-detail li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
+        .list-item-date {
+            font-size: 12px;
             color: var(--text-muted);
+            flex-shrink: 0;
+            width: 45px;
+        }
+
+        .list-item-title {
+            font-size: 13px;
+            color: var(--text-primary);
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .list-item-revenue {
+            font-size: 12px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        /* 뒤로가기 버튼 */
+        .back-btn {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 12px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            width: 100%;
+        }
+
+        .back-btn svg {
+            flex-shrink: 0;
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
         }
 
         .source-item {
@@ -428,10 +865,7 @@
         }
 
         .source-manager-panel {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            margin-top: 4px;
+            position: fixed;
             background: var(--bg-light);
             border: 1px solid var(--border-color);
             border-radius: 6px;
@@ -1663,6 +2097,63 @@
             color: var(--text-muted);
         }
 
+        /* 원문 탭 스타일 */
+        .source-container {
+            padding: 16px;
+            padding-right: 10px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .source-header {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .source-title {
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .source-date {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .source-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .source-text {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 12px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+        }
+
+        .source-empty {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 40px 0;
+        }
+
         /* 산업 분석 스타일 */
         .industry-analysis-view {
             padding: 24px;
@@ -2196,14 +2687,20 @@
             overflow-y: auto;
         }
         .manual-toc-header {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
             border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        }
+        .manual-toc-header-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .manual-toc-header-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
         }
         .manual-toc-header svg {
             width: 20px;
@@ -2240,7 +2737,7 @@
 
         /* 매뉴얼 상세 (중앙 패널) */
         .manual-detail {
-            padding: 24px;
+            padding: 16px;
             height: 100%;
             overflow-y: auto;
         }
@@ -4531,6 +5028,97 @@
             margin-left: auto;
         }
 
+        /* 스냅샷 커스텀 드롭다운 스타일 */
+        .snapshot-custom-dropdown {
+            position: relative;
+        }
+
+        .snapshot-dropdown-selected {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .snapshot-dropdown-selected:hover {
+            border-color: var(--chartlab-highlight);
+        }
+
+        .snapshot-dropdown-text {
+            flex: 1;
+        }
+
+        .snapshot-dropdown-arrow {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s;
+        }
+
+        .snapshot-custom-dropdown.open .snapshot-dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .snapshot-dropdown-options {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            margin-top: 2px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .snapshot-custom-dropdown.open .snapshot-dropdown-options {
+            display: block;
+        }
+
+        .snapshot-dropdown-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+
+        .snapshot-dropdown-option:hover {
+            background: var(--bg-light);
+        }
+
+        .snapshot-dropdown-option.selected {
+            background: var(--chartlab-highlight);
+        }
+
+        .snapshot-dropdown-icon {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .snapshot-dropdown-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .snapshot-dropdown-check {
+            width: 14px;
+            height: 14px;
+            margin-left: auto;
+        }
+
         .chartlab-tabs {
             display: flex;
             border-bottom: 1px solid var(--border-color);
@@ -5799,16 +6387,18 @@
                             <h2 class="chart-title" id="chartTitle"></h2>
                         </div>
                     </div>
-                    <div class="chart-container">
-                        <div id="stockChart"></div>
+                    <div class="chart-area">
+                        <div class="chart-sidebar" id="chartSidebar">
+                            <!-- 사이드바 내용은 JavaScript로 렌더링 -->
+                        </div>
+                        <div class="chart-container">
+                            <div id="stockChart"></div>
+                        </div>
                     </div>
                     <div class="table-container">
                         <table class="data-table" id="dataTable">
                             <!-- 테이블 내용 -->
                         </table>
-                        <div class="source-detail-container" id="sourceDetailContainer">
-                            <!-- 출처 클릭 시 보고서 목록 표시 -->
-                        </div>
                     </div>
                 </div>
 
@@ -5833,7 +6423,6 @@
         <div class="popover-title" id="popoverTitle"></div>
         <div class="popover-content" id="popoverContent"></div>
     </div>
-
 
     <script>
         // 알림 데이터
@@ -5970,6 +6559,51 @@
                     id: 'dart-2022-01-1',
                     title: '2021년 4분기 잠정실적 공시',
                     summary: ['매출 2.5조원 달성', '영업이익 6,500억원', '던전앤파이터 중국 매출 호조', '메이플스토리 안정적 성장', '해외 매출 비중 65%'],
+                    content: `[공시 원문]
+
+주식회사 넥슨코리아 (대표이사: 이정헌)
+
+2021년 4분기 잠정실적 공시
+
+1. 개요
+당사는 2021년 제4분기(2021.10.01 ~ 2021.12.31) 잠정 연결재무제표를 다음과 같이 공시합니다.
+
+2. 주요 재무현황
+가. 매출액: 2조 5,000억원
+   - 전년 동기 대비 8% 증가
+   - PC 온라인 게임: 1조 3,750억원 (55%)
+   - 모바일 게임: 8,750억원 (35%)
+   - 콘솔/기타: 2,500억원 (10%)
+
+나. 영업이익: 6,500억원
+   - 전년 동기 대비 5% 증가
+   - 영업이익률: 26.0%
+
+다. 당기순이익: 5,200억원
+   - 전년 동기 대비 3% 증가
+
+3. 주요 게임별 실적
+가. 던전앤파이터
+   - 중국 서비스 분기 매출 7,000억원
+   - 신규 캐릭터 업데이트로 활성 유저 15% 증가
+
+나. 메이플스토리
+   - 국내 MMORPG 시장 점유율 1위 유지
+   - 신규 콘텐츠 업데이트로 결제 유저 10% 증가
+
+다. FC 온라인
+   - 분기 매출 5,000억원
+   - 시즌 업데이트 호조
+
+4. 향후 전망
+   - 2022년 상반기 신규 게임 출시 예정
+   - 글로벌 시장 확대 지속
+   - 메타버스 및 NFT 관련 사업 검토 중
+
+본 잠정실적은 외부감사인의 감사가 완료되지 않은 상태에서 작성되었으며, 확정 실적과 차이가 있을 수 있습니다.
+
+2022년 1월 15일
+주식회사 넥슨코리아`,
                     charts: [
                         {
                             title: '분기별 매출 추이 (억원)',
@@ -6027,6 +6661,57 @@
                     id: 'dart-2022-04-1',
                     title: '2022년 1분기 분기보고서',
                     summary: ['매출 2.3조원', '영업이익 5,800억원', '메이플스토리 리마스터 효과', '블루아카이브 글로벌 출시', '신규 유저 유입 증가'],
+                    content: `[공시 원문]
+
+주식회사 넥슨코리아 (대표이사: 이정헌)
+
+2022년 1분기 분기보고서
+
+Ⅰ. 회사의 개요
+1. 회사의 개요
+   - 상호: 주식회사 넥슨코리아
+   - 설립일: 2002년 5월 15일
+   - 본점 소재지: 경기도 성남시 분당구 판교로 256번길 7
+
+Ⅱ. 사업의 내용
+당사는 온라인/모바일 게임 개발 및 퍼블리싱을 주요 사업으로 영위하고 있습니다.
+
+Ⅲ. 재무에 관한 사항
+1. 요약 연결재무정보 (단위: 억원)
+
+   가. 매출액: 23,000
+      - 게임 매출: 22,310 (97%)
+      - 기타 매출: 690 (3%)
+
+   나. 영업이익: 5,800
+      - 영업이익률: 25.2%
+
+   다. 법인세비용차감전순이익: 6,100
+
+   라. 당기순이익: 4,880
+
+2. 부문별 매출 현황
+   가. PC 온라인: 12,650억원 (55%)
+   나. 모바일: 8,050억원 (35%)
+   다. 콘솔/기타: 2,300억원 (10%)
+
+3. 주요 게임별 실적
+   가. 메이플스토리
+      - 리마스터 업데이트 효과로 전분기 대비 매출 12% 증가
+      - 복귀 유저 캠페인 성공
+
+   나. 블루 아카이브
+      - 글로벌 서비스 확대
+      - 일본 시장 매출 급성장
+
+   다. 던전앤파이터
+      - 중국 매출 안정적 유지
+
+Ⅳ. 감사인의 의견
+본 분기보고서는 외부감사인의 검토를 받았습니다.
+
+2022년 4월 15일
+주식회사 넥슨코리아`,
                     charts: [
                         {
                             title: '전년 동기 대비 (억원)',
@@ -6188,6 +6873,64 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                     id: 'dart-2023-01-1',
                     title: '2022년 4분기 잠정실적 공시',
                     summary: ['매출 2.8조원 달성', '영업이익 7,200억원', '연간 매출 9.8조원 확정', 'FC온라인 월드컵 효과', '역대 최고 4분기 실적'],
+                    content: `[공시 원문]
+
+주식회사 넥슨코리아 (대표이사: 이정헌)
+
+2022년 4분기 및 연간 잠정실적 공시
+
+1. 개요
+당사는 2022년 제4분기(2022.10.01 ~ 2022.12.31) 및 연간 잠정 연결재무제표를 다음과 같이 공시합니다.
+
+2. 2022년 4분기 재무현황 (단위: 억원)
+가. 매출액: 28,000
+   - 전년 동기 대비 12% 증가
+   - 역대 최고 4분기 실적 달성
+
+나. 영업이익: 7,200
+   - 전년 동기 대비 10.8% 증가
+   - 영업이익률: 25.7%
+
+다. 당기순이익: 5,760
+
+3. 2022년 연간 실적 요약 (단위: 억원)
+가. 매출액: 98,000
+   - 전년(85,000) 대비 15.3% 증가
+   - 역대 최고 연간 매출 달성
+
+나. 영업이익: 26,800
+   - 전년(22,000) 대비 21.8% 증가
+   - 영업이익률: 27.3%
+
+다. 해외 매출 비중: 70%
+
+4. 4분기 주요 성과
+가. FC 온라인
+   - 카타르 월드컵 연계 이벤트 대성공
+   - 월드컵 기간 동시 접속자 200% 증가
+   - 분기 매출 7,840억원 (전분기 대비 30% 증가)
+
+나. 메이플스토리
+   - 겨울 대규모 업데이트 호조
+   - 분기 매출 8,400억원 (전년 동기 대비 8% 증가)
+
+다. 던전앤파이터
+   - 연말 시즌 이벤트 성공
+   - 분기 매출 7,000억원
+
+라. 블루아카이브
+   - 하프 애니버서리 이벤트
+   - 분기 매출 2,800억원
+
+5. 2023년 전망
+   - 연간 매출 10조원 돌파 목표
+   - 퍼스트 디센던트 개발 순조로운 진행
+   - 글로벌 신작 라인업 확대 예정
+
+본 잠정실적은 외부감사인의 감사가 완료되지 않은 상태에서 작성되었으며, 확정 실적과 차이가 있을 수 있습니다.
+
+2023년 1월 15일
+주식회사 넥슨코리아`,
                     charts: [
                         {
                             title: '2022년 분기별 실적 (억원)',
@@ -6829,6 +7572,55 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 '2024-12': [{
                     id: 'dart-2024-12-1',
                     title: '2024년 4분기 잠정실적 공시',
+                    content: `[잠정실적(공정공시)]
+
+1. 실적 개요
+   - 대상기간: 2024년 4분기 (2024.10.01 ~ 2024.12.31)
+   - 공시일: 2024년 12월 20일
+
+2. 잠정 실적 (연결기준)
+
+   구분           당분기         전분기         전년동기
+   ─────────────────────────────────────────────────────
+   매출액         3.8조원        3.5조원        3.2조원
+   영업이익       1.0조원        0.91조원       0.82조원
+   영업이익률     26.3%          26.0%          25.6%
+   당기순이익     0.8조원        0.73조원       0.65조원
+
+3. 2024년 연간 실적 (잠정)
+
+   구분           2024년(E)      2023년         증감률
+   ─────────────────────────────────────────────────────
+   매출액         13.7조원       12.0조원       +14.2%
+   영업이익       3.6조원        3.0조원        +20.0%
+   당기순이익     2.9조원        2.4조원        +20.8%
+
+4. 주요 성과
+
+   [게임별 실적]
+   • 메이플스토리: 20주년 효과 지속, 연간 매출 역대 최고
+   • 던전앤파이터: 중국 시장 안정적 성과 유지
+   • FC온라인: EA스포츠FC25 성공적 전환
+   • 퍼스트디센던트: 시즌2 업데이트로 매출 반등
+   • 블루아카이브: 일본 시장 매출 1위 다수 달성
+
+   [지역별 매출 비중]
+   • 한국: 41% (전년비 +3%p)
+   • 중국: 26% (전년비 -2%p)
+   • 일본: 17% (전년비 +1%p)
+   • 북미/유럽: 12% (전년비 +2%p)
+   • 기타: 4%
+
+5. 2025년 전망
+
+   • 신작 출시 예정: 프로젝트 매그넘, 드래곤하운드 등
+   • 기존 IP 확장: 메이플스토리 유니버스 확대
+   • 글로벌 시장 공략 강화
+   • 자사주 매입 프로그램 지속 (500억엔 규모)
+
+6. 기타 참고사항
+   - 상기 실적은 잠정치이며, 외부감사인의 회계감사 결과에 따라 변동될 수 있습니다.
+   - 확정 실적은 2025년 2월 사업보고서를 통해 공시 예정입니다.`,
                     summary: [
                         '매출 3.8조원 (역대 최고 분기 실적)',
                         '영업이익 1조원 돌파',
@@ -6890,6 +7682,67 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
 
 ### 2025년 전망
 신작 라인업 발표 예정. 퍼스트 디센던트 시즌2, 메이플 신규 월드 등 기대작 다수.`
+                }],
+                '2025-01': [{
+                    id: 'dart-2025-01-1',
+                    title: '2024년 연간 실적 확정 공시',
+                    content: '연간 매출 13.7조원, 영업이익 3.6조원 확정',
+                    summary: ['연간 매출 13.7조원 확정', '영업이익 3.6조원'],
+                    charts: [],
+                    date: '2025-01-15'
+                }],
+                '2025-02': [{
+                    id: 'dart-2025-02-1',
+                    title: '2024년 사업보고서 제출',
+                    content: '2024년 사업보고서 및 감사보고서 제출',
+                    summary: ['사업보고서 제출', '외부감사 적정의견'],
+                    charts: [],
+                    date: '2025-02-28'
+                }],
+                '2025-03': [{
+                    id: 'dart-2025-03-1',
+                    title: '2025년 1분기 잠정실적 공시',
+                    content: '1분기 매출 3.2조원, 영업이익 0.85조원',
+                    summary: ['매출 3.2조원', '영업이익 0.85조원'],
+                    charts: [],
+                    date: '2025-03-20'
+                }],
+                '2025-04': [],
+                '2025-05': [{
+                    id: 'dart-2025-05-1',
+                    title: '정기주주총회 결과 공시',
+                    content: '이사 선임, 배당금 결정 등',
+                    summary: ['배당금 주당 1,500원', '신규 사외이사 선임'],
+                    charts: [],
+                    date: '2025-05-15'
+                }],
+                '2025-06': [{
+                    id: 'dart-2025-06-1',
+                    title: '2025년 2분기 잠정실적 공시',
+                    content: '2분기 매출 3.4조원, 영업이익 0.92조원',
+                    summary: ['매출 3.4조원', '영업이익 0.92조원'],
+                    charts: [],
+                    date: '2025-06-20'
+                }],
+                '2025-07': [],
+                '2025-08': [],
+                '2025-09': [{
+                    id: 'dart-2025-09-1',
+                    title: '2025년 3분기 잠정실적 공시',
+                    content: '3분기 매출 3.6조원, 영업이익 0.98조원',
+                    summary: ['매출 3.6조원', '영업이익 0.98조원'],
+                    charts: [],
+                    date: '2025-09-20'
+                }],
+                '2025-10': [],
+                '2025-11': [],
+                '2025-12': [{
+                    id: 'dart-2025-12-1',
+                    title: '2025년 4분기 잠정실적 공시',
+                    content: '4분기 매출 4.0조원, 영업이익 1.1조원 (역대 최고)',
+                    summary: ['매출 4.0조원 (역대 최고)', '영업이익 1.1조원'],
+                    charts: [],
+                    date: '2025-12-20'
                 }]
             },
             darkReport: {
@@ -7403,7 +8256,43 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                     ],
                     date: '2024-11-12'
                 }],
-                '2024-12': []
+                '2024-12': [],
+                '2025-01': [{
+                    id: 'dark-2025-01-1',
+                    title: '메이플스토리 유니버스 확장 분석',
+                    summary: ['메이플 IP 다각화 전략 분석', '신규 플랫폼 진출 전망'],
+                    charts: [],
+                    date: '2025-01-10'
+                }],
+                '2025-02': [],
+                '2025-03': [{
+                    id: 'dark-2025-03-1',
+                    title: '넥슨 신작 라인업 분석',
+                    summary: ['프로젝트 매그넘 기대작 분석', '2025년 출시 예정 타이틀'],
+                    charts: [],
+                    date: '2025-03-15'
+                }],
+                '2025-04': [],
+                '2025-05': [],
+                '2025-06': [{
+                    id: 'dark-2025-06-1',
+                    title: '글로벌 게임시장 트렌드',
+                    summary: ['모바일 시장 성장세 둔화', 'PC/콘솔 크로스플랫폼 확대'],
+                    charts: [],
+                    date: '2025-06-20'
+                }],
+                '2025-07': [],
+                '2025-08': [],
+                '2025-09': [{
+                    id: 'dark-2025-09-1',
+                    title: '넥슨 하반기 전망',
+                    summary: ['퍼스트 디센던트 시즌3 분석', '연말 신작 출시 일정'],
+                    charts: [],
+                    date: '2025-09-10'
+                }],
+                '2025-10': [],
+                '2025-11': [],
+                '2025-12': []
             },
             policy: {
                 '2022-01': [],
@@ -7634,7 +8523,37 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                         }
                     ],
                     date: '2024-12-15'
-                }]
+                }],
+                '2025-01': [],
+                '2025-02': [{
+                    id: 'policy-2025-02-1',
+                    title: '게임산업 진흥법 시행령 개정',
+                    summary: ['게임 등급 분류 체계 개선', '인디 게임 지원 확대'],
+                    charts: [],
+                    date: '2025-02-10'
+                }],
+                '2025-03': [],
+                '2025-04': [],
+                '2025-05': [{
+                    id: 'policy-2025-05-1',
+                    title: 'AI 게임 규제 가이드라인',
+                    summary: ['AI 생성 콘텐츠 규제 논의', '자율 규제 원칙 발표'],
+                    charts: [],
+                    date: '2025-05-20'
+                }],
+                '2025-06': [],
+                '2025-07': [],
+                '2025-08': [],
+                '2025-09': [],
+                '2025-10': [{
+                    id: 'policy-2025-10-1',
+                    title: '게임 이용자 보호 강화 방안',
+                    summary: ['확률형 아이템 규제 강화', '이용자 환불권 확대'],
+                    charts: [],
+                    date: '2025-10-15'
+                }],
+                '2025-11': [],
+                '2025-12': []
             },
             news: {
                 '2022-01': [{
@@ -8263,7 +9182,49 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                         }
                     ],
                     date: '2024-12-20'
-                }]
+                }],
+                '2025-01': [{
+                    id: 'news-2025-01-1',
+                    title: '넥슨 2025년 신작 발표',
+                    summary: ['프로젝트 매그넘 출시 일정 공개', '글로벌 동시 출시 예정'],
+                    charts: [],
+                    date: '2025-01-15'
+                }],
+                '2025-02': [],
+                '2025-03': [{
+                    id: 'news-2025-03-1',
+                    title: 'GDC 2025 넥슨 참가',
+                    summary: ['신기술 발표', 'AI NPC 시스템 공개'],
+                    charts: [],
+                    date: '2025-03-20'
+                }],
+                '2025-04': [],
+                '2025-05': [{
+                    id: 'news-2025-05-1',
+                    title: '메이플스토리 21주년 이벤트',
+                    summary: ['대규모 기념 이벤트', '신규 직업 출시'],
+                    charts: [],
+                    date: '2025-05-10'
+                }],
+                '2025-06': [],
+                '2025-07': [{
+                    id: 'news-2025-07-1',
+                    title: '퍼스트 디센던트 1주년',
+                    summary: ['1주년 기념 대규모 업데이트', '누적 다운로드 2,000만 돌파'],
+                    charts: [],
+                    date: '2025-07-11'
+                }],
+                '2025-08': [],
+                '2025-09': [],
+                '2025-10': [],
+                '2025-11': [{
+                    id: 'news-2025-11-1',
+                    title: '블랙프라이데이 매출 신기록',
+                    summary: ['글로벌 매출 전년 대비 30% 증가', '북미 시장 성장세'],
+                    charts: [],
+                    date: '2025-11-28'
+                }],
+                '2025-12': []
             },
             paper: {
                 '2022-01': [],
@@ -8361,7 +9322,31 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                     charts: [],
                     date: '2024-11-05'
                 }],
-                '2024-12': []
+                '2024-12': [],
+                '2025-01': [],
+                '2025-02': [],
+                '2025-03': [{
+                    id: 'paper-2025-03-1',
+                    title: '게임 AI NPC 발전 동향',
+                    summary: ['LLM 기반 NPC 대화 시스템', '넥슨 기술 사례 분석'],
+                    charts: [],
+                    date: '2025-03-15'
+                }],
+                '2025-04': [],
+                '2025-05': [],
+                '2025-06': [{
+                    id: 'paper-2025-06-1',
+                    title: '크로스플랫폼 게임 개발 트렌드',
+                    summary: ['PC-모바일-콘솔 통합 개발', '유저 데이터 연동 기술'],
+                    charts: [],
+                    date: '2025-06-20'
+                }],
+                '2025-07': [],
+                '2025-08': [],
+                '2025-09': [],
+                '2025-10': [],
+                '2025-11': [],
+                '2025-12': []
             },
             patent: {
                 '2022-01': [],
@@ -8471,7 +9456,37 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                     summary: ['실시간 레이트레이싱 최적화', '모바일 적용 기술'],
                     charts: [],
                     date: '2024-12-10'
-                }]
+                }],
+                '2025-01': [],
+                '2025-02': [{
+                    id: 'patent-2025-02-1',
+                    title: 'AI 기반 게임 밸런싱 시스템',
+                    summary: ['실시간 게임 밸런스 조정', '머신러닝 기반 최적화'],
+                    charts: [],
+                    date: '2025-02-15'
+                }],
+                '2025-03': [],
+                '2025-04': [],
+                '2025-05': [{
+                    id: 'patent-2025-05-1',
+                    title: '메타버스 상호작용 기술',
+                    summary: ['가상공간 내 다중 사용자 상호작용', '실시간 동기화 기술'],
+                    charts: [],
+                    date: '2025-05-20'
+                }],
+                '2025-06': [],
+                '2025-07': [],
+                '2025-08': [{
+                    id: 'patent-2025-08-1',
+                    title: '게임 내 경제 시스템 특허',
+                    summary: ['가상 경제 안정화 알고리즘', '인플레이션 방지 기술'],
+                    charts: [],
+                    date: '2025-08-10'
+                }],
+                '2025-09': [],
+                '2025-10': [],
+                '2025-11': [],
+                '2025-12': []
             },
             sec: {
                 '2022-01': [],
@@ -8576,12 +9591,111 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 '2024-10': [{
                     id: 'sec-2024-10-1',
                     title: 'Form 6-K 수시보고',
-                    summary: ['3분기 실적 발표', '자사주 매입 계획 공시'],
+                    content: `FORM 6-K
+REPORT OF FOREIGN PRIVATE ISSUER
+PURSUANT TO RULE 13a-16 OR 15d-16
+UNDER THE SECURITIES EXCHANGE ACT OF 1934
+
+For the month of October 2024
+Commission File Number: 001-41379
+
+NEXON Co., Ltd.
+(Translation of registrant's name into English)
+
+1-6-1 Yoyogi, Shibuya-ku
+Tokyo 151-0053, Japan
+(Address of principal executive office)
+
+SIGNATURES
+
+Pursuant to the requirements of the Securities Exchange Act of 1934, the registrant has duly caused this report to be signed on its behalf by the undersigned, thereunto duly authorized.
+
+NEXON Co., Ltd.
+
+Date: October 28, 2024
+
+By: /s/ Shiro Uemura
+Name: Shiro Uemura
+Title: Representative Director, President and CEO
+
+EXHIBIT INDEX
+
+Exhibit 99.1 - Consolidated Financial Results for the Third Quarter Ended September 30, 2024
+
+CONSOLIDATED FINANCIAL RESULTS (Unaudited)
+For the Nine Months Ended September 30, 2024
+
+1. Consolidated Operating Results
+
+Revenue: ¥346.2 billion (YoY +12%)
+Operating Income: ¥98.4 billion (YoY +18%)
+Net Income: ¥78.6 billion (YoY +15%)
+
+2. Key Highlights
+
+- MapleStory PC achieved record quarterly revenue in Korea
+- Dungeon&Fighter Mobile maintained strong performance in China
+- FC Online delivered stable results across regions
+- The First Descendant launched globally with strong initial reception
+
+3. Regional Performance
+
+Korea: Revenue ¥142.8 billion (+15% YoY)
+China: Revenue ¥89.3 billion (+8% YoY)
+Japan: Revenue ¥58.7 billion (+11% YoY)
+North America & Europe: Revenue ¥42.1 billion (+18% YoY)
+Other: Revenue ¥13.3 billion (+5% YoY)
+
+4. Share Repurchase Program
+
+The Company announced a share repurchase program of up to ¥50 billion to be executed over the next 12 months, demonstrating commitment to shareholder returns.
+
+5. Outlook
+
+Full year 2024 revenue guidance maintained at ¥460-480 billion.
+Continued investment in new game development and live services.`,
+                    summary: ['3분기 매출 3,462억엔 (전년비 +12%)', '영업이익 984억엔 (전년비 +18%)', '메이플스토리 PC 한국 역대 최고 분기 매출', '더 퍼스트 디센던트 글로벌 런칭 호조', '자사주 매입 500억엔 규모 발표'],
                     charts: [],
                     date: '2024-10-28'
                 }],
                 '2024-11': [],
-                '2024-12': []
+                '2024-12': [],
+                '2025-01': [],
+                '2025-02': [],
+                '2025-03': [{
+                    id: 'sec-2025-03-1',
+                    title: 'Form 20-F 연차보고서',
+                    summary: ['2024 회계연도 실적 보고', '역대 최고 실적 달성'],
+                    charts: [],
+                    date: '2025-03-31'
+                }],
+                '2025-04': [{
+                    id: 'sec-2025-04-1',
+                    title: 'Form 6-K 수시보고',
+                    summary: ['1분기 실적 발표', '신작 출시 일정 공개'],
+                    charts: [],
+                    date: '2025-04-20'
+                }],
+                '2025-05': [],
+                '2025-06': [],
+                '2025-07': [{
+                    id: 'sec-2025-07-1',
+                    title: 'Form 6-K 수시보고',
+                    summary: ['2분기 실적 발표', '퍼스트디센던트 1주년 성과'],
+                    charts: [],
+                    date: '2025-07-25'
+                }],
+                '2025-08': [],
+                '2025-09': [],
+                '2025-10': [{
+                    id: 'sec-2025-10-1',
+                    title: 'Form 6-K 수시보고',
+                    summary: ['3분기 실적 발표', '연간 가이던스 상향'],
+                    charts: [],
+                    date: '2025-10-28'
+                }],
+                '2025-11': [],
+                '2025-12': []
             },
             edinet: {
                 '2022-01': [],
@@ -8687,11 +9801,89 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 '2024-11': [{
                     id: 'edinet-2024-11-1',
                     title: '분기보고서 Q3',
-                    summary: ['일본법인 3분기 실적', '메이플 20주년 이벤트 효과'],
+                    content: `四半期報告書
+第22期第3四半期（2024年7月1日～2024年9月30日）
+
+株式会社ネクソン
+東京都渋谷区代々木一丁目6番1号
+
+【企業の概況】
+1. 主要な経営指標等の推移
+
+第3四半期連結累計期間（2024年1月1日～2024年9月30日）
+・売上収益: 346,234百万円（前年同期比 +12.1%）
+・営業利益: 98,421百万円（前年同期比 +18.3%）
+・四半期利益: 78,612百万円（前年同期比 +15.2%）
+
+2. 事業の状況
+
+【経営成績の概況】
+当第3四半期連結累計期間における世界経済は、インフレ圧力の緩和により緩やかな回復基調となりました。
+
+オンラインゲーム業界においては、PCオンラインゲーム市場が安定的に推移する中、モバイルゲーム市場は競争が激化しております。
+
+このような環境下、当社グループは以下の成果を達成しました。
+
+【韓国】
+・メイプルストーリー: 20周年記念イベントが大成功、四半期売上過去最高
+・FCオンライン: EAスポーツFC25への移行が順調
+・ダンジョンアンドファイター: 安定した収益貢献
+
+【日本】
+・ブルーアーカイブ: 2.5周年イベントで売上1位達成
+・メイプルストーリー: 20周年コラボイベント好調
+
+【中国】
+・ダンジョンアンドファイターモバイル: 引き続き高い収益性を維持
+
+【グローバル】
+・The First Descendant: 7月のグローバルローンチ後、1,000万ダウンロード突破
+
+3. 財政状態
+・総資産: 1,234,567百万円
+・純資産: 987,654百万円
+・自己資本比率: 80.0%`,
+                    summary: ['3분기 누적 매출 3,462억엔 (+12.1%)', '영업이익 984억엔 (+18.3%)', '메이플스토리 20주년 이벤트 대성공', '블루아카이브 일본 매출 1위 달성', 'The First Descendant 1000만 다운로드 돌파'],
                     charts: [],
                     date: '2024-11-14'
                 }],
-                '2024-12': []
+                '2024-12': [],
+                '2025-01': [],
+                '2025-02': [{
+                    id: 'edinet-2025-02-1',
+                    title: '유가증권보고서 (일본법인)',
+                    summary: ['넥슨 재팬 2024년 연간 실적', '역대 최고 매출 달성'],
+                    charts: [],
+                    date: '2025-02-28'
+                }],
+                '2025-03': [],
+                '2025-04': [],
+                '2025-05': [{
+                    id: 'edinet-2025-05-1',
+                    title: '분기보고서 Q1',
+                    summary: ['일본법인 1분기 실적', '신작 효과 반영'],
+                    charts: [],
+                    date: '2025-05-15'
+                }],
+                '2025-06': [],
+                '2025-07': [],
+                '2025-08': [{
+                    id: 'edinet-2025-08-1',
+                    title: '분기보고서 Q2',
+                    summary: ['일본법인 2분기 실적', '블루아카이브 매출 증가'],
+                    charts: [],
+                    date: '2025-08-15'
+                }],
+                '2025-09': [],
+                '2025-10': [],
+                '2025-11': [{
+                    id: 'edinet-2025-11-1',
+                    title: '분기보고서 Q3',
+                    summary: ['일본법인 3분기 실적', '연간 가이던스 달성 전망'],
+                    charts: [],
+                    date: '2025-11-14'
+                }],
+                '2025-12': []
             }
         };
 
@@ -8857,7 +10049,7 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
         function generateStockData() {
             const data = [];
             const startDate = new Date('2022-01-01');
-            const endDate = new Date('2024-12-31');
+            const endDate = new Date('2025-12-31');
             let price = 180000; // 시작 가격 (원)
 
             for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
@@ -8870,21 +10062,553 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             return data;
         }
 
-        // USD/KRW 환율 더미 데이터 생성
+        // 넥슨 분기별 매출액 데이터 생성
+        function generateRevenueData() {
+            const data = [];
+            // 2022년 1월 ~ 2024년 12월 (12분기)
+            const quarters = [
+                { date: '2022-03-31', revenue: 0.85 },
+                { date: '2022-06-30', revenue: 0.92 },
+                { date: '2022-09-30', revenue: 1.05 },
+                { date: '2022-12-31', revenue: 1.28 },
+                { date: '2023-03-31', revenue: 0.95 },
+                { date: '2023-06-30', revenue: 1.02 },
+                { date: '2023-09-30', revenue: 1.15 },
+                { date: '2023-12-31', revenue: 1.35 },
+                { date: '2024-03-31', revenue: 1.08 },
+                { date: '2024-06-30', revenue: 1.18 },
+                { date: '2024-09-30', revenue: 1.25 },
+                { date: '2024-12-31', revenue: 1.42 },
+                { date: '2025-03-31', revenue: 1.15 },
+                { date: '2025-06-30', revenue: 1.28 },
+                { date: '2025-09-30', revenue: 1.35 },
+                { date: '2025-12-31', revenue: 1.52 }
+            ];
+
+            quarters.forEach(q => {
+                data.push([new Date(q.date).getTime(), q.revenue]);
+            });
+
+            return data;
+        }
+
+        // 영업이익 데이터 생성 (분기별)
+        function generateOperatingProfitData() {
+            const data = [];
+            const quarters = [
+                { date: '2022-03-31', profit: 2100 },
+                { date: '2022-06-30', profit: 2450 },
+                { date: '2022-09-30', profit: 2800 },
+                { date: '2022-12-31', profit: 3500 },
+                { date: '2023-03-31', profit: 2300 },
+                { date: '2023-06-30', profit: 2650 },
+                { date: '2023-09-30', profit: 3100 },
+                { date: '2023-12-31', profit: 3800 },
+                { date: '2024-03-31', profit: 2750 },
+                { date: '2024-06-30', profit: 3200 },
+                { date: '2024-09-30', profit: 3450 },
+                { date: '2024-12-31', profit: 4100 },
+                { date: '2025-03-31', profit: 2900 },
+                { date: '2025-06-30', profit: 3400 },
+                { date: '2025-09-30', profit: 3650 },
+                { date: '2025-12-31', profit: 4350 }
+            ];
+            quarters.forEach(q => {
+                data.push([new Date(q.date).getTime(), q.profit]);
+            });
+            return data;
+        }
+
+        // 순이익 데이터 생성 (분기별)
+        function generateNetIncomeData() {
+            const data = [];
+            const quarters = [
+                { date: '2022-03-31', income: 1680 },
+                { date: '2022-06-30', income: 1960 },
+                { date: '2022-09-30', income: 2240 },
+                { date: '2022-12-31', income: 2800 },
+                { date: '2023-03-31', income: 1840 },
+                { date: '2023-06-30', income: 2120 },
+                { date: '2023-09-30', income: 2480 },
+                { date: '2023-12-31', income: 3040 },
+                { date: '2024-03-31', income: 2200 },
+                { date: '2024-06-30', income: 2560 },
+                { date: '2024-09-30', income: 2760 },
+                { date: '2024-12-31', income: 3280 },
+                { date: '2025-03-31', income: 2320 },
+                { date: '2025-06-30', income: 2720 },
+                { date: '2025-09-30', income: 2920 },
+                { date: '2025-12-31', income: 3480 }
+            ];
+            quarters.forEach(q => {
+                data.push([new Date(q.date).getTime(), q.income]);
+            });
+            return data;
+        }
+
+        // USD/KRW 환율 데이터 생성 (일별)
         function generateExchangeRateData() {
             const data = [];
             const startDate = new Date('2022-01-01');
-            const endDate = new Date('2024-12-31');
-            let rate = 1320; // 시작 환율
+            const endDate = new Date('2025-12-31');
+            let rate = 1200;
 
             for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-                if (d.getDay() !== 0 && d.getDay() !== 6) { // 주말 제외
+                if (d.getDay() !== 0 && d.getDay() !== 6) {
                     const change = (Math.random() - 0.5) * 15;
-                    rate = Math.max(1280, Math.min(1400, rate + change));
-                    data.push([d.getTime(), Math.round(rate * 100) / 100]);
+                    rate = Math.max(1100, Math.min(1450, rate + change));
+                    data.push([d.getTime(), Math.round(rate)]);
                 }
             }
             return data;
+        }
+
+        // PER 데이터 생성 (일별)
+        function generatePERData() {
+            const data = [];
+            const startDate = new Date('2022-01-01');
+            const endDate = new Date('2025-12-31');
+            let per = 15;
+
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                if (d.getDay() !== 0 && d.getDay() !== 6) {
+                    const change = (Math.random() - 0.5) * 0.5;
+                    per = Math.max(8, Math.min(25, per + change));
+                    data.push([d.getTime(), Math.round(per * 100) / 100]);
+                }
+            }
+            return data;
+        }
+
+        // PBR 데이터 생성 (일별)
+        function generatePBRData() {
+            const data = [];
+            const startDate = new Date('2022-01-01');
+            const endDate = new Date('2025-12-31');
+            let pbr = 1.5;
+
+            for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+                if (d.getDay() !== 0 && d.getDay() !== 6) {
+                    const change = (Math.random() - 0.5) * 0.05;
+                    pbr = Math.max(0.8, Math.min(3, pbr + change));
+                    data.push([d.getTime(), Math.round(pbr * 100) / 100]);
+                }
+            }
+            return data;
+        }
+
+        // 지표 설정
+        const indicatorConfigs = {
+            revenue: {
+                name: '매출액',
+                unit: '조원',
+                color: '#888888',
+                generateData: generateRevenueData,
+                chartType: 'line',
+                step: 'left',
+                yAxisTitle: '매출액 (조원)',
+                valueDecimals: 2
+            },
+            operatingProfit: {
+                name: '영업이익',
+                unit: '억원',
+                color: '#4CAF50',
+                generateData: generateOperatingProfitData,
+                chartType: 'line',
+                step: 'left',
+                yAxisTitle: '영업이익 (억원)',
+                valueDecimals: 0
+            },
+            netIncome: {
+                name: '순이익',
+                unit: '억원',
+                color: '#2196F3',
+                generateData: generateNetIncomeData,
+                chartType: 'line',
+                step: 'left',
+                yAxisTitle: '순이익 (억원)',
+                valueDecimals: 0
+            },
+            exchangeRate: {
+                name: 'USD/KRW',
+                unit: '원',
+                color: '#FF9800',
+                generateData: generateExchangeRateData,
+                chartType: 'line',
+                step: false,
+                yAxisTitle: 'USD/KRW (원)',
+                valueDecimals: 0
+            },
+            per: {
+                name: 'PER',
+                unit: '배',
+                color: '#9C27B0',
+                generateData: generatePERData,
+                chartType: 'line',
+                step: false,
+                yAxisTitle: 'PER (배)',
+                valueDecimals: 2
+            },
+            pbr: {
+                name: 'PBR',
+                unit: '배',
+                color: '#00BCD4',
+                generateData: generatePBRData,
+                chartType: 'line',
+                step: false,
+                yAxisTitle: 'PBR (배)',
+                valueDecimals: 2
+            }
+        };
+
+        // 현재 활성화된 보조지표 (Y축 시리즈)
+        let activeIndicators = ['revenue'];  // 기본: 매출액
+        let currentSidebarTab = 'data';  // 현재 탭: data 또는 style
+
+        // 시리즈 가시성 상태 (true = 보임, false = 숨김)
+        let seriesVisibility = {
+            stock: true  // 주가
+        };
+
+        // 스냅샷 차트 타입 정의
+        const snapshotChartTypes = [
+            { id: 'line', name: 'Line chart', icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4,18 9,12 13,15 20,6"/></svg>` },
+            { id: 'bar', name: 'Bar chart', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="12" width="4" height="8"/><rect x="10" y="8" width="4" height="12"/><rect x="16" y="4" width="4" height="16"/></svg>` },
+            { id: 'area', name: 'Area chart', icon: `<svg viewBox="0 0 24 24" fill="currentColor" opacity="0.6"><path d="M4,20 L4,14 L9,10 L13,13 L20,6 L20,20 Z"/></svg>` }
+        ];
+        let currentSnapshotChartType = 'line';  // 현재 선택된 차트 타입
+
+        // 사이드바 렌더링 - ChartLab 스타일
+        function renderChartSidebar() {
+            const sidebar = document.getElementById('chartSidebar');
+            if (!sidebar) return;
+
+            sidebar.innerHTML = `
+                <div class="tab-toggle">
+                    <button class="tab-btn ${currentSidebarTab === 'data' ? 'active' : ''}" onclick="switchSidebarTab('data')">데이터</button>
+                    <button class="tab-btn ${currentSidebarTab === 'style' ? 'active' : ''}" onclick="switchSidebarTab('style')">스타일</button>
+                </div>
+                <div id="sidebarTabContent">
+                    ${currentSidebarTab === 'data' ? renderDataTab() : renderStyleTab()}
+                </div>
+            `;
+        }
+
+        // 데이터 탭 렌더링
+        function renderDataTab() {
+            const currentType = snapshotChartTypes.find(t => t.id === currentSnapshotChartType) || snapshotChartTypes[0];
+            return `
+                <div class="sidebar-section">
+                    <div class="section-title">차트 유형</div>
+                    <div class="snapshot-custom-dropdown" id="snapshotChartTypeDropdown">
+                        <div class="snapshot-dropdown-selected" onclick="toggleSnapshotChartTypeDropdown()">
+                            <span class="snapshot-dropdown-icon">${currentType.icon}</span>
+                            <span class="snapshot-dropdown-text">${currentType.name}</span>
+                            <svg class="snapshot-dropdown-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6,9 12,15 18,9"/>
+                            </svg>
+                        </div>
+                        <div class="snapshot-dropdown-options">
+                            ${snapshotChartTypes.map(type => `
+                                <div class="snapshot-dropdown-option ${currentSnapshotChartType === type.id ? 'selected' : ''}"
+                                     onclick="selectSnapshotChartType('${type.id}')">
+                                    <span class="snapshot-dropdown-icon">${type.icon}</span>
+                                    <span>${type.name}</span>
+                                    ${currentSnapshotChartType === type.id ? `<svg class="snapshot-dropdown-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"/></svg>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="section-title">X축</div>
+                    <div class="sidebar-dropdown">
+                        <select class="dropdown-select" onchange="changeXAxisType(this.value)">
+                            <option value="datetime" selected>날짜 (datetime)</option>
+                            <option value="category">카테고리</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-row">
+                        <div class="sidebar-dropdown">
+                            <div class="dropdown-label">스케일 유형</div>
+                            <select class="dropdown-select">
+                                <option value="datetime" selected>날짜/시간</option>
+                                <option value="linear">선형</option>
+                            </select>
+                        </div>
+                        <div class="sidebar-dropdown">
+                            <div class="dropdown-label">정렬</div>
+                            <select class="dropdown-select">
+                                <option value="asc">오름차순</option>
+                                <option value="desc">내림차순</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="section-header" style="position: relative;">
+                        <span class="section-title">시리즈</span>
+                        <button class="section-add-btn" onclick="toggleIndicatorPopover(event)">+ 추가</button>
+                        <div class="indicator-popover" id="indicatorPopover">
+                            <div class="indicator-popover-list" id="indicatorPopoverList"></div>
+                        </div>
+                    </div>
+                    <div id="yAxisSeriesList">
+                        <!-- 주가 시리즈 (고정) -->
+                        <div class="series-item ${!seriesVisibility.stock ? 'hidden' : ''}" onclick="toggleSeriesVisibility('stock')">
+                            <span class="series-line" style="background: #E57B53;"></span>
+                            <span class="series-name">주가</span>
+                        </div>
+                        <!-- 추가 지표 시리즈 -->
+                        ${activeIndicators.map(key => {
+                            const config = indicatorConfigs[key];
+                            const isHidden = seriesVisibility[key] === false;
+                            return `
+                                <div class="series-item ${isHidden ? 'hidden' : ''}" onclick="toggleSeriesVisibility('${key}')">
+                                    <span class="series-line" style="background: ${config.color};"></span>
+                                    <span class="series-name">${config.name}</span>
+                                    <button class="series-remove" onclick="event.stopPropagation(); removeIndicator('${key}')">&times;</button>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 스냅샷 차트 타입 드롭다운 토글
+        function toggleSnapshotChartTypeDropdown() {
+            const dropdown = document.getElementById('snapshotChartTypeDropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('open');
+            }
+        }
+
+        // 스냅샷 차트 타입 선택
+        function selectSnapshotChartType(typeId) {
+            currentSnapshotChartType = typeId;
+            const dropdown = document.getElementById('snapshotChartTypeDropdown');
+            if (dropdown) {
+                dropdown.classList.remove('open');
+            }
+            renderChartSidebar();
+            // TODO: 실제 차트 타입 변경 로직 추가 가능
+        }
+
+        // 스냅샷 드롭다운 외부 클릭 시 닫기
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.snapshot-custom-dropdown')) {
+                document.querySelectorAll('.snapshot-custom-dropdown.open').forEach(d => d.classList.remove('open'));
+            }
+        });
+
+        // 스타일 탭 렌더링
+        function renderStyleTab() {
+            return `
+                <div class="sidebar-section">
+                    <div class="section-title">라인 스타일</div>
+                    <div class="sidebar-dropdown">
+                        <div class="dropdown-label">선 두께</div>
+                        <select class="dropdown-select" onchange="changeLineWidth(this.value)">
+                            <option value="1">1px</option>
+                            <option value="2" selected>2px</option>
+                            <option value="3">3px</option>
+                            <option value="4">4px</option>
+                        </select>
+                    </div>
+                    <div class="sidebar-dropdown">
+                        <div class="dropdown-label">마커 표시</div>
+                        <select class="dropdown-select" onchange="toggleMarkers(this.value)">
+                            <option value="true" selected>표시</option>
+                            <option value="false">숨김</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="sidebar-section">
+                    <div class="section-title">축 설정</div>
+                    <div class="sidebar-dropdown">
+                        <div class="dropdown-label">Y축 위치</div>
+                        <select class="dropdown-select">
+                            <option value="left">왼쪽</option>
+                            <option value="right" selected>오른쪽</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 탭 전환
+        function switchSidebarTab(tab) {
+            currentSidebarTab = tab;
+            renderChartSidebar();
+        }
+
+        // 시리즈 가시성 토글
+        function toggleSeriesVisibility(seriesKey) {
+            // 가시성 상태 토글
+            if (seriesVisibility[seriesKey] === undefined) {
+                seriesVisibility[seriesKey] = false;  // 처음 클릭 시 숨김
+            } else {
+                seriesVisibility[seriesKey] = !seriesVisibility[seriesKey];
+            }
+
+            // Highcharts 시리즈 숨기기/보이기
+            const chart = Highcharts.charts.find(c => c && c.renderTo && c.renderTo.id === 'stockChart');
+            if (chart) {
+                let seriesIndex;
+                if (seriesKey === 'stock') {
+                    seriesIndex = 0;  // 주가는 첫 번째 시리즈
+                } else {
+                    seriesIndex = activeIndicators.indexOf(seriesKey) + 1;  // 지표는 주가 다음
+                }
+
+                const series = chart.series[seriesIndex];
+                if (series) {
+                    if (seriesVisibility[seriesKey]) {
+                        series.show();
+                    } else {
+                        series.hide();
+                    }
+                }
+            }
+
+            // 사이드바 UI 업데이트
+            renderChartSidebar();
+        }
+
+        // 지표 추가 팝오버 토글
+        function toggleIndicatorPopover(event) {
+            event.stopPropagation();
+            const popover = document.getElementById('indicatorPopover');
+            const listContainer = document.getElementById('indicatorPopoverList');
+
+            if (popover.classList.contains('visible')) {
+                popover.classList.remove('visible');
+                return;
+            }
+
+            const availableIndicators = Object.entries(indicatorConfigs)
+                .filter(([key]) => !activeIndicators.includes(key));
+
+            if (availableIndicators.length === 0) {
+                listContainer.innerHTML = '<div class="indicator-popover-empty">추가할 지표가 없습니다</div>';
+            } else {
+                listContainer.innerHTML = availableIndicators.map(([key, config]) => `
+                    <div class="indicator-popover-item" onclick="selectIndicatorFromPopover('${key}')">
+                        <span class="indicator-color" style="background: ${config.color};"></span>
+                        <span class="indicator-name">${config.name}</span>
+                    </div>
+                `).join('');
+            }
+
+            popover.classList.add('visible');
+        }
+
+        // 팝오버에서 지표 선택
+        function selectIndicatorFromPopover(key) {
+            addIndicator(key);
+            document.getElementById('indicatorPopover').classList.remove('visible');
+        }
+
+        // 팝오버 외부 클릭 시 닫기
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.section-header')) {
+                const popover = document.getElementById('indicatorPopover');
+                if (popover) popover.classList.remove('visible');
+            }
+        });
+
+        // 지표 추가
+        function addIndicator(indicatorKey) {
+            if (activeIndicators.includes(indicatorKey)) return;
+
+            activeIndicators.push(indicatorKey);
+            updateChartSeries();
+            renderChartSidebar();
+        }
+
+        // 지표 제거
+        function removeIndicator(indicatorKey) {
+            const index = activeIndicators.indexOf(indicatorKey);
+            if (index > -1) {
+                activeIndicators.splice(index, 1);
+                updateChartSeries();
+                renderChartSidebar();
+            }
+        }
+
+        // 차트 시리즈 업데이트
+        function updateChartSeries() {
+            const chart = Highcharts.charts.find(c => c && c.renderTo && c.renderTo.id === 'stockChart');
+            if (!chart) return;
+
+            // 주가 시리즈(인덱스 0)를 제외한 모든 시리즈 제거
+            while (chart.series.length > 1) {
+                chart.series[chart.series.length - 1].remove(false);
+            }
+
+            // 활성화된 지표들 추가
+            activeIndicators.forEach(key => {
+                const config = indicatorConfigs[key];
+                chart.addSeries({
+                    type: config.chartType,
+                    step: config.step,
+                    name: config.name,
+                    data: config.generateData(),
+                    color: config.color,
+                    lineWidth: 2,
+                    yAxis: 1,
+                    marker: {
+                        enabled: true,
+                        radius: 4
+                    },
+                    tooltip: {
+                        valueDecimals: config.valueDecimals,
+                        valueSuffix: config.unit
+                    }
+                }, false);
+            });
+
+            // Y축 타이틀 업데이트
+            if (activeIndicators.length > 0) {
+                const firstConfig = indicatorConfigs[activeIndicators[0]];
+                chart.yAxis[1].setTitle({ text: firstConfig.yAxisTitle }, false);
+            } else {
+                chart.yAxis[1].setTitle({ text: '' }, false);
+            }
+
+            chart.redraw();
+        }
+
+        // 라인 두께 변경
+        function changeLineWidth(width) {
+            const chart = Highcharts.charts.find(c => c && c.renderTo && c.renderTo.id === 'stockChart');
+            if (!chart) return;
+
+            chart.series.forEach(series => {
+                series.update({ lineWidth: parseInt(width) }, false);
+            });
+            chart.redraw();
+        }
+
+        // 마커 토글
+        function toggleMarkers(show) {
+            const chart = Highcharts.charts.find(c => c && c.renderTo && c.renderTo.id === 'stockChart');
+            if (!chart) return;
+
+            chart.series.forEach((series, i) => {
+                if (i > 0) { // 보조지표만
+                    series.update({ marker: { enabled: show === 'true' } }, false);
+                }
+            });
+            chart.redraw();
+        }
+
+        // X축 타입 변경 (placeholder)
+        function changeXAxisType(type) {
+            console.log('X axis type changed to:', type);
         }
 
         // 테이블 렌더링
@@ -8955,27 +10679,70 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 ...Object.fromEntries(Object.entries(customSources).map(([k, v]) => [k, v.name]))
             };
 
-            let html = `<thead><tr><th>
-                <div class="period-selector">
-                    <button class="period-btn${selectedPeriod === 'day' ? ' active' : ''}" data-period="day">D</button>
-                    <button class="period-btn${selectedPeriod === 'month' ? ' active' : ''}" data-period="month">M</button>
-                    <button class="period-btn${selectedPeriod === 'quarter' ? ' active' : ''}" data-period="quarter">Q</button>
-                    <button class="period-btn${selectedPeriod === 'year' ? ' active' : ''}" data-period="year">Y</button>
-                </div>
-                <div class="source-manager-container">
-                    <button class="source-manager-btn" onclick="toggleSourceManager(event)">
-                        <span>출처</span>
-                        <span style="font-size: 9px;">▼</span>
-                    </button>
-                    <div class="source-manager-panel" id="sourceManagerPanel">
-                        <!-- 패널 내용은 renderSourceManagerPanel()에서 생성 -->
+            let html = '<thead>';
+
+            // 월별일 때 두 줄 헤더 (연도 + 1~12월)
+            if (grain === 'month') {
+                // 연도별로 컬럼 그룹화
+                const yearGroups = {};
+                columns.forEach(col => {
+                    const year = col.key.split('-')[0];
+                    if (!yearGroups[year]) yearGroups[year] = [];
+                    yearGroups[year].push(col);
+                });
+                const years = Object.keys(yearGroups).sort();
+
+                // 첫 번째 행: 연도
+                html += `<tr><th rowspan="2">
+                    <div class="period-selector">
+                        <button class="period-btn${selectedPeriod === 'day' ? ' active' : ''}" data-period="day">D</button>
+                        <button class="period-btn${selectedPeriod === 'month' ? ' active' : ''}" data-period="month">M</button>
+                        <button class="period-btn${selectedPeriod === 'quarter' ? ' active' : ''}" data-period="quarter">Q</button>
+                        <button class="period-btn${selectedPeriod === 'year' ? ' active' : ''}" data-period="year">Y</button>
                     </div>
-                </div>
-            </th>`;
-            columns.forEach(col => {
-                html += `<th class="period-header" onclick="handlePeriodHeaderClick('${col.key}', '${grain}')">${col.label}</th>`;
-            });
-            html += '</tr></thead><tbody>';
+                    <div class="source-manager-container">
+                        <button class="source-manager-btn" onclick="toggleSourceManager(event)">
+                            <span>출처</span>
+                            <span style="font-size: 9px;">▼</span>
+                        </button>
+                        <div class="source-manager-panel" id="sourceManagerPanel"></div>
+                    </div>
+                </th>`;
+                years.forEach(year => {
+                    html += `<th colspan="${yearGroups[year].length}" class="year-header">${year}</th>`;
+                });
+                html += '</tr>';
+
+                // 두 번째 행: 월 (1~12)
+                html += '<tr>';
+                columns.forEach(col => {
+                    const month = parseInt(col.key.split('-')[1]);
+                    html += `<th class="period-header month-header" onclick="handlePeriodHeaderClick('${col.key}', '${grain}')">${month}</th>`;
+                });
+                html += '</tr>';
+            } else {
+                // 기존 단일 행 헤더
+                html += `<tr><th>
+                    <div class="period-selector">
+                        <button class="period-btn${selectedPeriod === 'day' ? ' active' : ''}" data-period="day">D</button>
+                        <button class="period-btn${selectedPeriod === 'month' ? ' active' : ''}" data-period="month">M</button>
+                        <button class="period-btn${selectedPeriod === 'quarter' ? ' active' : ''}" data-period="quarter">Q</button>
+                        <button class="period-btn${selectedPeriod === 'year' ? ' active' : ''}" data-period="year">Y</button>
+                    </div>
+                    <div class="source-manager-container">
+                        <button class="source-manager-btn" onclick="toggleSourceManager(event)">
+                            <span>출처</span>
+                            <span style="font-size: 9px;">▼</span>
+                        </button>
+                        <div class="source-manager-panel" id="sourceManagerPanel"></div>
+                    </div>
+                </th>`;
+                columns.forEach(col => {
+                    html += `<th class="period-header" onclick="handlePeriodHeaderClick('${col.key}', '${grain}')">${col.label}</th>`;
+                });
+                html += '</tr>';
+            }
+            html += '</thead><tbody>';
 
             sources.forEach(src => {
                 const isCustom = Object.keys(customSources).includes(src);
@@ -9001,9 +10768,12 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             renderSourceManagerPanel();
         }
 
-        // 출처 클릭 시 보고서 목록 표시
+        // 출처 클릭 시 우측 패널에 보고서 목록 표시
         function showSourceDetail(source) {
-            const container = document.getElementById('sourceDetailContainer');
+            rightPanelView = 'list';
+            currentListSource = source;
+
+            const container = document.getElementById('detailContainer');
             // 기본 출처 또는 커스텀 출처 데이터 조회
             const data = sourceData[source] || customSourceData[source];
             const events = eventData[source] || customEventData[source];
@@ -9021,10 +10791,7 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             // 날짜 역순 정렬 (최신순)
             allEvents.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-            let html = `<div class="source-detail">
-                <h4>${data.name} (${allEvents.length}건)</h4>
-                <ul>`;
-
+            let itemsHtml = '';
             allEvents.forEach(event => {
                 // 날짜 포맷: YYYY-MM-DD → MM.DD
                 const dateStr = event.date ? event.date.substring(5).replace('-', '.') : '';
@@ -9032,22 +10799,29 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 // 매출액 관련 항목 추출 (summary에서 '매출' 또는 '조원' 포함 항목)
                 const revenueItem = event.summary ?
                     event.summary.find(s => s.includes('매출') || s.includes('조원')) : null;
-                const revenueText = revenueItem ? ` · ${revenueItem}` : '';
+                const revenueText = revenueItem ? revenueItem : '';
 
                 const monthKey = event.date ? event.date.substring(0, 7) : '';
                 const isCustom = source.startsWith('custom_');
                 const dataSource = isCustom ? 'customEventData' : 'eventData';
 
-                html += `<li class="source-item" onclick="showDetail(${dataSource}['${source}']['${monthKey}'].find(e => e.id === '${event.id}'), '${source}')">
-                    <span class="source-item-date">${dateStr}</span>
-                    <span class="source-item-title">${event.title}</span>
-                    <span class="source-item-revenue">${revenueText}</span>
-                </li>`;
+                itemsHtml += `<div class="list-item" onclick="showDetail(${dataSource}['${source}']['${monthKey}'].find(e => e.id === '${event.id}'), '${source}')">
+                    <span class="list-item-date">${dateStr}</span>
+                    <span class="list-item-title">${event.title}</span>
+                    <span class="list-item-revenue">${revenueText}</span>
+                </div>`;
             });
 
-            html += '</ul></div>';
-            container.innerHTML = html;
-            container.classList.add('active');
+            container.innerHTML = `
+                <div class="list-view">
+                    <div class="list-header">
+                        <span class="list-title">${data.name} (${allEvents.length}건)</span>
+                    </div>
+                    <div class="list-content">
+                        ${itemsHtml}
+                    </div>
+                </div>
+            `;
         }
 
         // 기간별 이벤트 조회
@@ -9144,6 +10918,11 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             if (isOpening) {
                 tempActiveSources = [...activeSources];
                 renderSourceManagerPanel();
+
+                // 버튼 위치 기준으로 패널 위치 설정 (fixed 포지션용)
+                const btnRect = btn.getBoundingClientRect();
+                panel.style.top = (btnRect.bottom + 4) + 'px';
+                panel.style.left = btnRect.left + 'px';
             }
         }
 
@@ -9803,6 +11582,7 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
 
         // 팝오버 항목 클릭
         function onPopoverItemClick(event, source, key, index, grain) {
+            currentListSource = null; // 목록 경유가 아닌 직접 클릭
             const events = getEventsForPeriod(source, key, grain);
             if (events && events[index]) {
                 showDetail(events[index], source);
@@ -9829,8 +11609,11 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
         let detailCharts = [];
         let currentItem = null;
         let currentSource = null;
+        let rightPanelView = 'placeholder'; // 'placeholder' | 'list' | 'detail'
+        let currentListSource = null;
 
         function showDetail(item, source) {
+            rightPanelView = 'detail';
             const container = document.getElementById('detailContainer');
 
             // 현재 항목 저장
@@ -9843,28 +11626,43 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             });
             detailCharts = [];
 
-            // 전망 포인트 생성
-            const forecastPoints = generateForecast(item, source);
+            const displaySourceName = sourceNames[source] || (customSources[source] ? customSources[source].name : source);
 
-            // 전망 탭 내용 생성
-            const forecastHtml = `
-                <div class="forecast-container">
-                    <div class="forecast-header">
-                        <span class="forecast-title">전망</span>
-                        <span class="forecast-period">${item.date}</span>
+            // 뒤로가기 버튼 (목록에서 진입한 경우만)
+            const listSourceName = sourceNames[currentListSource] ||
+                (customSources[currentListSource] ? customSources[currentListSource].name : '목록');
+            const backButton = currentListSource ?
+                `<button class="back-btn" onclick="showSourceDetail('${currentListSource}')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    ${listSourceName}
+                </button>` : '';
+
+            // 원문 탭 내용 생성
+            const sourceHtml = item.content ? `
+                <div class="source-container">
+                    <div class="source-header">
+                        <span class="source-title">${item.title}</span>
+                        <span class="source-date">${item.date}</span>
                     </div>
-                    <div class="forecast-content">
-                        <div class="forecast-section">
-                            <h4>전망 포인트</h4>
-                            <ul>
-                                ${forecastPoints.map(p => `<li>${p}</li>`).join('')}
-                            </ul>
-                        </div>
+                    <div class="source-content">
+                        <pre class="source-text">${item.content}</pre>
+                    </div>
+                </div>
+            ` : `
+                <div class="source-container">
+                    <div class="source-header">
+                        <span class="source-title">${item.title}</span>
+                        <span class="source-date">${item.date}</span>
+                    </div>
+                    <div class="source-content">
+                        <p class="source-empty">원문 데이터가 없습니다.</p>
                     </div>
                 </div>
             `;
 
-            // 상세 탭 내용 생성
+            // 요약 탭 내용 생성
             let chartsHtml = '';
             if (item.charts && item.charts.length > 0) {
                 chartsHtml = `<div class="detail-charts">
@@ -9882,9 +11680,7 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 `<div class="detail-analysis">${parseMarkdown(item.analysis)}</div>` :
                 '';
 
-            const displaySourceName = sourceNames[source] || (customSources[source] ? customSources[source].name : source);
-
-            const detailHtml = `
+            const summaryTabHtml = `
                 <div class="detail-header">
                     <div class="detail-source">${displaySourceName}</div>
                     <div class="detail-date">${item.date}</div>
@@ -9899,15 +11695,16 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
 
             // 탭 구조 생성
             container.innerHTML = `
+                ${backButton}
                 <div class="detail-tabs">
-                    <div class="detail-tab active" data-tab="detail">상세</div>
-                    <div class="detail-tab" data-tab="forecast">전망</div>
+                    <div class="detail-tab active" data-tab="source">원문</div>
+                    <div class="detail-tab" data-tab="summary">요약</div>
                 </div>
-                <div class="detail-tab-content" id="detailContent">
-                    ${detailHtml}
+                <div class="detail-tab-content" id="sourceContent">
+                    ${sourceHtml}
                 </div>
-                <div class="detail-tab-content" id="forecastContent" style="display:none">
-                    ${forecastHtml}
+                <div class="detail-tab-content" id="summaryContent" style="display:none">
+                    ${summaryTabHtml}
                 </div>
             `;
 
@@ -9915,23 +11712,14 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             container.querySelectorAll('.detail-tab').forEach(tab => {
                 tab.addEventListener('click', () => switchTab(tab.dataset.tab));
             });
-
-            // 상세 탭이 기본이므로 차트 바로 렌더링
-            if (currentItem && currentItem.charts && currentItem.charts.length > 0) {
-                setTimeout(() => {
-                    currentItem.charts.forEach((chartConfig, i) => {
-                        renderDetailChart(`detailChart${i}`, chartConfig);
-                    });
-                }, 50);
-            }
         }
 
         // 탭 전환
         function switchTab(tabName) {
             const container = document.getElementById('detailContainer');
             const tabs = container.querySelectorAll('.detail-tab');
-            const forecastContent = document.getElementById('forecastContent');
-            const detailContent = document.getElementById('detailContent');
+            const sourceContent = document.getElementById('sourceContent');
+            const summaryContent = document.getElementById('summaryContent');
 
             tabs.forEach(tab => {
                 if (tab.dataset.tab === tabName) {
@@ -9941,14 +11729,11 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 }
             });
 
-            if (tabName === 'forecast') {
-                forecastContent.style.display = 'block';
-                detailContent.style.display = 'none';
-            } else {
-                forecastContent.style.display = 'none';
-                detailContent.style.display = 'block';
+            if (tabName === 'summary') {
+                sourceContent.style.display = 'none';
+                summaryContent.style.display = 'block';
 
-                // 상세 탭 활성화 시 차트 렌더링
+                // 요약 탭 활성화 시 차트 렌더링
                 if (currentItem && currentItem.charts && currentItem.charts.length > 0) {
                     // 이미 렌더링된 차트가 없으면 렌더링
                     if (detailCharts.length === 0) {
@@ -9957,6 +11742,9 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                         });
                     }
                 }
+            } else {
+                sourceContent.style.display = 'block';
+                summaryContent.style.display = 'none';
             }
         }
 
@@ -10080,7 +11868,8 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                             style: { fontSize: '8px', fontWeight: '300', color: '#ccc' }
                         },
                         borderRadius: 2,
-                        groupPadding: 0.1
+                        groupPadding: 0.1,
+                        borderWidth: 0
                     }
                 },
                 series: config.series,
@@ -10173,7 +11962,13 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                 plotOptions: {
                     column: {
                         color: '#E57B53',
-                        borderRadius: 3
+                        borderRadius: 3,
+                        borderWidth: 0
+                    },
+                    bar: {
+                        color: '#E57B53',
+                        borderRadius: 3,
+                        borderWidth: 0
                     },
                     line: {
                         color: '#E57B53',
@@ -10195,7 +11990,7 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
         // 차트 초기화
         function initChart() {
             const stockData = generateStockData();
-            const exchangeRateData = generateExchangeRateData();
+            const revenueData = generateRevenueData();
 
             Highcharts.stockChart('stockChart', {
                 chart: {
@@ -10319,12 +12114,12 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                     },
                     height: '100%'
                 }, {
-                    // 환율 축 (오른쪽)
+                    // 매출액 축 (오른쪽)
                     opposite: true,
                     gridLineWidth: 0,
                     labels: {
-                        align: 'right',
-                        x: -3,
+                        align: 'left',
+                        x: 3,
                         style: {
                             color: '#888',
                             fontWeight: '300'
@@ -10334,9 +12129,10 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                         }
                     },
                     title: {
-                        text: 'USD/KRW',
+                        text: '매출액 (조원)',
                         align: 'high',
                         rotation: 0,
+                        x: -40,
                         y: -10,
                         style: {
                             color: '#888',
@@ -10356,29 +12152,10 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                     shared: true
                 },
                 legend: {
-                    enabled: true,
-                    align: 'left',
-                    verticalAlign: 'top',
-                    layout: 'vertical',
-                    x: 140,
-                    y: 15,
-                    floating: true,
-                    backgroundColor: 'rgba(30, 30, 30, 0.8)',
-                    borderColor: 'var(--border-color)',
-                    borderWidth: 1,
-                    borderRadius: 4,
-                    itemStyle: {
-                        color: 'var(--text-muted)',
-                        fontSize: '11px'
-                    },
-                    itemHoverStyle: {
-                        color: 'var(--text-primary)'
-                    },
-                    symbolWidth: 16,
-                    symbolHeight: 2
+                    enabled: false
                 },
                 series: [{
-                    name: '넥슨 주가',
+                    name: '주가',
                     data: stockData,
                     color: '#E57B53',
                     lineWidth: 2,
@@ -10388,14 +12165,20 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                         valuePrefix: '₩'
                     }
                 }, {
-                    name: 'USD/KRW 환율',
-                    data: exchangeRateData,
-                    color: '#888',
+                    type: 'line',
+                    step: 'left',
+                    name: '매출액',
+                    data: revenueData,
+                    color: '#888888',
                     lineWidth: 2,
                     yAxis: 1,
+                    marker: {
+                        enabled: true,
+                        radius: 4
+                    },
                     tooltip: {
                         valueDecimals: 2,
-                        valuePrefix: '₩'
+                        valueSuffix: '조원'
                     }
                 }],
                 credits: {
@@ -10410,6 +12193,9 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             const firstDate = stockData[0][0];
             const lastDate = stockData[stockData.length - 1][0];
             renderTable(firstDate, lastDate);
+
+            // 차트 사이드바 초기화
+            renderChartSidebar();
         }
 
         // 리사이저 기능
@@ -14377,7 +16163,8 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
             rightPanel.innerHTML = `
                 <div class="manual-toc">
                     <div class="manual-toc-header">
-                        사용자 매뉴얼
+                        <div class="manual-toc-header-title">사용자 매뉴얼 목차</div>
+                        <div class="manual-toc-header-desc">항목을 선택하면 자세한 내용을 볼 수 있습니다.</div>
                     </div>
                     ${Object.entries(manualData).map(([key, data]) => `
                         <div class="manual-toc-item" data-manual="${key}" onclick="showManualDetail('${key}')">
@@ -14537,20 +16324,20 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                             <rect x="10" y="10" width="180" height="130" fill="var(--bg-dark)" rx="4"/>
                             <text x="100" y="30" font-size="10" fill="var(--text-primary)" text-anchor="middle">캔들스틱</text>
                             <!-- 캔들들 -->
-                            <rect x="35" y="50" width="8" height="40" fill="#4ade80"/>
-                            <line x1="39" y1="45" x2="39" y2="95" stroke="#4ade80" stroke-width="1"/>
-                            <rect x="55" y="60" width="8" height="30" fill="#ef4444"/>
-                            <line x1="59" y1="55" x2="59" y2="100" stroke="#ef4444" stroke-width="1"/>
-                            <rect x="75" y="45" width="8" height="50" fill="#4ade80"/>
-                            <line x1="79" y1="40" x2="79" y2="100" stroke="#4ade80" stroke-width="1"/>
-                            <rect x="95" y="55" width="8" height="35" fill="#4ade80"/>
-                            <line x1="99" y1="50" x2="99" y2="95" stroke="#4ade80" stroke-width="1"/>
-                            <rect x="115" y="70" width="8" height="25" fill="#ef4444"/>
-                            <line x1="119" y1="65" x2="119" y2="105" stroke="#ef4444" stroke-width="1"/>
-                            <rect x="135" y="50" width="8" height="45" fill="#4ade80"/>
-                            <line x1="139" y1="45" x2="139" y2="100" stroke="#4ade80" stroke-width="1"/>
-                            <rect x="155" y="40" width="8" height="50" fill="#4ade80"/>
-                            <line x1="159" y1="35" x2="159" y2="95" stroke="#4ade80" stroke-width="1"/>
+                            <rect x="35" y="50" width="8" height="40" fill="#7D8471"/>
+                            <line x1="39" y1="45" x2="39" y2="95" stroke="#7D8471" stroke-width="1"/>
+                            <rect x="55" y="60" width="8" height="30" fill="#C15F3C"/>
+                            <line x1="59" y1="55" x2="59" y2="100" stroke="#C15F3C" stroke-width="1"/>
+                            <rect x="75" y="45" width="8" height="50" fill="#7D8471"/>
+                            <line x1="79" y1="40" x2="79" y2="100" stroke="#7D8471" stroke-width="1"/>
+                            <rect x="95" y="55" width="8" height="35" fill="#7D8471"/>
+                            <line x1="99" y1="50" x2="99" y2="95" stroke="#7D8471" stroke-width="1"/>
+                            <rect x="115" y="70" width="8" height="25" fill="#C15F3C"/>
+                            <line x1="119" y1="65" x2="119" y2="105" stroke="#C15F3C" stroke-width="1"/>
+                            <rect x="135" y="50" width="8" height="45" fill="#7D8471"/>
+                            <line x1="139" y1="45" x2="139" y2="100" stroke="#7D8471" stroke-width="1"/>
+                            <rect x="155" y="40" width="8" height="50" fill="#7D8471"/>
+                            <line x1="159" y1="35" x2="159" y2="95" stroke="#7D8471" stroke-width="1"/>
 
                             <!-- 라인 차트 -->
                             <rect x="210" y="10" width="180" height="130" fill="var(--bg-dark)" rx="4"/>
@@ -14594,19 +16381,19 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                             <text x="290" y="32" font-size="9" fill="var(--text-primary)">45.2조</text>
 
                             <text x="30" y="60" font-size="9" fill="var(--text-muted)">엔씨소프트</text>
-                            <rect x="80" y="50" width="120" height="16" fill="#60a5fa" rx="2"/>
+                            <rect x="80" y="50" width="120" height="16" fill="#6B7B8C" rx="2"/>
                             <text x="210" y="62" font-size="9" fill="var(--text-primary)">27.1조</text>
 
                             <text x="30" y="90" font-size="9" fill="var(--text-muted)">크래프톤</text>
-                            <rect x="80" y="80" width="150" height="16" fill="#4ade80" rx="2"/>
+                            <rect x="80" y="80" width="150" height="16" fill="#7D8471" rx="2"/>
                             <text x="240" y="92" font-size="9" fill="var(--text-primary)">33.8조</text>
 
                             <text x="30" y="120" font-size="9" fill="var(--text-muted)">넷마블</text>
-                            <rect x="80" y="110" width="80" height="16" fill="#a78bfa" rx="2"/>
+                            <rect x="80" y="110" width="80" height="16" fill="#9B8AA6" rx="2"/>
                             <text x="170" y="122" font-size="9" fill="var(--text-primary)">18.2조</text>
 
                             <text x="30" y="150" font-size="9" fill="var(--text-muted)">펄어비스</text>
-                            <rect x="80" y="140" width="50" height="16" fill="#f472b6" rx="2"/>
+                            <rect x="80" y="140" width="50" height="16" fill="#D4A574" rx="2"/>
                             <text x="140" y="152" font-size="9" fill="var(--text-primary)">11.3조</text>
                         </svg>
                         <div class="illustration-caption">산업 내 시가총액 비교</div>
@@ -14626,11 +16413,11 @@ FC온라인 시즌 업데이트와 블루아카이브 1주년 효과로 전분�
                             <rect x="20" y="65" width="16" height="16" fill="var(--bg-light)" rx="2" stroke="var(--border-color)"/>
                             <text x="45" y="77" font-size="10" fill="var(--text-muted)">배당</text>
 
-                            <rect x="20" y="90" width="16" height="16" fill="#4ade80" rx="2"/>
+                            <rect x="20" y="90" width="16" height="16" fill="#7D8471" rx="2"/>
                             <text x="22" y="102" font-size="10" fill="white">✓</text>
                             <text x="45" y="102" font-size="10" fill="var(--text-primary)">게임 출시</text>
 
-                            <rect x="20" y="115" width="16" height="16" fill="#a78bfa" rx="2"/>
+                            <rect x="20" y="115" width="16" height="16" fill="#9B8AA6" rx="2"/>
                             <text x="22" y="127" font-size="10" fill="white">✓</text>
                             <text x="45" y="127" font-size="10" fill="var(--text-primary)">IR 행사</text>
                         </svg>
