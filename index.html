@@ -122,7 +122,7 @@
         }
 
         .chart-header {
-            padding: 16px 8px 0;
+            padding: 40px 8px 0;  /* 우측 패널 padding-top과 동일 */
         }
 
         .search-title-container {
@@ -170,7 +170,7 @@
             min-height: 0;
             height: 55vh;
             min-height: 500px;
-            margin: 40px 8px 15px;
+            margin: 60px 8px 15px;  /* 검색창 이동 후 재조정 */
             border: 1px solid var(--border-color);
             border-radius: 8px;
             background: #1a1a1a;
@@ -1510,6 +1510,20 @@
             background: rgba(255, 255, 255, 0.3);
         }
 
+        /* NSIC 패널 스타일 */
+        .nsic-panel-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .nsic-content {
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
         .detail-placeholder {
             height: 100%;
             display: flex;
@@ -1625,6 +1639,164 @@
             font-size: 12px;
             color: var(--text-muted);
             text-align: center;
+        }
+
+        /* 전망 인사이트 스타일 */
+        .forecast-insight-container {
+            padding: 0;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .forecast-insight-content {
+            padding: 20px;
+        }
+
+        .insight-section {
+            margin-bottom: 24px;
+        }
+
+        .insight-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .insight-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .insight-stat-item {
+            background: var(--bg-medium);
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .insight-stat-label {
+            display: block;
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .insight-stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .insight-stat-value.highlight {
+            color: #4ade80;
+        }
+
+        .quarterly-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .quarterly-table th,
+        .quarterly-table td {
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .quarterly-table th {
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .quarterly-table td {
+            color: var(--text-secondary);
+        }
+
+        .quarterly-table .yoy-positive {
+            color: #4ade80;
+            font-weight: 500;
+        }
+
+        .quarterly-table .yoy-negative {
+            color: #f87171;
+            font-weight: 500;
+        }
+
+        .insight-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .insight-list li {
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        .insight-list.positive li {
+            background: rgba(74, 222, 128, 0.1);
+        }
+
+        .insight-list.risk li {
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .consensus-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            background: var(--bg-medium);
+            padding: 16px;
+            border-radius: 6px;
+            margin: 0;
+        }
+
+        /* 전망 인사이트 헤더 */
+        .forecast-insight-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .forecast-insight-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* 전망 근거 스타일 */
+        .rationale-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .rationale-item {
+            background: var(--bg-medium);
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .rationale-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .rationale-detail {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
         }
 
         .detail-header {
@@ -6873,6 +7045,50 @@
             lastConfirmed: '2026-01-30'
         };
 
+        // 전망 인사이트 데이터
+        const forecastInsights = {
+            summary: {
+                annual2026: 6.5,           // 2026 연간 예측 (조원)
+                annualMin: 6.0,
+                annualMax: 7.2,
+                yoyGrowth: 12.5,           // 전년 대비 성장률 (%)
+                analysts: 10
+            },
+            quarterly: [
+                { quarter: '2026 Q1', forecast: 1.58, min: 1.45, max: 1.72, yoyGrowth: 10.2 },
+                { quarter: '2026 Q2', forecast: 1.65, min: 1.48, max: 1.85, yoyGrowth: 13.1 },
+                { quarter: '2026 Q3', forecast: 1.72, min: 1.55, max: 1.92, yoyGrowth: 14.5 },
+                { quarter: '2026 Q4', forecast: 1.55, min: 1.40, max: 1.75, yoyGrowth: 11.8 }
+            ],
+            outlook: {
+                positive: [
+                    "신규 게임 IP 출시로 인한 매출 다변화",
+                    "글로벌 시장 확대 지속",
+                    "플랫폼 수수료 인하에 따른 마진 개선"
+                ],
+                risks: [
+                    "글로벌 경기 둔화에 따른 게임 소비 감소 우려",
+                    "중국 시장 규제 리스크",
+                    "환율 변동성"
+                ],
+                consensus: "대부분의 애널리스트가 매수 의견 유지, 목표주가 평균 85,000원"
+            },
+            rationale: [
+                {
+                    title: "신작 게임 출시 효과",
+                    detail: "2026년 상반기 대작 RPG 출시 예정, 사전예약 200만 돌파"
+                },
+                {
+                    title: "글로벌 매출 확대",
+                    detail: "일본/북미 시장에서 블루 아카이브 MAU 30% 증가"
+                },
+                {
+                    title: "비용 효율화",
+                    detail: "플랫폼 수수료 협상으로 영업이익률 2%p 개선 전망"
+                }
+            ]
+        };
+
         // 예측 표시 활성화 상태
         let showForecast = false;
 
@@ -11643,6 +11859,13 @@ The First Descendant の日本展開が好調に推移し、
                 const extremes = chart.xAxis[0].getExtremes();
                 renderTable(extremes.min, extremes.max);
             }
+
+            // 전망 ON 시 인사이트 표시, OFF 시 회사 개요로 복귀
+            if (enabled) {
+                showForecastInsight();
+            } else {
+                showCompanyOverview();
+            }
         }
 
         // 차트 시리즈 업데이트
@@ -12980,6 +13203,203 @@ The First Descendant の日本展開が好調に推移し、
             }
         }
 
+        // 전망 인사이트 표시
+        function showForecastInsight() {
+            rightPanelView = 'forecast';
+            const container = document.getElementById('detailContainer');
+
+            // 회사 개요 숨기기
+            const companyOverview = document.getElementById('companyOverview');
+            if (companyOverview) {
+                companyOverview.style.display = 'none';
+            }
+
+            container.innerHTML = `
+                <div class="forecast-insight-container">
+                    <div class="forecast-insight-header">
+                        <div class="forecast-insight-title">전망 인사이트</div>
+                    </div>
+
+                    <div class="forecast-insight-content">
+                        <div class="insight-section">
+                            <div class="insight-title">매출액 전망</div>
+                            <div class="insight-stats">
+                                <div class="insight-stat-item">
+                                    <span class="insight-stat-label">2026 연간 예측</span>
+                                    <span class="insight-stat-value">${forecastInsights.summary.annual2026}조원</span>
+                                </div>
+                                <div class="insight-stat-item">
+                                    <span class="insight-stat-label">컨센서스 범위</span>
+                                    <span class="insight-stat-value">${forecastInsights.summary.annualMin} ~ ${forecastInsights.summary.annualMax}조원</span>
+                                </div>
+                                <div class="insight-stat-item">
+                                    <span class="insight-stat-label">전년 대비 성장률</span>
+                                    <span class="insight-stat-value highlight">+${forecastInsights.summary.yoyGrowth}%</span>
+                                </div>
+                                <div class="insight-stat-item">
+                                    <span class="insight-stat-label">애널리스트 수</span>
+                                    <span class="insight-stat-value">${forecastInsights.summary.analysts}명</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="insight-section">
+                            <div class="insight-title">분기별 전망</div>
+                            <table class="quarterly-table">
+                                <thead>
+                                    <tr>
+                                        <th>분기</th>
+                                        <th>예측치</th>
+                                        <th>범위</th>
+                                        <th>YoY</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${forecastInsights.quarterly.map(q => `
+                                        <tr>
+                                            <td>${q.quarter}</td>
+                                            <td>${q.forecast}조</td>
+                                            <td>${q.min}~${q.max}</td>
+                                            <td class="yoy-positive">+${q.yoyGrowth}%</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="insight-section">
+                            <div class="insight-title">전망 근거</div>
+                            <div class="rationale-list">
+                                ${forecastInsights.rationale.map(r => `
+                                    <div class="rationale-item">
+                                        <div class="rationale-title">${r.title}</div>
+                                        <div class="rationale-detail">${r.detail}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="insight-section">
+                            <div class="insight-title">긍정적 요인</div>
+                            <ul class="insight-list positive">
+                                ${forecastInsights.outlook.positive.map(p => `<li>${p}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <div class="insight-section">
+                            <div class="insight-title">리스크 요인</div>
+                            <ul class="insight-list risk">
+                                ${forecastInsights.outlook.risks.map(r => `<li>${r}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+        }
+
+        // 회사 개요 표시
+        function showCompanyOverview() {
+            rightPanelView = 'placeholder';
+            const container = document.getElementById('detailContainer');
+
+            // 회사 개요 HTML 재생성
+            container.innerHTML = `
+                <div class="company-overview" id="companyOverview">
+                    <div class="overview-header">
+                        <img src="https://www.nexongames.co.kr/img/main/main_logo.png" alt="넥슨게임즈" class="company-logo-img">
+                        <div class="company-name">넥슨게임즈 (NEXON Games)</div>
+                        <div class="company-ticker">KOSDAQ: 225570 · 게임/엔터테인먼트</div>
+                    </div>
+
+                    <div class="overview-section">
+                        <div class="overview-title">회사 개요</div>
+                        <div class="overview-text">
+                            넥슨게임즈는 2002년 설립된 넥슨코리아의 자회사로, 대한민국을 대표하는 게임 개발사입니다. FC 온라인(피파 온라인 시리즈), 마비노기 영웅전 등 장수 온라인 게임과 V4, HIT, 카운터사이드 등 글로벌 모바일 게임을 개발·서비스하고 있습니다. 2017년 코스닥에 상장되었으며, 언리얼 엔진 기반의 고품질 액션 게임 개발 역량을 보유하고 있습니다.
+                        </div>
+                    </div>
+
+                    <div class="overview-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">시가총액</span>
+                            <span class="stat-value">약 1.5조원</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">설립</span>
+                            <span class="stat-value">2002년</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">본사</span>
+                            <span class="stat-value">서울 강남구</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">상장</span>
+                            <span class="stat-value">KOSDAQ 225570</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">2024 매출</span>
+                            <span class="stat-value">약 8,000억원</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">2024 영업이익</span>
+                            <span class="stat-value">약 1,200억원</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">직원 수</span>
+                            <span class="stat-value">약 1,500명</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">모회사</span>
+                            <span class="stat-value">넥슨코리아</span>
+                        </div>
+                    </div>
+
+                    <div class="overview-section">
+                        <div class="overview-title">주요 게임 IP</div>
+                        <div class="game-tags">
+                            <span class="game-tag">FC 온라인</span>
+                            <span class="game-tag">마비노기 영웅전</span>
+                            <span class="game-tag">V4</span>
+                            <span class="game-tag">HIT</span>
+                            <span class="game-tag">HIT2</span>
+                            <span class="game-tag">카운터사이드</span>
+                            <span class="game-tag">블루 아카이브</span>
+                            <span class="game-tag">데이브 더 다이버</span>
+                        </div>
+                    </div>
+
+                    <div class="overview-section">
+                        <div class="overview-title">주요 연혁</div>
+                        <div class="overview-text">
+                            • 2002년: 회사 설립 (구 네오위즈게임즈에서 분사)<br>
+                            • 2010년: 마비노기 영웅전 출시, 글로벌 흥행<br>
+                            • 2015년: HIT 모바일 출시, 대한민국 모바일게임 대상 수상<br>
+                            • 2017년: 코스닥 상장<br>
+                            • 2019년: V4 글로벌 출시<br>
+                            • 2021년: 블루 아카이브 글로벌 서비스<br>
+                            • 2023년: 데이브 더 다이버 전 세계 흥행
+                        </div>
+                    </div>
+
+                    <div class="overview-section">
+                        <div class="overview-title">투자 포인트</div>
+                        <div class="overview-text">
+                            • FC 온라인 안정적인 라이브 서비스 매출 (연 5,000억원+)<br>
+                            • 블루 아카이브 글로벌 흥행으로 서브컬처 시장 입지 강화<br>
+                            • 데이브 더 다이버 성공으로 인디 게임 퍼블리싱 역량 입증<br>
+                            • 언리얼 엔진 기반 고품질 액션 게임 개발 기술력<br>
+                            • 넥슨 그룹 IP 활용 및 글로벌 퍼블리싱 네트워크<br>
+                            • 신작 파이프라인 및 기존 IP 후속작 기대
+                        </div>
+                    </div>
+
+                    <div class="overview-hint">
+                        좌측에서 출처나 문서를 선택하면 상세 내용을 확인할 수 있습니다.
+                    </div>
+                </div>
+            `;
+        }
+
         // 상세보기 차트 렌더링
         function renderDetailChart(containerId, chartConfig) {
             const chartType = chartConfig.type || 'column';
@@ -14299,6 +14719,59 @@ The First Descendant の日本展開が好調に推移し、
             renderIntraIndustryChart();
             renderIndustryTable();
             renderIntraTable();
+
+            // 우측 패널에 NSIC 탭 표시
+            const detailContainer = document.getElementById('detailContainer');
+            const companyOverview = document.getElementById('companyOverview');
+            if (companyOverview) {
+                companyOverview.style.display = 'none';
+            }
+
+            detailContainer.innerHTML = `
+                <div class="nsic-panel-container">
+                    <div class="detail-tabs">
+                        <div class="detail-tab active" data-tab="nsic-definition" onclick="switchNsicTab('definition')">NSIC 정의</div>
+                        <div class="detail-tab" data-tab="nsic-classification" onclick="switchNsicTab('classification')">NSIC 분류체계</div>
+                    </div>
+
+                    <div class="detail-tab-content" id="nsicDefinitionContent">
+                        <div class="nsic-content">
+                            <p>NSIC 정의 내용이 여기에 표시됩니다.</p>
+                        </div>
+                    </div>
+
+                    <div class="detail-tab-content" id="nsicClassificationContent" style="display: none;">
+                        <div class="nsic-content">
+                            <p>NSIC 분류체계 내용이 여기에 표시됩니다.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // NSIC 탭 전환 함수
+        function switchNsicTab(tabName) {
+            const tabs = document.querySelectorAll('.nsic-panel-container .detail-tab');
+            const definitionContent = document.getElementById('nsicDefinitionContent');
+            const classificationContent = document.getElementById('nsicClassificationContent');
+
+            tabs.forEach(tab => {
+                if (tabName === 'definition' && tab.dataset.tab === 'nsic-definition') {
+                    tab.classList.add('active');
+                } else if (tabName === 'classification' && tab.dataset.tab === 'nsic-classification') {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            if (tabName === 'definition') {
+                definitionContent.style.display = 'block';
+                classificationContent.style.display = 'none';
+            } else {
+                definitionContent.style.display = 'none';
+                classificationContent.style.display = 'block';
+            }
         }
 
         // 산업간 비교 선택기 렌더링
