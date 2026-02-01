@@ -2109,6 +2109,101 @@
             color: var(--text-muted);
         }
 
+        /* 테이블 예측 셀 스타일 */
+        .forecast-cell {
+            background: var(--bg-medium);
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .forecast-header {
+            color: var(--claude-orange);
+        }
+
+        .forecast-row td:first-child {
+            color: var(--claude-orange);
+            font-weight: 500;
+        }
+
+        /* 시리즈 아이템 점선 스타일 */
+        .series-line.dashed {
+            background: repeating-linear-gradient(
+                to right,
+                currentColor 0px,
+                currentColor 4px,
+                transparent 4px,
+                transparent 8px
+            ) !important;
+        }
+
+        /* 전망 토글 스타일 */
+        .forecast-toggle-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .forecast-toggle-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            background: var(--bg-medium);
+            border-radius: 4px;
+        }
+
+        .forecast-toggle-label {
+            flex: 1;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 36px;
+            height: 20px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-light);
+            transition: 0.2s;
+            border-radius: 20px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-muted);
+            transition: 0.2s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--claude-orange);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(16px);
+            background-color: white;
+        }
+
         /* 원문 탭 스타일 */
         .source-container {
             padding: 16px;
@@ -6564,6 +6659,26 @@
         let customSourceData = {}; // { key: { name: '...', items: [...] } }
         let customEventData = {}; // { key: { 'YYYY-MM': [...] } }
 
+        // 매출액 예측 데이터 (분기별, 조원 단위)
+        const forecastData = {
+            revenue: [
+                // 2026년
+                { date: '2026-03-31', value: 1.58, min: 1.45, max: 1.72, analysts: 10 },
+                { date: '2026-06-30', value: 1.65, min: 1.48, max: 1.85, analysts: 10 },
+                { date: '2026-09-30', value: 1.72, min: 1.50, max: 2.05, analysts: 10 },
+                { date: '2026-12-31', value: 1.85, min: 1.52, max: 2.35, analysts: 10 },
+                // 2027년
+                { date: '2027-03-31', value: 1.92, min: 1.55, max: 2.45, analysts: 8 },
+                { date: '2027-06-30', value: 2.00, min: 1.58, max: 2.60, analysts: 8 },
+                { date: '2027-09-30', value: 2.10, min: 1.60, max: 2.80, analysts: 8 },
+                { date: '2027-12-31', value: 2.25, min: 1.65, max: 3.10, analysts: 8 }
+            ],
+            lastConfirmed: '2026-01-30'
+        };
+
+        // 예측 표시 활성화 상태
+        let showForecast = false;
+
         // 이벤트 데이터 (날짜별) - 확장된 구조
         const eventData = {
             dart: {
@@ -10628,6 +10743,49 @@ The First Descendant の日本展開が好調に推移し、
             return data;
         }
 
+        // 특정 분기의 실적 매출액 조회 (전망 행에서 사용)
+        function findActualRevenueForQuarter(quarterKey) {
+            // quarterKey 형식: "2025-Q4"
+            const quarters = [
+                { date: '2022-03-31', revenue: 0.85 },
+                { date: '2022-06-30', revenue: 0.92 },
+                { date: '2022-09-30', revenue: 1.05 },
+                { date: '2022-12-31', revenue: 1.28 },
+                { date: '2023-03-31', revenue: 0.95 },
+                { date: '2023-06-30', revenue: 1.02 },
+                { date: '2023-09-30', revenue: 1.15 },
+                { date: '2023-12-31', revenue: 1.35 },
+                { date: '2024-03-31', revenue: 1.08 },
+                { date: '2024-06-30', revenue: 1.18 },
+                { date: '2024-09-30', revenue: 1.25 },
+                { date: '2024-12-31', revenue: 1.42 },
+                { date: '2025-03-31', revenue: 1.15 },
+                { date: '2025-06-30', revenue: 1.28 },
+                { date: '2025-09-30', revenue: 1.35 },
+                { date: '2025-12-31', revenue: 1.52 }
+            ];
+
+            const found = quarters.find(q => getQuarterKey(q.date) === quarterKey);
+            return found ? found.revenue : null;
+        }
+
+        // 매출액 전망 데이터 생성 (분기별)
+        function generateRevenueForecastData() {
+            return forecastData.revenue.map(item => [
+                new Date(item.date).getTime(),
+                item.value
+            ]);
+        }
+
+        // 매출액 전망 범위 데이터 생성 (arearange용)
+        function generateRevenueForecastRangeData() {
+            return forecastData.revenue.map(item => [
+                new Date(item.date).getTime(),
+                item.min,
+                item.max
+            ]);
+        }
+
         // 영업이익 데이터 생성 (분기별)
         function generateOperatingProfitData() {
             const data = [];
@@ -10744,6 +10902,19 @@ The First Descendant の日本展開が好調に推移し、
                 step: 'left',
                 yAxisTitle: '매출액 (조원)',
                 valueDecimals: 2
+            },
+            revenueForecast: {
+                name: '매출액 전망',
+                unit: '조원',
+                color: '#888888',
+                generateData: generateRevenueForecastData,
+                chartType: 'line',
+                step: 'left',
+                yAxisTitle: '매출액 (조원)',
+                valueDecimals: 2,
+                dashStyle: 'Dash',
+                linkedTo: 'revenue',
+                isForecast: true
             },
             operatingProfit: {
                 name: '영업이익',
@@ -10898,17 +11069,32 @@ The First Descendant の日本展開が好調に推移し、
                             <span class="series-name">주가</span>
                         </div>
                         <!-- 추가 지표 시리즈 -->
-                        ${activeIndicators.map(key => {
+                        ${activeIndicators.filter(key => !indicatorConfigs[key].isForecast).map(key => {
                             const config = indicatorConfigs[key];
                             const isHidden = seriesVisibility[key] === false;
+                            const isDashed = config.dashStyle ? 'dashed' : '';
                             return `
                                 <div class="series-item ${isHidden ? 'hidden' : ''}" onclick="toggleSeriesVisibility('${key}')">
-                                    <span class="series-line" style="background: ${config.color};"></span>
+                                    <span class="series-line ${isDashed}" style="background: ${config.color}; ${isDashed ? 'color: ' + config.color : ''}"></span>
                                     <span class="series-name">${config.name}</span>
                                     <button class="series-remove" onclick="event.stopPropagation(); removeIndicator('${key}')">&times;</button>
                                 </div>
                             `;
                         }).join('')}
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <div class="section-title">전망</div>
+                    <div class="forecast-toggle-container">
+                        <div class="forecast-toggle-item">
+                            <span class="series-line dashed" style="color: #888888;"></span>
+                            <span class="forecast-toggle-label">매출액 전망</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" ${showForecast ? 'checked' : ''} onchange="toggleForecast(this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             `;
@@ -11026,7 +11212,7 @@ The First Descendant の日本展開が好調に推移し、
             }
 
             const availableIndicators = Object.entries(indicatorConfigs)
-                .filter(([key]) => !activeIndicators.includes(key));
+                .filter(([key, config]) => !activeIndicators.includes(key) && !config.isForecast);
 
             if (availableIndicators.length === 0) {
                 listContainer.innerHTML = '<div class="indicator-popover-empty">추가할 지표가 없습니다</div>';
@@ -11061,6 +11247,18 @@ The First Descendant の日本展開が好調に推移し、
             if (activeIndicators.includes(indicatorKey)) return;
 
             activeIndicators.push(indicatorKey);
+
+            // 예측 지표 추가 시 showForecast 활성화
+            if (indicatorConfigs[indicatorKey] && indicatorConfigs[indicatorKey].isForecast) {
+                showForecast = true;
+                // 테이블 갱신
+                const chart = Highcharts.charts.find(c => c && c.renderTo && c.renderTo.id === 'stockChart');
+                if (chart && chart.xAxis && chart.xAxis[0]) {
+                    const extremes = chart.xAxis[0].getExtremes();
+                    renderTable(extremes.min, extremes.max);
+                }
+            }
+
             updateChartSeries();
             renderChartSidebar();
         }
@@ -11070,8 +11268,169 @@ The First Descendant の日本展開が好調に推移し、
             const index = activeIndicators.indexOf(indicatorKey);
             if (index > -1) {
                 activeIndicators.splice(index, 1);
+
+                // 예측 지표 제거 시 showForecast 비활성화
+                if (indicatorConfigs[indicatorKey] && indicatorConfigs[indicatorKey].isForecast) {
+                    showForecast = false;
+                    // 테이블 갱신
+                    const chart = Highcharts.charts.find(c => c && c.renderTo && c.renderTo.id === 'stockChart');
+                    if (chart && chart.xAxis && chart.xAxis[0]) {
+                        const extremes = chart.xAxis[0].getExtremes();
+                        renderTable(extremes.min, extremes.max);
+                    }
+                }
+
                 updateChartSeries();
                 renderChartSidebar();
+            }
+        }
+
+        // 전망 구분선 및 레이블 추가
+        function addForecastDivider(chart) {
+            const lastActualDate = new Date('2025-12-31').getTime();
+
+            // 기존 구분선 제거
+            chart.xAxis[0].removePlotLine('forecast-divider');
+
+            // PlotLine으로 수직 구분선
+            chart.xAxis[0].addPlotLine({
+                value: lastActualDate,
+                color: 'rgba(255, 255, 255, 0.3)',
+                width: 1,
+                dashStyle: 'Dot',
+                id: 'forecast-divider',
+                zIndex: 5,
+                label: {
+                    text: '',
+                    style: { color: 'transparent' }
+                }
+            });
+
+            // 기존 PlotBand 제거
+            chart.xAxis[0].removePlotBand('forecast-band');
+            chart.xAxis[0].removePlotBand('actual-band');
+
+            // Actual 영역 PlotBand
+            const minExtreme = chart.xAxis[0].getExtremes().min;
+            chart.xAxis[0].addPlotBand({
+                from: minExtreme,
+                to: lastActualDate,
+                color: 'transparent',
+                id: 'actual-band',
+                label: {
+                    text: 'Actual',
+                    align: 'center',
+                    verticalAlign: 'top',
+                    y: 10,
+                    style: {
+                        color: '#888',
+                        fontSize: '11px',
+                        fontWeight: '400'
+                    }
+                }
+            });
+
+            // 전망 영역 PlotBand
+            const lastForecastDate = new Date('2027-12-31').getTime();
+            chart.xAxis[0].addPlotBand({
+                from: lastActualDate,
+                to: lastForecastDate,
+                color: 'rgba(136, 136, 136, 0.05)',
+                id: 'forecast-band',
+                label: {
+                    text: 'Analysts Forecasts',
+                    align: 'center',
+                    verticalAlign: 'top',
+                    y: 10,
+                    style: {
+                        color: '#888',
+                        fontSize: '11px',
+                        fontWeight: '400'
+                    }
+                }
+            });
+        }
+
+        // 전망 구분선 및 레이블 제거
+        function removeForecastDivider(chart) {
+            chart.xAxis[0].removePlotLine('forecast-divider');
+            chart.xAxis[0].removePlotBand('forecast-band');
+            chart.xAxis[0].removePlotBand('actual-band');
+        }
+
+        // 전망 토글
+        function toggleForecast(enabled) {
+            showForecast = enabled;
+
+            const chart = Highcharts.charts.find(c => c && c.renderTo && c.renderTo.id === 'stockChart');
+
+            if (enabled) {
+                // 예측 지표 추가
+                if (!activeIndicators.includes('revenueForecast')) {
+                    activeIndicators.push('revenueForecast');
+                }
+            } else {
+                // 예측 지표 제거
+                const index = activeIndicators.indexOf('revenueForecast');
+                if (index > -1) {
+                    activeIndicators.splice(index, 1);
+                }
+
+                // 구분선 및 레이블 제거
+                if (chart) {
+                    removeForecastDivider(chart);
+                }
+            }
+
+            updateChartSeries();
+            renderChartSidebar();
+
+            // X축 범위 설정 (xAxis.update로 min/max 강제 설정)
+            if (chart && chart.xAxis && chart.xAxis[0]) {
+                if (enabled) {
+                    // X축 범위: 2022~2027 (6개년, 전망 2개년이 1/3 차지)
+                    const fullDataMin = new Date('2022-01-01').getTime();
+                    const lastForecastDate = new Date('2027-12-31').getTime();
+
+                    // xAxis min/max 강제 설정 및 Navigator 범위 확장
+                    chart.xAxis[0].update({
+                        min: fullDataMin,
+                        max: lastForecastDate,
+                        ordinal: false  // 시간 축 균등 배분
+                    }, false);
+
+                    // Navigator 범위도 확장
+                    if (chart.navigator && chart.navigator.xAxis) {
+                        chart.navigator.xAxis.update({
+                            min: fullDataMin,
+                            max: lastForecastDate
+                        }, false);
+                    }
+
+                    chart.redraw();
+                } else {
+                    // X축 범위 복원 (자동 계산)
+                    chart.xAxis[0].update({
+                        min: undefined,
+                        max: undefined,
+                        ordinal: true
+                    }, false);
+
+                    if (chart.navigator && chart.navigator.xAxis) {
+                        chart.navigator.xAxis.update({
+                            min: undefined,
+                            max: undefined
+                        }, false);
+                    }
+
+                    chart.redraw();
+                }
+            }
+
+            // 테이블 갱신
+            if (chart && chart.xAxis && chart.xAxis[0]) {
+                const extremes = chart.xAxis[0].getExtremes();
+                renderTable(extremes.min, extremes.max);
             }
         }
 
@@ -11085,10 +11444,40 @@ The First Descendant の日本展開が好調に推移し、
                 chart.series[chart.series.length - 1].remove(false);
             }
 
+            // 전망 활성화 시 신뢰구간 영역 먼저 추가 (맨 뒤에 그려지도록)
+            if (showForecast) {
+                // 1. 신뢰구간 영역 (arearange) - 그라데이션 효과
+                chart.addSeries({
+                    type: 'arearange',
+                    name: '전망 범위',
+                    data: generateRevenueForecastRangeData(),
+                    color: 'rgba(136, 136, 136, 0.4)',
+                    fillColor: {
+                        linearGradient: { x1: 0, y1: 0, x2: 1, y2: 0 },
+                        stops: [
+                            [0, 'rgba(136, 136, 136, 0.1)'],
+                            [1, 'rgba(136, 136, 136, 0.4)']
+                        ]
+                    },
+                    lineWidth: 0,
+                    yAxis: 1,
+                    enableMouseTracking: false,
+                    zIndex: 0,
+                    marker: { enabled: false }
+                }, false);
+
+                // 구분선 및 레이블 추가
+                addForecastDivider(chart);
+            }
+
             // 활성화된 지표들 추가
             activeIndicators.forEach(key => {
                 const config = indicatorConfigs[key];
-                chart.addSeries({
+
+                // revenueForecast인 경우 커스텀 툴팁 사용
+                const isForecast = config.isForecast;
+
+                const seriesOptions = {
                     type: config.chartType,
                     step: config.step,
                     name: config.name,
@@ -11103,8 +11492,16 @@ The First Descendant の日本展開が好調に推移し、
                     tooltip: {
                         valueDecimals: config.valueDecimals,
                         valueSuffix: config.unit
-                    }
-                }, false);
+                    },
+                    zIndex: isForecast ? 2 : 1
+                };
+
+                // 점선 스타일 적용 (예측 지표)
+                if (config.dashStyle) {
+                    seriesOptions.dashStyle = config.dashStyle;
+                }
+
+                chart.addSeries(seriesOptions, false);
             });
 
             // Y축 타이틀 업데이트
@@ -11147,10 +11544,25 @@ The First Descendant の日本展開が好調に推移し、
             console.log('X axis type changed to:', type);
         }
 
+        // 분기 키 생성 헬퍼 함수
+        function getQuarterKey(dateStr) {
+            const d = new Date(dateStr);
+            const quarter = Math.floor(d.getMonth() / 3) + 1;
+            return `${d.getFullYear()}-Q${quarter}`;
+        }
+
         // 테이블 렌더링
         function renderTable(min, max) {
             const startDate = new Date(min);
-            const endDate = new Date(max);
+            let endDate = new Date(max);
+
+            // 예측 데이터가 활성화되어 있으면 endDate 확장
+            if (showForecast && forecastData.revenue && forecastData.revenue.length > 0) {
+                const lastForecastDate = new Date(forecastData.revenue[forecastData.revenue.length - 1].date);
+                if (lastForecastDate > endDate) {
+                    endDate = lastForecastDate;
+                }
+            }
 
             let columns = [];
             // 선택된 기간 사용
@@ -11163,7 +11575,8 @@ The First Descendant の日本展開が好調に推移し、
                 while (current <= endDate) {
                     columns.push({
                         label: `${current.getMonth() + 1}/${current.getDate()}`,
-                        key: `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`
+                        key: `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}-${String(current.getDate()).padStart(2, '0')}`,
+                        isForecast: showForecast && current > new Date(max)
                     });
                     current.setDate(current.getDate() + 1);
                 }
@@ -11174,7 +11587,8 @@ The First Descendant の日本展開が好調に推移し、
                     const monthKey = `${current.getFullYear()}-${String(current.getMonth() + 1).padStart(2, '0')}`;
                     columns.push({
                         label: `${current.getMonth() + 1}월`,
-                        key: monthKey
+                        key: monthKey,
+                        isForecast: showForecast && current > new Date(max)
                     });
                     current.setMonth(current.getMonth() + 1);
                 }
@@ -11183,9 +11597,11 @@ The First Descendant の日本展開が好調に推移し、
                 let current = new Date(startDate.getFullYear(), Math.floor(startDate.getMonth() / 3) * 3, 1);
                 while (current <= endDate) {
                     const quarter = Math.floor(current.getMonth() / 3) + 1;
+                    const isForecastCol = showForecast && current > new Date(max);
                     columns.push({
-                        label: `${current.getFullYear()} Q${quarter}`,
-                        key: `${current.getFullYear()}-Q${quarter}`
+                        label: isForecastCol ? `Q${quarter}'${String(current.getFullYear()).slice(2)}(E)` : `${current.getFullYear()} Q${quarter}`,
+                        key: `${current.getFullYear()}-Q${quarter}`,
+                        isForecast: isForecastCol
                     });
                     current.setMonth(current.getMonth() + 3);
                 }
@@ -11193,9 +11609,11 @@ The First Descendant の日本展開が好調に推移し、
                 // 연별: 각 연도마다 컬럼
                 let current = new Date(startDate.getFullYear(), 0, 1);
                 while (current <= endDate) {
+                    const isForecastCol = showForecast && current > new Date(max);
                     columns.push({
-                        label: `${current.getFullYear()}`,
-                        key: `${current.getFullYear()}`
+                        label: isForecastCol ? `${current.getFullYear()}(E)` : `${current.getFullYear()}`,
+                        key: `${current.getFullYear()}`,
+                        isForecast: isForecastCol
                     });
                     current.setFullYear(current.getFullYear() + 1);
                 }
@@ -11258,7 +11676,8 @@ The First Descendant の日本展開が好調に推移し、
                 html += '<tr>';
                 columns.forEach(col => {
                     const month = parseInt(col.key.split('-')[1]);
-                    html += `<th class="period-header month-header" onclick="handlePeriodHeaderClick('${col.key}', '${grain}')">${month}</th>`;
+                    const forecastClass = col.isForecast ? ' forecast-header' : '';
+                    html += `<th class="period-header month-header${forecastClass}" onclick="handlePeriodHeaderClick('${col.key}', '${grain}')">${month}</th>`;
                 });
                 html += '</tr>';
             } else {
@@ -11279,7 +11698,8 @@ The First Descendant の日本展開が好調に推移し、
                     </div>
                 </th>`;
                 columns.forEach(col => {
-                    html += `<th class="period-header" onclick="handlePeriodHeaderClick('${col.key}', '${grain}')">${col.label}</th>`;
+                    const forecastClass = col.isForecast ? ' forecast-header' : '';
+                    html += `<th class="period-header${forecastClass}" onclick="handlePeriodHeaderClick('${col.key}', '${grain}')">${col.label}</th>`;
                 });
                 html += '</tr>';
             }
@@ -11291,16 +11711,38 @@ The First Descendant の日本展開が好調に推移し、
                 columns.forEach(col => {
                     const events = getEventsForPeriod(src, col.key, grain);
                     const count = events.length;
+                    const forecastCellClass = col.isForecast ? ' forecast-cell' : '';
                     if (count > 0) {
                         const tooltipText = getTooltipText(events);
                         const cellContent = getCellPreview(events);
-                        html += `<td class="has-data" title="${tooltipText}" onclick="handleCellClick(event, '${src}', '${col.key}', '${grain}')">${cellContent}</td>`;
+                        html += `<td class="has-data${forecastCellClass}" title="${tooltipText}" onclick="handleCellClick(event, '${src}', '${col.key}', '${grain}')">${cellContent}</td>`;
                     } else {
-                        html += '<td>-</td>';
+                        html += `<td class="${forecastCellClass}">-</td>`;
                     }
                 });
                 html += '</tr>';
             });
+
+            // 예측 행 추가 (분기별일 때만, showForecast 활성화 시)
+            if (showForecast && grain === 'quarter' && forecastData.revenue && forecastData.revenue.length > 0) {
+                html += `<tr class="forecast-row"><td class="source-name">전망</td>`;
+                columns.forEach(col => {
+                    // 1. 먼저 전망 데이터 확인
+                    const forecastItem = forecastData.revenue.find(f => getQuarterKey(f.date) === col.key);
+                    if (forecastItem) {
+                        html += `<td class="forecast-cell has-data">${forecastItem.value}조</td>`;
+                    } else {
+                        // 2. 전망 데이터가 없으면 실적 데이터 확인
+                        const actualRevenue = findActualRevenueForQuarter(col.key);
+                        if (actualRevenue !== null) {
+                            html += `<td class="forecast-cell">${actualRevenue}조</td>`;
+                        } else {
+                            html += `<td class="forecast-cell">-</td>`;
+                        }
+                    }
+                });
+                html += '</tr>';
+            }
 
             html += '</tbody>';
             table.innerHTML = html;
@@ -12639,6 +13081,7 @@ The First Descendant の日本展開が好調に推移し、
                     enabled: false
                 },
                 xAxis: {
+                    type: 'datetime',
                     events: {
                         afterSetExtremes: function(e) {
                             renderTable(e.min, e.max);
@@ -12646,7 +13089,23 @@ The First Descendant の日本展開が好調に推移し、
                     },
                     lineColor: '#3a3a3a',
                     tickColor: '#3a3a3a',
+                    tickPositioner: function() {
+                        // 각 연도별로 1개씩만 레이블 표시 (7월 1일 기준)
+                        const positions = [];
+                        const extremes = this.getExtremes();
+                        const startYear = new Date(extremes.min).getFullYear();
+                        const endYear = new Date(extremes.max).getFullYear();
+
+                        for (let year = startYear; year <= endYear; year++) {
+                            // 각 연도의 중간 지점 (7월 1일)에 레이블 배치
+                            positions.push(new Date(year, 6, 1).getTime());
+                        }
+                        return positions;
+                    },
                     labels: {
+                        formatter: function() {
+                            return new Date(this.value).getFullYear();
+                        },
                         style: {
                             color: '#888',
                             fontWeight: '300'
@@ -12716,7 +13175,43 @@ The First Descendant の日本展開が好調に推移し、
                         color: '#ccc',
                         fontWeight: '300'
                     },
-                    shared: true
+                    shared: true,
+                    formatter: function() {
+                        let html = '<b>' + Highcharts.dateFormat('%Y-%m-%d', this.x) + '</b><br/>';
+
+                        this.points.forEach(point => {
+                            // 전망 범위 시리즈는 툴팁에서 제외
+                            if (point.series.name === '전망 범위') return;
+
+                            const seriesName = point.series.name;
+                            let value = '';
+
+                            if (seriesName === '주가') {
+                                value = '₩' + Highcharts.numberFormat(point.y, 0);
+                            } else if (seriesName === '매출액 전망') {
+                                // 전망 데이터인 경우 추가 정보 표시
+                                const forecastItem = forecastData.revenue.find(f =>
+                                    new Date(f.date).getTime() === point.x
+                                );
+                                if (forecastItem) {
+                                    value = point.y.toFixed(2) + '조원';
+                                    html += '<span style="color:' + point.color + '">●</span> ' + seriesName + ': <b>' + value + '</b><br/>';
+                                    html += '<span style="color:#888; font-size:11px;">범위: ' + forecastItem.min + '조 - ' + forecastItem.max + '조</span><br/>';
+                                    html += '<span style="color:#888; font-size:11px;">' + forecastItem.analysts + ' Analysts</span><br/>';
+                                    html += '<span style="color:#666; font-size:10px;">Last confirmed: ' + forecastData.lastConfirmed + '</span>';
+                                    return;
+                                }
+                            } else if (point.series.options.tooltip && point.series.options.tooltip.valueSuffix) {
+                                value = Highcharts.numberFormat(point.y, point.series.options.tooltip.valueDecimals || 2) + point.series.options.tooltip.valueSuffix;
+                            } else {
+                                value = Highcharts.numberFormat(point.y, 2);
+                            }
+
+                            html += '<span style="color:' + point.color + '">●</span> ' + seriesName + ': <b>' + value + '</b><br/>';
+                        });
+
+                        return html;
+                    }
                 },
                 legend: {
                     enabled: false
