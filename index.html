@@ -525,9 +525,8 @@
         }
 
         .table-container {
-            flex: 1;
+            flex: 0 0 auto;
             min-width: 0;  /* flex 아이템 축소 허용 */
-            min-height: 200px;
             width: calc(100% - 16px);   /* 부모 너비에 맞춤 */
             overflow-x: auto;
             overflow-y: auto;
@@ -539,10 +538,10 @@
         }
 
         .data-table {
-            width: max-content;
-            min-width: 100%;
+            width: auto;
             border-collapse: collapse;
             font-size: 12px;
+            table-layout: fixed;
         }
 
         .data-table th,
@@ -626,6 +625,7 @@
             min-width: 200px;
             max-width: 200px;
             border-left: none;
+            overflow: hidden;
         }
 
         .data-table td:first-child {
@@ -10679,7 +10679,12 @@ Continued investment in new game development and live services.`,
                 ...Object.fromEntries(Object.entries(customSources).map(([k, v]) => [k, v.name]))
             };
 
-            let html = '<thead>';
+            // colgroup으로 첫 번째 컬럼 너비 강제 설정
+            let html = `<colgroup><col style="width: 200px; min-width: 200px; max-width: 200px;">`;
+            columns.forEach(() => {
+                html += `<col style="width: 45px; min-width: 45px;">`;
+            });
+            html += '</colgroup><thead>';
 
             // 월별일 때 두 줄 헤더 (연도 + 1~12월)
             if (grain === 'month') {
