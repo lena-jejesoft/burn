@@ -1519,6 +1519,108 @@
             font-size: 13px;
         }
 
+        /* 회사 개요 스타일 */
+        .company-overview {
+            padding: 24px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .overview-header {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .company-logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--claude-orange);
+            margin-bottom: 8px;
+        }
+
+        .company-name {
+            font-size: 18px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .company-ticker {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .overview-section {
+            margin-bottom: 20px;
+        }
+
+        .overview-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .overview-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .overview-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: var(--bg-medium);
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .stat-value {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .game-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .game-tag {
+            padding: 4px 10px;
+            background: var(--bg-light);
+            border-radius: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .overview-hint {
+            margin-top: 24px;
+            padding: 12px;
+            background: rgba(229, 123, 83, 0.1);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
         .detail-header {
             padding: 12px 16px;
             border-bottom: 1px solid var(--border-color);
@@ -2148,7 +2250,7 @@
             align-items: center;
             gap: 8px;
             padding: 6px 8px;
-            background: var(--bg-medium);
+            background: transparent;
             border-radius: 4px;
         }
 
@@ -6516,8 +6618,57 @@
                 <!-- 우측 패널 -->
                 <div class="right-panel" id="rightPanel">
                     <div class="detail-container" id="detailContainer">
-                        <div class="detail-placeholder" id="detailPlaceholder">
-                            항목을 선택하세요
+                        <div class="company-overview" id="companyOverview">
+                            <div class="overview-header">
+                                <div class="company-logo">NEXON</div>
+                                <div class="company-name">넥슨 (NEXON)</div>
+                                <div class="company-ticker">TYO: 3659</div>
+                            </div>
+
+                            <div class="overview-section">
+                                <div class="overview-title">회사 개요</div>
+                                <div class="overview-text">
+                                    넥슨은 1994년 설립된 글로벌 게임 회사로,
+                                    메이플스토리, 던전앤파이터, FIFA 온라인 등
+                                    대표 IP를 보유하고 있습니다.
+                                    한국, 일본, 북미, 유럽 등 전 세계에서
+                                    온라인/모바일 게임 서비스를 운영합니다.
+                                </div>
+                            </div>
+
+                            <div class="overview-stats">
+                                <div class="stat-item">
+                                    <span class="stat-label">시가총액</span>
+                                    <span class="stat-value">약 18조원</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">설립</span>
+                                    <span class="stat-value">1994년</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">본사</span>
+                                    <span class="stat-value">일본 도쿄</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">직원 수</span>
+                                    <span class="stat-value">약 7,000명</span>
+                                </div>
+                            </div>
+
+                            <div class="overview-section">
+                                <div class="overview-title">주요 게임</div>
+                                <div class="game-tags">
+                                    <span class="game-tag">메이플스토리</span>
+                                    <span class="game-tag">던전앤파이터</span>
+                                    <span class="game-tag">FC 온라인</span>
+                                    <span class="game-tag">카트라이더</span>
+                                    <span class="game-tag">블루 아카이브</span>
+                                </div>
+                            </div>
+
+                            <div class="overview-hint">
+                                좌측에서 출처나 문서를 선택하면 상세 내용을 확인할 수 있습니다.
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -10770,20 +10921,34 @@ The First Descendant の日本展開が好調に推移し、
         }
 
         // 매출액 전망 데이터 생성 (분기별)
+        // 마지막 실적 포인트를 포함하여 선이 연결되도록 함
         function generateRevenueForecastData() {
-            return forecastData.revenue.map(item => [
+            const revenueData = generateRevenueData();
+            const lastActual = revenueData[revenueData.length - 1]; // 마지막 실적 포인트
+
+            const forecastPoints = forecastData.revenue.map(item => [
                 new Date(item.date).getTime(),
                 item.value
             ]);
+
+            // 마지막 실적 포인트를 전망 시리즈 앞에 추가하여 연결
+            return [lastActual, ...forecastPoints];
         }
 
         // 매출액 전망 범위 데이터 생성 (arearange용)
+        // 마지막 실적 포인트를 포함하여 영역이 연결되도록 함
         function generateRevenueForecastRangeData() {
-            return forecastData.revenue.map(item => [
+            const revenueData = generateRevenueData();
+            const lastActual = revenueData[revenueData.length - 1];
+
+            const forecastRangePoints = forecastData.revenue.map(item => [
                 new Date(item.date).getTime(),
                 item.min,
                 item.max
             ]);
+
+            // 마지막 실적 포인트를 범위의 시작점으로 추가 (min=max=실적값)
+            return [[lastActual[0], lastActual[1], lastActual[1]], ...forecastRangePoints];
         }
 
         // 영업이익 데이터 생성 (분기별)
@@ -11782,6 +11947,12 @@ The First Descendant の日本展開が好調に推移し、
             currentListSource = source;
 
             const container = document.getElementById('detailContainer');
+
+            // 회사 개요 숨기기
+            const companyOverview = document.getElementById('companyOverview');
+            if (companyOverview) {
+                companyOverview.style.display = 'none';
+            }
             // 기본 출처 또는 커스텀 출처 데이터 조회
             const data = sourceData[source] || customSourceData[source];
             const events = eventData[source] || customEventData[source];
@@ -12623,6 +12794,12 @@ The First Descendant の日本展開が好調に推移し、
         function showDetail(item, source) {
             rightPanelView = 'detail';
             const container = document.getElementById('detailContainer');
+
+            // 회사 개요 숨기기
+            const companyOverview = document.getElementById('companyOverview');
+            if (companyOverview) {
+                companyOverview.style.display = 'none';
+            }
 
             // 현재 항목 저장
             currentItem = item;
