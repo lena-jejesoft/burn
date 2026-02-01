@@ -130,8 +130,8 @@
         }
 
         .chart-search-input {
-            width: 450px;
-            padding: 16px 20px;
+            width: 500px;
+            padding: 18px 22px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 16px;
@@ -547,7 +547,7 @@
         .data-table th,
         .data-table td {
             border: 1px solid var(--border-color);
-            padding: 6px 8px;
+            padding: 8px 8px;
             text-align: center;
             white-space: nowrap;
             width: 45px;
@@ -1450,7 +1450,7 @@
             display: flex;
             gap: 6px;
             padding: 12px 12px 0;
-            background: var(--bg-medium);
+            background: var(--bg-dark);
             flex-shrink: 0;
         }
 
@@ -1462,25 +1462,25 @@
             position: relative;
             border-radius: 8px 8px 0 0;
             transition: all 0.2s ease;
-            border: none;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
-        }
-
-        /* 탭 공통 스타일 */
-        .detail-tab {
-            background: var(--bg-light);
-            color: var(--claude-orange);
+            border: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-medium);
+            color: var(--text-secondary);
+            margin-bottom: -1px;
+            z-index: 1;
         }
 
         .detail-tab:hover {
             background: var(--bg-hover);
-            transform: translateY(-2px);
+            color: var(--claude-orange);
         }
 
         .detail-tab.active {
-            background: var(--claude-orange);
-            color: #fff;
-            box-shadow: 0 -4px 12px rgba(229, 123, 83, 0.4);
+            background: var(--bg-dark);
+            color: var(--claude-orange);
+            border-color: var(--border-color);
+            border-bottom-color: var(--bg-dark);
+            z-index: 2;
         }
 
         .detail-tab-content {
@@ -1488,6 +1488,8 @@
             overflow-y: auto;
             scrollbar-width: thin;
             scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-dark);
         }
 
         /* 스크롤바 빈 공간 제거 */
@@ -12245,15 +12247,16 @@ The First Descendant の日本展開が好調に推移し、
                 '';
 
             const summaryTabHtml = `
-                <div class="detail-header">
-                    <div class="detail-source">${displaySourceName}</div>
-                    <div class="detail-date">${item.date}</div>
-                </div>
-                ${chartsHtml}
-                <div class="detail-content">
-                    <div class="detail-title">${item.title}</div>
-                    <div class="detail-summary">${summaryHtml}</div>
-                    ${analysisHtml}
+                <div class="source-container">
+                    <div class="source-header">
+                        <span class="source-title">${item.title}</span>
+                        <span class="source-date">${item.date}</span>
+                    </div>
+                    ${chartsHtml}
+                    <div class="detail-content">
+                        <div class="detail-summary">${summaryHtml}</div>
+                        ${analysisHtml}
+                    </div>
                 </div>
             `;
 
