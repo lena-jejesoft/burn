@@ -2994,6 +2994,437 @@
             border-bottom: 1px solid var(--border-color);
         }
 
+        /* 준비중 페이지 스타일 */
+        .coming-soon-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 400px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .coming-soon-icon {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            opacity: 0.5;
+        }
+
+        .coming-soon-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .coming-soon-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* 산업분석 메인 탭 스타일 */
+        .industry-main-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .industry-main-tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            margin-bottom: -1px;
+        }
+
+        .industry-main-tab:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .industry-main-tab.active {
+            color: var(--claude-orange);
+            border-bottom-color: var(--claude-orange);
+            font-weight: 600;
+        }
+
+        .industry-main-content {
+            display: none;
+        }
+
+        .industry-main-content.active {
+            display: block;
+        }
+
+        /* 산업분석 컨텐츠 레이아웃 */
+        .industry-analysis-layout {
+            display: flex;
+            gap: 20px;
+        }
+
+        .industry-selection-panel {
+            flex: 0 0 200px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .industry-selection-panel h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .industry-result-panel {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* 체크박스 리스트 스타일 */
+        .industry-checkbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .industry-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .industry-checkbox-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .industry-checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--claude-orange);
+            cursor: pointer;
+        }
+
+        .industry-checkbox-item label {
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .industry-search-input {
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 12px;
+        }
+
+        .industry-search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .industry-search-input:focus {
+            outline: none;
+            border-color: var(--claude-orange);
+        }
+
+        /* 지표 선택 UI 스타일 */
+        .metric-selector-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .metric-selector-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .metric-dropdown {
+            position: relative;
+        }
+
+        .metric-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .metric-dropdown-btn:hover {
+            border-color: var(--claude-orange);
+        }
+
+        .metric-dropdown-btn .arrow {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .metric-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 200px;
+            margin-top: 4px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 100;
+            display: none;
+        }
+
+        .metric-dropdown-menu.show {
+            display: block;
+        }
+
+        .metric-dropdown-section {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .metric-dropdown-section:last-child {
+            border-bottom: none;
+        }
+
+        .metric-dropdown-section-title {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 4px 12px;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-dropdown-item {
+            padding: 10px 12px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .metric-dropdown-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .metric-dropdown-item.active {
+            color: var(--claude-orange);
+        }
+
+        .metric-dropdown-item .check {
+            width: 16px;
+            color: var(--claude-orange);
+        }
+
+        /* 산업내 비교 - 산업 선택 드롭다운 */
+        .intra-industry-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .intra-industry-selector label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .intra-industry-select {
+            padding: 8px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            min-width: 150px;
+        }
+
+        .intra-industry-select:focus {
+            outline: none;
+            border-color: var(--claude-orange);
+        }
+
+        /* 서브 탭 스타일 */
+        .industry-sub-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .industry-sub-tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 13px;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .industry-sub-tab:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-light);
+        }
+
+        .industry-sub-tab.active {
+            background: var(--claude-orange);
+            color: white;
+            border-color: var(--claude-orange);
+        }
+
+        /* NSIC 파인더 스타일 (Miller Columns) */
+        .nsic-finder {
+            display: flex;
+            height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--bg-secondary);
+        }
+
+        .nsic-finder-column {
+            flex: 1;
+            min-width: 0;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            background: var(--card-bg);
+        }
+
+        .nsic-finder-column:last-child {
+            border-right: none;
+        }
+
+        .nsic-finder-column-header {
+            padding: 10px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+        }
+
+        .nsic-finder-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            font-size: 13px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.15s;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .nsic-finder-item:last-child {
+            border-bottom: none;
+        }
+
+        .nsic-finder-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .nsic-finder-item.selected {
+            background: rgba(193, 95, 60, 0.15);
+            color: var(--claude-orange);
+        }
+
+        .nsic-finder-item .arrow {
+            color: var(--text-muted);
+            font-size: 10px;
+        }
+
+        .nsic-finder-item.selected .arrow {
+            color: var(--claude-orange);
+        }
+
+        .nsic-selection-info {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .nsic-selection-path {
+            font-size: 13px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .nsic-selection-path span {
+            color: var(--text-muted);
+        }
+
+        .nsic-selection-codes {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .nsic-selection-codes strong {
+            color: var(--text-primary);
+        }
+
+        .nsic-action-btn {
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            background: var(--claude-orange);
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nsic-action-btn:hover {
+            background: var(--claude-crail);
+        }
+
+        .nsic-action-btn:disabled {
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
         /* 사용자 매뉴얼 스타일 */
         .manual-view {
             padding: 16px;
@@ -3316,10 +3747,14 @@
         .calendar-event:hover { background: var(--bg-light); }
         .calendar-event::before { content: '●'; font-size: 8px; flex-shrink: 0; }
         .calendar-event.source-earnings::before { color: var(--claude-crail); }
-        .calendar-event.source-news::before { color: var(--claude-sage); }
+        .calendar-event.source-disclosure::before { color: #4a90d9; }
+        .calendar-event.source-sec::before { color: #2e5a8c; }
+        .calendar-event.source-legislation::before { color: #7c5cba; }
+        .calendar-event.source-macro::before { color: #e67e22; }
         .calendar-event.source-report::before { color: var(--claude-tan); }
         .calendar-event.source-conference::before { color: var(--claude-lavender); }
         .calendar-event.source-dividend::before { color: var(--claude-coffee); }
+        .calendar-event.source-news::before { color: var(--claude-sage); }
 
         /* 미니 캘린더 */
         .mini-calendar { padding: 20px; border-bottom: 1px solid var(--border-color); }
@@ -13051,6 +13486,11 @@ The First Descendant の日本展開が好調に推移し、
             if (!e.target.closest('.industry-dropdown-wrapper')) {
                 document.querySelectorAll('.industry-dropdown').forEach(d => d.classList.remove('show'));
             }
+
+            // 지표 선택 드롭다운 닫기
+            if (!e.target.closest('.metric-dropdown')) {
+                document.querySelectorAll('.metric-dropdown-menu').forEach(d => d.classList.remove('show'));
+            }
         });
 
         // 상세보기 표시
@@ -14574,6 +15014,157 @@ The First Descendant の日本展開が好調に推移し、
         };
 
         let currentIndustryTab = 'competitors';
+        let currentIndustryMainTab = 'inter'; // 'inter' (산업간) 또는 'intra' (산업내)
+        let currentIntraSubTab = 'competitors'; // 산업내 비교 서브탭
+        let currentMetricPreset = 'marketSize';
+        let selectedNsicCategory = { major: null, mid: null, minor: null };
+
+        // 지표 프리셋
+        const metricPresets = {
+            marketSize: { name: '시장 규모 비교', metrics: ['marketCap', 'revenue'], unit: '조원' },
+            profitability: { name: '수익성 비교', metrics: ['operatingMargin', 'netMargin', 'roe'], unit: '%' },
+            growth: { name: '성장성 비교', metrics: ['revenueGrowth', 'profitGrowth'], unit: '%' },
+            valuation: { name: '밸류에이션 비교', metrics: ['per', 'pbr', 'evEbitda'], unit: '배' }
+        };
+
+        // 개별 지표
+        const availableMetrics = {
+            marketCap: { name: '시가총액', unit: '조원' },
+            revenue: { name: '매출액', unit: '조원' },
+            operatingMargin: { name: '영업이익률', unit: '%' },
+            netMargin: { name: '순이익률', unit: '%' },
+            roe: { name: 'ROE', unit: '%' },
+            revenueGrowth: { name: '매출 성장률', unit: '%' },
+            profitGrowth: { name: '이익 성장률', unit: '%' },
+            per: { name: 'PER', unit: '배' },
+            pbr: { name: 'PBR', unit: '배' },
+            evEbitda: { name: 'EV/EBITDA', unit: '배' }
+        };
+
+        // NSIC 분류체계 데이터
+        const nsicClassification = {
+            major: [
+                { id: 'manufacturing', name: '제조업', code: 'C' },
+                { id: 'ict', name: '정보통신업', code: 'J' },
+                { id: 'finance', name: '금융업', code: 'K' },
+                { id: 'service', name: '서비스업', code: 'N' },
+                { id: 'retail', name: '도소매업', code: 'G' }
+            ],
+            mid: {
+                manufacturing: [
+                    { id: 'electronics', name: '전자·전기', code: 'C26' },
+                    { id: 'machinery', name: '기계·장비', code: 'C29' },
+                    { id: 'chemical', name: '화학', code: 'C20' },
+                    { id: 'bio', name: '바이오·의약', code: 'C21' },
+                    { id: 'auto', name: '자동차', code: 'C30' }
+                ],
+                ict: [
+                    { id: 'software', name: '소프트웨어', code: 'J62' },
+                    { id: 'telecom', name: '통신', code: 'J61' },
+                    { id: 'content', name: '콘텐츠', code: 'J63' },
+                    { id: 'platform', name: '플랫폼', code: 'J64' }
+                ],
+                finance: [
+                    { id: 'bank', name: '은행', code: 'K64' },
+                    { id: 'securities', name: '증권', code: 'K66' },
+                    { id: 'insurance', name: '보험', code: 'K65' },
+                    { id: 'fintech', name: '핀테크', code: 'K67' }
+                ],
+                service: [
+                    { id: 'professional', name: '전문서비스', code: 'N71' },
+                    { id: 'business', name: '사업서비스', code: 'N74' },
+                    { id: 'research', name: '연구개발', code: 'N72' }
+                ],
+                retail: [
+                    { id: 'ecommerce', name: '전자상거래', code: 'G47' },
+                    { id: 'wholesale', name: '도매', code: 'G46' },
+                    { id: 'retail_store', name: '소매', code: 'G45' }
+                ]
+            },
+            minor: {
+                electronics: [
+                    { id: 'semiconductor', name: '반도체', code: 'C2611', nsic: 'NS-MF-EL-001' },
+                    { id: 'display', name: '디스플레이', code: 'C2612', nsic: 'NS-MF-EL-002' },
+                    { id: 'battery', name: '2차전지', code: 'C2613', nsic: 'NS-MF-EL-003' }
+                ],
+                software: [
+                    { id: 'game', name: '게임', code: 'J6201', nsic: 'NS-IT-SW-001' },
+                    { id: 'enterprise', name: '기업용SW', code: 'J6202', nsic: 'NS-IT-SW-002' },
+                    { id: 'si', name: 'SI', code: 'J6203', nsic: 'NS-IT-SW-003' },
+                    { id: 'saas', name: 'SaaS', code: 'J6204', nsic: 'NS-IT-SW-004' }
+                ],
+                content: [
+                    { id: 'entertainment', name: '엔터테인먼트', code: 'J6301', nsic: 'NS-IT-CT-001' },
+                    { id: 'media', name: '미디어', code: 'J6302', nsic: 'NS-IT-CT-002' },
+                    { id: 'advertising', name: '광고', code: 'J6303', nsic: 'NS-IT-CT-003' }
+                ],
+                platform: [
+                    { id: 'portal', name: '포털', code: 'J6401', nsic: 'NS-IT-PF-001' },
+                    { id: 'sns', name: 'SNS', code: 'J6402', nsic: 'NS-IT-PF-002' },
+                    { id: 'commerce', name: '커머스 플랫폼', code: 'J6403', nsic: 'NS-IT-PF-003' }
+                ],
+                telecom: [
+                    { id: 'mobile', name: '이동통신', code: 'J6101', nsic: 'NS-IT-TC-001' },
+                    { id: 'fixed', name: '유선통신', code: 'J6102', nsic: 'NS-IT-TC-002' }
+                ],
+                bank: [
+                    { id: 'commercial', name: '시중은행', code: 'K6401', nsic: 'NS-FN-BK-001' },
+                    { id: 'regional', name: '지방은행', code: 'K6402', nsic: 'NS-FN-BK-002' }
+                ],
+                securities: [
+                    { id: 'broker', name: '증권사', code: 'K6601', nsic: 'NS-FN-SC-001' },
+                    { id: 'asset', name: '자산운용', code: 'K6602', nsic: 'NS-FN-SC-002' }
+                ],
+                insurance: [
+                    { id: 'life', name: '생명보험', code: 'K6501', nsic: 'NS-FN-IN-001' },
+                    { id: 'non_life', name: '손해보험', code: 'K6502', nsic: 'NS-FN-IN-002' }
+                ],
+                fintech: [
+                    { id: 'payment', name: '간편결제', code: 'K6701', nsic: 'NS-FN-FT-001' },
+                    { id: 'lending', name: 'P2P금융', code: 'K6702', nsic: 'NS-FN-FT-002' }
+                ],
+                bio: [
+                    { id: 'pharma', name: '제약', code: 'C2101', nsic: 'NS-MF-BI-001' },
+                    { id: 'biotech', name: '바이오텍', code: 'C2102', nsic: 'NS-MF-BI-002' },
+                    { id: 'medical', name: '의료기기', code: 'C2103', nsic: 'NS-MF-BI-003' }
+                ],
+                machinery: [
+                    { id: 'industrial', name: '산업기계', code: 'C2901', nsic: 'NS-MF-MC-001' },
+                    { id: 'precision', name: '정밀기계', code: 'C2902', nsic: 'NS-MF-MC-002' }
+                ],
+                chemical: [
+                    { id: 'petrochem', name: '석유화학', code: 'C2001', nsic: 'NS-MF-CH-001' },
+                    { id: 'specialty', name: '정밀화학', code: 'C2002', nsic: 'NS-MF-CH-002' }
+                ],
+                auto: [
+                    { id: 'oem', name: '완성차', code: 'C3001', nsic: 'NS-MF-AU-001' },
+                    { id: 'parts', name: '부품', code: 'C3002', nsic: 'NS-MF-AU-002' },
+                    { id: 'ev', name: '전기차', code: 'C3003', nsic: 'NS-MF-AU-003' }
+                ],
+                professional: [
+                    { id: 'consulting', name: '컨설팅', code: 'N7101', nsic: 'NS-SV-PR-001' },
+                    { id: 'legal', name: '법률', code: 'N7102', nsic: 'NS-SV-PR-002' }
+                ],
+                business: [
+                    { id: 'hr', name: '인력서비스', code: 'N7401', nsic: 'NS-SV-BS-001' },
+                    { id: 'facility', name: '시설관리', code: 'N7402', nsic: 'NS-SV-BS-002' }
+                ],
+                research: [
+                    { id: 'rd', name: 'R&D서비스', code: 'N7201', nsic: 'NS-SV-RS-001' }
+                ],
+                ecommerce: [
+                    { id: 'online_mall', name: '온라인쇼핑몰', code: 'G4701', nsic: 'NS-RT-EC-001' },
+                    { id: 'open_market', name: '오픈마켓', code: 'G4702', nsic: 'NS-RT-EC-002' }
+                ],
+                wholesale: [
+                    { id: 'general', name: '종합도매', code: 'G4601', nsic: 'NS-RT-WH-001' }
+                ],
+                retail_store: [
+                    { id: 'department', name: '백화점', code: 'G4501', nsic: 'NS-RT-RS-001' },
+                    { id: 'mart', name: '대형마트', code: 'G4502', nsic: 'NS-RT-RS-002' }
+                ]
+            }
+        };
 
         // 확장된 산업 데이터
         const extendedIndustryData = {
@@ -14631,122 +15222,398 @@ The First Descendant の日本展開が好調に推移し、
             });
             document.querySelector('.icon-sidebar-item[title="산업분석"]').classList.add('active');
 
-            // 중앙 패널 내용 변경
+            // 중앙 패널 - 준비중 메시지
             const centerPanel = document.querySelector('.center-panel');
             centerPanel.innerHTML = `
-                <div class="industry-analysis-view">
-                    <div class="industry-analysis-header">산업 분석</div>
+                <div class="industry-analysis-view" style="padding: 24px;">
+                    <div class="industry-analysis-header">NSIC 산업분석</div>
 
-                    <!-- 산업간 비교 섹션 -->
-                    <div class="industry-section">
-                        <div class="industry-section-title">산업간 비교 (시장 규모)</div>
-
-                        <!-- 산업 선택기 -->
-                        <div class="industry-selector" id="industrySelector">
-                            <div id="industryItems"></div>
-                            <div class="industry-dropdown-wrapper">
-                                <button class="industry-add-btn" onclick="toggleIndustryDropdown('industry')">+ 추가</button>
-                                <div class="industry-dropdown" id="industryDropdown"></div>
-                            </div>
+                    <div class="coming-soon-container" style="min-height: 300px;">
+                        <div class="coming-soon-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                            </svg>
                         </div>
-
-                        <!-- 차트와 테이블 가로 배치 -->
-                        <div class="industry-content-row">
-                            <div class="industry-chart-wrapper">
-                                <div id="inter-industry-chart" class="industry-chart-container"></div>
-                            </div>
-                            <div class="industry-table-wrapper">
-                                <table class="industry-data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>산업</th>
-                                            <th>시장규모</th>
-                                            <th>성장률</th>
-                                            <th>순위</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="industryTableBody"></tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <h2 class="coming-soon-title">준비중입니다</h2>
+                        <p class="coming-soon-desc">
+                            NSIC(New Standard Industry Classification) 기반의 산업분석 기능이 준비 중입니다.
+                        </p>
                     </div>
 
-                    <!-- 산업내 비교 섹션 -->
-                    <div class="industry-section">
-                        <div class="industry-section-title">산업내 비교</div>
-                        <div class="industry-tabs">
-                            <div class="industry-tab active" data-tab="competitors" onclick="switchIndustryTab('competitors')">경쟁사</div>
-                            <div class="industry-tab" data-tab="genres" onclick="switchIndustryTab('genres')">장르별</div>
-                            <div class="industry-tab" data-tab="regions" onclick="switchIndustryTab('regions')">지역별</div>
-                        </div>
-
-                        <!-- 탭별 선택기 -->
-                        <div class="industry-selector" id="intraSelector">
-                            <div id="intraItems"></div>
-                            <div class="industry-dropdown-wrapper">
-                                <button class="industry-add-btn" onclick="toggleIndustryDropdown('intra')">+ 추가</button>
-                                <div class="industry-dropdown" id="intraDropdown"></div>
+                    <div class="nsic-info-section" style="margin-top: 40px; padding: 24px; background: var(--bg-secondary); border-radius: 8px;">
+                        <h4 style="font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 16px;">NSIC 산업분석이란?</h4>
+                        <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;">
+                            NSIC는 기존 한국표준산업분류(KSIC)를 현대 산업 환경에 맞게 재정의한 새로운 분류 체계입니다.
+                            디지털 경제, 플랫폼 비즈니스, 융복합 산업 등 새로운 산업 트렌드를 반영하여 보다 정확한 산업 분석을 제공합니다.
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                            <div style="flex: 1; min-width: 200px; padding: 16px; background: var(--bg-tertiary); border-radius: 6px;">
+                                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">예정 기능</div>
+                                <div style="font-size: 13px; color: var(--text-primary);">산업간 비교 분석</div>
                             </div>
-                        </div>
-
-                        <!-- 차트와 테이블 가로 배치 -->
-                        <div class="industry-content-row">
-                            <div class="industry-chart-wrapper">
-                                <div id="intra-industry-chart" class="industry-chart-container"></div>
+                            <div style="flex: 1; min-width: 200px; padding: 16px; background: var(--bg-tertiary); border-radius: 6px;">
+                                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">예정 기능</div>
+                                <div style="font-size: 13px; color: var(--text-primary);">산업내 경쟁사 분석</div>
                             </div>
-                            <div class="industry-table-wrapper">
-                                <table class="industry-data-table">
-                                    <thead id="intraTableHead">
-                                        <tr>
-                                            <th>항목</th>
-                                            <th>값</th>
-                                            <th>성장률</th>
-                                            <th>순위</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="intraTableBody"></tbody>
-                                </table>
+                            <div style="flex: 1; min-width: 200px; padding: 16px; background: var(--bg-tertiary); border-radius: 6px;">
+                                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">예정 기능</div>
+                                <div style="font-size: 13px; color: var(--text-primary);">NSIC 분류체계 탐색</div>
                             </div>
                         </div>
                     </div>
                 </div>
             `;
 
-            // 선택기와 차트, 테이블 렌더링
-            renderIndustrySelectorItems();
-            renderIntraSelectorItems();
-            renderInterIndustryChart();
-            renderIntraIndustryChart();
-            renderIndustryTable();
-            renderIntraTable();
+            // 우측 패널 초기화 (차트랩 등에서 구조가 변경되었을 수 있음)
+            const rightPanel = document.querySelector('.right-panel');
+            if (rightPanel) {
+                rightPanel.innerHTML = `
+                    <div class="detail-container" id="detailContainer">
+                        <div style="padding: 20px; text-align: center; color: var(--text-muted);">
+                            <p style="font-size: 13px;">산업분석 기능 준비중</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
 
-            // 우측 패널에 NSIC 탭 표시
-            const detailContainer = document.getElementById('detailContainer');
-            const companyOverview = document.getElementById('companyOverview');
-            if (companyOverview) {
-                companyOverview.style.display = 'none';
+        // 메인 탭 전환 함수 (산업간/산업내)
+        function switchIndustryMainTab(tabName) {
+            currentIndustryMainTab = tabName;
+
+            // 탭 활성화 상태 업데이트
+            document.querySelectorAll('.industry-main-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === tabName);
+            });
+
+            // 컨텐츠 표시/숨김
+            document.querySelectorAll('.industry-main-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            if (tabName === 'inter') {
+                document.getElementById('interIndustryContent').classList.add('active');
+            } else {
+                document.getElementById('intraIndustryContent').classList.add('active');
+            }
+        }
+
+        // 산업내 비교 서브탭 전환
+        function switchIntraSubTab(tabName) {
+            currentIntraSubTab = tabName;
+            currentIndustryTab = tabName; // 기존 변수도 업데이트
+
+            // 서브탭 활성화
+            document.querySelectorAll('.industry-sub-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === tabName);
+            });
+
+            // 선택 패널 제목 업데이트
+            const titleEl = document.getElementById('intraSelectionTitle');
+            if (titleEl) {
+                const titles = { competitors: '기업 선택', genres: '세부산업 선택', regions: '지역 선택' };
+                titleEl.textContent = titles[tabName] || '항목 선택';
             }
 
-            detailContainer.innerHTML = `
-                <div class="nsic-panel-container">
-                    <div class="detail-tabs">
-                        <div class="detail-tab active" data-tab="nsic-definition" onclick="switchNsicTab('definition')">NSIC 정의</div>
-                        <div class="detail-tab" data-tab="nsic-classification" onclick="switchNsicTab('classification')">NSIC 분류체계</div>
-                    </div>
+            // 리스트 및 차트 갱신
+            renderIntraCheckboxList();
+            renderIntraIndustryChart();
+            renderIntraTable();
+        }
 
-                    <div class="detail-tab-content" id="nsicDefinitionContent">
-                        <div class="nsic-content">
-                            <p>NSIC 정의 내용이 여기에 표시됩니다.</p>
-                        </div>
-                    </div>
+        // 지표 드롭다운 토글
+        function toggleMetricDropdown(type) {
+            const dropdownId = type === 'inter' ? 'interMetricDropdown' : 'intraMetricDropdown';
+            const dropdown = document.getElementById(dropdownId);
+            if (!dropdown) return;
 
-                    <div class="detail-tab-content" id="nsicClassificationContent" style="display: none;">
-                        <div class="nsic-content">
-                            <p>NSIC 분류체계 내용이 여기에 표시됩니다.</p>
-                        </div>
-                    </div>
+            // 다른 드롭다운 닫기
+            document.querySelectorAll('.metric-dropdown-menu').forEach(d => {
+                if (d.id !== dropdownId) d.classList.remove('show');
+            });
+
+            dropdown.classList.toggle('show');
+        }
+
+        // 지표 프리셋 선택
+        function selectMetricPreset(presetKey, type) {
+            currentMetricPreset = presetKey;
+
+            // 라벨 업데이트
+            const labelId = type === 'inter' ? 'interMetricLabel' : 'intraMetricLabel';
+            const labelEl = document.getElementById(labelId);
+            if (labelEl) {
+                labelEl.textContent = metricPresets[presetKey].name;
+            }
+
+            // 드롭다운 닫기
+            document.querySelectorAll('.metric-dropdown-menu').forEach(d => d.classList.remove('show'));
+
+            // 차트 갱신
+            if (type === 'inter') {
+                renderInterIndustryChart();
+                renderIndustryTable();
+            } else {
+                renderIntraIndustryChart();
+                renderIntraTable();
+            }
+        }
+
+        // 산업 체크박스 리스트 렌더링
+        function renderIndustryCheckboxList() {
+            const container = document.getElementById('industryCheckboxList');
+            if (!container) return;
+
+            const searchInput = document.getElementById('industrySearchInput');
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+
+            const industries = Object.entries(extendedIndustryData.industries)
+                .filter(([key, ind]) => ind.name.toLowerCase().includes(searchTerm));
+
+            container.innerHTML = industries.map(([key, ind]) => `
+                <div class="industry-checkbox-item">
+                    <input type="checkbox" id="ind-${key}"
+                           ${selectedIndustries.includes(key) ? 'checked' : ''}
+                           onchange="toggleIndustrySelection('${key}')">
+                    <label for="ind-${key}">${ind.name}</label>
                 </div>
-            `;
+            `).join('');
+        }
+
+        // 산업내 비교 체크박스 리스트 렌더링
+        function renderIntraCheckboxList() {
+            const container = document.getElementById('intraCheckboxList');
+            if (!container) return;
+
+            const searchInput = document.getElementById('intraSearchInput');
+            const searchTerm = searchInput ? searchInput.value.toLowerCase() : '';
+
+            let dataSource, selectedItems;
+            if (currentIntraSubTab === 'competitors') {
+                dataSource = extendedIndustryData.companies;
+                selectedItems = selectedCompanies;
+            } else if (currentIntraSubTab === 'genres') {
+                dataSource = extendedIndustryData.genres;
+                selectedItems = selectedGenres;
+            } else {
+                dataSource = extendedIndustryData.regions;
+                selectedItems = selectedRegions;
+            }
+
+            const items = Object.entries(dataSource)
+                .filter(([key, item]) => item.name.toLowerCase().includes(searchTerm));
+
+            container.innerHTML = items.map(([key, item]) => `
+                <div class="industry-checkbox-item">
+                    <input type="checkbox" id="intra-${key}"
+                           ${selectedItems.includes(key) ? 'checked' : ''}
+                           onchange="toggleIntraSelection('${key}')">
+                    <label for="intra-${key}">${item.name}</label>
+                </div>
+            `).join('');
+        }
+
+        // 산업 선택 토글
+        function toggleIndustrySelection(key) {
+            if (selectedIndustries.includes(key)) {
+                if (selectedIndustries.length > 1) {
+                    selectedIndustries = selectedIndustries.filter(k => k !== key);
+                }
+            } else {
+                selectedIndustries.push(key);
+            }
+            renderIndustryCheckboxList();
+            renderInterIndustryChart();
+            renderIndustryTable();
+        }
+
+        // 산업내 항목 선택 토글
+        function toggleIntraSelection(key) {
+            let selectedItems;
+            if (currentIntraSubTab === 'competitors') {
+                selectedItems = selectedCompanies;
+            } else if (currentIntraSubTab === 'genres') {
+                selectedItems = selectedGenres;
+            } else {
+                selectedItems = selectedRegions;
+            }
+
+            if (selectedItems.includes(key)) {
+                if (selectedItems.length > 1) {
+                    if (currentIntraSubTab === 'competitors') {
+                        selectedCompanies = selectedCompanies.filter(k => k !== key);
+                    } else if (currentIntraSubTab === 'genres') {
+                        selectedGenres = selectedGenres.filter(k => k !== key);
+                    } else {
+                        selectedRegions = selectedRegions.filter(k => k !== key);
+                    }
+                }
+            } else {
+                selectedItems.push(key);
+            }
+
+            renderIntraCheckboxList();
+            renderIntraIndustryChart();
+            renderIntraTable();
+        }
+
+        // 산업 검색 필터
+        function filterIndustryList() {
+            renderIndustryCheckboxList();
+        }
+
+        // 산업내 검색 필터
+        function filterIntraList() {
+            renderIntraCheckboxList();
+        }
+
+        // 산업내 비교 - 산업 변경
+        function changeIntraIndustry() {
+            const select = document.getElementById('intraIndustrySelect');
+            if (select) {
+                // 선택된 산업에 따라 데이터 갱신 (향후 확장)
+                renderIntraCheckboxList();
+                renderIntraIndustryChart();
+                renderIntraTable();
+            }
+        }
+
+        // NSIC 파인더 렌더링
+        function renderNsicFinder() {
+            const majorList = document.getElementById('nsicMajorList');
+            if (!majorList) return;
+
+            // 대분류 렌더링
+            majorList.innerHTML = nsicClassification.major.map(item => `
+                <div class="nsic-finder-item ${selectedNsicCategory.major === item.id ? 'selected' : ''}"
+                     onclick="selectNsicMajor('${item.id}')">
+                    <span>${item.name}</span>
+                    <span class="arrow">▸</span>
+                </div>
+            `).join('');
+
+            // 중분류 렌더링
+            renderNsicMidColumn();
+
+            // 소분류 렌더링
+            renderNsicMinorColumn();
+        }
+
+        // NSIC 중분류 컬럼 렌더링
+        function renderNsicMidColumn() {
+            const midList = document.getElementById('nsicMidList');
+            if (!midList) return;
+
+            if (!selectedNsicCategory.major) {
+                midList.innerHTML = '<div style="padding: 12px; color: var(--text-muted); font-size: 12px;">대분류를 선택하세요</div>';
+                return;
+            }
+
+            const midItems = nsicClassification.mid[selectedNsicCategory.major] || [];
+            midList.innerHTML = midItems.map(item => `
+                <div class="nsic-finder-item ${selectedNsicCategory.mid === item.id ? 'selected' : ''}"
+                     onclick="selectNsicMid('${item.id}')">
+                    <span>${item.name}</span>
+                    <span class="arrow">▸</span>
+                </div>
+            `).join('');
+        }
+
+        // NSIC 소분류 컬럼 렌더링
+        function renderNsicMinorColumn() {
+            const minorList = document.getElementById('nsicMinorList');
+            if (!minorList) return;
+
+            if (!selectedNsicCategory.mid) {
+                minorList.innerHTML = '<div style="padding: 12px; color: var(--text-muted); font-size: 12px;">중분류를 선택하세요</div>';
+                return;
+            }
+
+            const minorItems = nsicClassification.minor[selectedNsicCategory.mid] || [];
+            minorList.innerHTML = minorItems.map(item => `
+                <div class="nsic-finder-item ${selectedNsicCategory.minor === item.id ? 'selected' : ''}"
+                     onclick="selectNsicMinor('${item.id}', '${item.code}', '${item.nsic || ''}')">
+                    <span>${item.name}</span>
+                </div>
+            `).join('');
+        }
+
+        // NSIC 대분류 선택
+        function selectNsicMajor(majorId) {
+            selectedNsicCategory.major = majorId;
+            selectedNsicCategory.mid = null;
+            selectedNsicCategory.minor = null;
+
+            renderNsicFinder();
+            updateNsicSelectionInfo();
+        }
+
+        // NSIC 중분류 선택
+        function selectNsicMid(midId) {
+            selectedNsicCategory.mid = midId;
+            selectedNsicCategory.minor = null;
+
+            renderNsicMidColumn();
+            renderNsicMinorColumn();
+            updateNsicSelectionInfo();
+        }
+
+        // NSIC 소분류 선택
+        function selectNsicMinor(minorId, ksicCode, nsicCode) {
+            selectedNsicCategory.minor = minorId;
+
+            // 소분류 목록 갱신 (선택 상태 표시)
+            renderNsicMinorColumn();
+
+            // 선택 정보 업데이트
+            const pathText = document.getElementById('nsicPathText');
+            const ksicEl = document.getElementById('nsicKsicCode');
+            const nsicEl = document.getElementById('nsicNsicCode');
+            const analyzeBtn = document.getElementById('nsicAnalyzeBtn');
+
+            // 경로 텍스트 생성
+            const majorItem = nsicClassification.major.find(m => m.id === selectedNsicCategory.major);
+            const midItems = nsicClassification.mid[selectedNsicCategory.major] || [];
+            const midItem = midItems.find(m => m.id === selectedNsicCategory.mid);
+            const minorItems = nsicClassification.minor[selectedNsicCategory.mid] || [];
+            const minorItem = minorItems.find(m => m.id === minorId);
+
+            if (pathText && majorItem && midItem && minorItem) {
+                pathText.textContent = `${majorItem.name} > ${midItem.name} > ${minorItem.name}`;
+            }
+
+            if (ksicEl) ksicEl.textContent = ksicCode;
+            if (nsicEl) nsicEl.textContent = nsicCode || '-';
+            if (analyzeBtn) analyzeBtn.disabled = false;
+        }
+
+        // NSIC 선택 정보 업데이트
+        function updateNsicSelectionInfo() {
+            const pathText = document.getElementById('nsicPathText');
+            const ksicEl = document.getElementById('nsicKsicCode');
+            const nsicEl = document.getElementById('nsicNsicCode');
+            const analyzeBtn = document.getElementById('nsicAnalyzeBtn');
+
+            if (!selectedNsicCategory.minor) {
+                if (pathText) pathText.textContent = '-';
+                if (ksicEl) ksicEl.textContent = '-';
+                if (nsicEl) nsicEl.textContent = '-';
+                if (analyzeBtn) analyzeBtn.disabled = true;
+            }
+        }
+
+        // NSIC 분류로 분석하기
+        function analyzeByNsic() {
+            if (!selectedNsicCategory.minor) return;
+
+            // 해당 분류로 분석 화면 전환
+            const minorItems = nsicClassification.minor[selectedNsicCategory.mid] || [];
+            const minorItem = minorItems.find(m => m.id === selectedNsicCategory.minor);
+
+            if (minorItem) {
+                alert(`"${minorItem.name}" 분류로 분석을 시작합니다.\n\nKSIC: ${minorItem.code}\nNSIC: ${minorItem.nsic || '-'}`);
+                // 향후: 해당 분류에 속하는 기업들을 자동으로 선택하고 산업내 비교 탭으로 이동
+            }
         }
 
         // NSIC 탭 전환 함수
@@ -14771,6 +15638,8 @@ The First Descendant の日本展開が好調に推移し、
             } else {
                 definitionContent.style.display = 'none';
                 classificationContent.style.display = 'block';
+                // 파인더 초기화
+                renderNsicFinder();
             }
         }
 
@@ -14889,6 +15758,7 @@ The First Descendant の日本展開が好調に推移し、
                 if (!selectedIndustries.includes(key)) {
                     selectedIndustries.push(key);
                     renderIndustrySelectorItems();
+                    renderIndustryCheckboxList();
                     renderInterIndustryChart();
                     renderIndustryTable();
                 }
@@ -14905,6 +15775,7 @@ The First Descendant の日本展開が好調に推移し、
                 if (!selected.includes(key)) {
                     selected.push(key);
                     renderIntraSelectorItems();
+                    renderIntraCheckboxList();
                     renderIntraIndustryChart();
                     renderIntraTable();
                 }
@@ -14920,6 +15791,7 @@ The First Descendant の日本展開が好調に推移し、
                 if (selectedIndustries.length > 1) {
                     selectedIndustries = selectedIndustries.filter(k => k !== key);
                     renderIndustrySelectorItems();
+                    renderIndustryCheckboxList();
                     renderInterIndustryChart();
                     renderIndustryTable();
                 }
@@ -14939,6 +15811,7 @@ The First Descendant の日本展開が好調に推移し、
                     }
                 }
                 renderIntraSelectorItems();
+                renderIntraCheckboxList();
                 renderIntraIndustryChart();
                 renderIntraTable();
             }
@@ -15058,16 +15931,73 @@ The First Descendant の日本展開が好調に推移し、
 
         // 캘린더 이벤트 샘플 데이터
         const calendarEvents = [
+            // 2026년 1월
             { date: '2026-01-15', title: '넥슨 4Q 실적발표', company: '넥슨', source: 'earnings' },
             { date: '2026-01-20', title: '엔씨소프트 배당금 지급', company: '엔씨소프트', source: 'dividend' },
             { date: '2026-01-22', title: '크래프톤 IR 컨퍼런스', company: '크래프톤', source: 'conference' },
             { date: '2026-01-25', title: '게임산업 분기 보고서', company: '산업', source: 'report' },
             { date: '2026-01-28', title: '넷마블 신작 발표', company: '넷마블', source: 'news' },
             { date: '2026-01-30', title: '넥슨 IR 데이', company: '넥슨', source: 'conference' },
-            { date: '2026-02-05', title: '엔씨소프트 1Q 실적예고', company: '엔씨소프트', source: 'earnings' },
-            { date: '2026-02-10', title: '크래프톤 배당 공시', company: '크래프톤', source: 'dividend' },
-            { date: '2026-02-15', title: '게임주 투자 리포트', company: '산업', source: 'report' },
-            { date: '2026-02-20', title: '넥슨 파트너 컨퍼런스', company: '넥슨', source: 'conference' },
+
+            // 2026년 2월 - 공시
+            { date: '2026-02-02', title: '삼성전자 자기주식 취득 공시', company: '삼성전자', source: 'disclosure' },
+            { date: '2026-02-05', title: 'SK하이닉스 시설투자 결정 공시', company: 'SK하이닉스', source: 'disclosure' },
+            { date: '2026-02-09', title: '현대차 임원 변경 공시', company: '현대차', source: 'disclosure' },
+            { date: '2026-02-12', title: 'LG에너지솔루션 특별관계자 거래 공시', company: 'LG에너지솔루션', source: 'disclosure' },
+            { date: '2026-02-16', title: 'NAVER 지분 변동 공시', company: 'NAVER', source: 'disclosure' },
+            { date: '2026-02-23', title: '카카오 합병 결정 공시', company: '카카오', source: 'disclosure' },
+
+            // 2026년 2월 - SEC
+            { date: '2026-02-03', title: 'Apple 10-K 연간보고서', company: 'Apple', source: 'sec' },
+            { date: '2026-02-06', title: 'Tesla 8-K 현재보고서', company: 'Tesla', source: 'sec' },
+            { date: '2026-02-10', title: 'NVIDIA 10-Q 분기보고서', company: 'NVIDIA', source: 'sec' },
+            { date: '2026-02-14', title: 'Microsoft 13-F 보유현황', company: 'Microsoft', source: 'sec' },
+            { date: '2026-02-19', title: 'Amazon DEF 14A 위임장', company: 'Amazon', source: 'sec' },
+            { date: '2026-02-25', title: 'Alphabet 10-K 연간보고서', company: 'Alphabet', source: 'sec' },
+
+            // 2026년 2월 - 법령/정책
+            { date: '2026-02-04', title: '자본시장법 시행령 개정', company: '금융위원회', source: 'legislation' },
+            { date: '2026-02-11', title: 'AI 규제 프레임워크 고시', company: '과기정통부', source: 'legislation' },
+            { date: '2026-02-17', title: '반도체 지원 특별법 시행', company: '산업부', source: 'legislation' },
+            { date: '2026-02-24', title: '공정거래법 개정안 의결', company: '공정위', source: 'legislation' },
+
+            // 2026년 2월 - 거시지표
+            { date: '2026-02-05', title: '한국은행 기준금리 발표', company: '한국은행', source: 'macro' },
+            { date: '2026-02-07', title: '미국 고용보고서 (1월)', company: 'BLS', source: 'macro' },
+            { date: '2026-02-12', title: '한국 소비자물가지수 발표', company: '통계청', source: 'macro' },
+            { date: '2026-02-14', title: '미국 CPI 발표', company: 'BLS', source: 'macro' },
+            { date: '2026-02-20', title: 'FOMC 의사록 공개', company: 'Fed', source: 'macro' },
+            { date: '2026-02-26', title: '한국 GDP 속보치 발표', company: '한국은행', source: 'macro' },
+            { date: '2026-02-28', title: '미국 PCE 물가지수', company: 'BEA', source: 'macro' },
+
+            // 2026년 2월 - 실적발표
+            { date: '2026-02-04', title: '삼성전자 4Q 실적 컨퍼런스콜', company: '삼성전자', source: 'earnings' },
+            { date: '2026-02-06', title: 'SK하이닉스 4Q 실적발표', company: 'SK하이닉스', source: 'earnings' },
+            { date: '2026-02-13', title: '현대차 4Q 실적발표', company: '현대차', source: 'earnings' },
+            { date: '2026-02-18', title: 'LG화학 4Q 실적발표', company: 'LG화학', source: 'earnings' },
+            { date: '2026-02-21', title: 'NAVER 4Q 실적발표', company: 'NAVER', source: 'earnings' },
+
+            // 2026년 2월 - 보고서
+            { date: '2026-02-03', title: '반도체 산업 전망 리포트', company: '산업', source: 'report' },
+            { date: '2026-02-10', title: '2차전지 밸류체인 분석', company: '산업', source: 'report' },
+            { date: '2026-02-15', title: '글로벌 AI 산업 동향', company: '산업', source: 'report' },
+            { date: '2026-02-22', title: '전기차 시장 전망', company: '산업', source: 'report' },
+            { date: '2026-02-27', title: '바이오 신약 파이프라인 분석', company: '산업', source: 'report' },
+
+            // 2026년 2월 - 컨퍼런스/이벤트
+            { date: '2026-02-08', title: 'MWC 2026 개막', company: 'GSMA', source: 'conference' },
+            { date: '2026-02-11', title: '삼성 갤럭시 언팩', company: '삼성전자', source: 'conference' },
+            { date: '2026-02-19', title: '현대차 투자자 설명회', company: '현대차', source: 'conference' },
+
+            // 2026년 2월 - 배당
+            { date: '2026-02-09', title: '삼성전자 배당락일', company: '삼성전자', source: 'dividend' },
+            { date: '2026-02-16', title: 'POSCO홀딩스 배당 지급', company: 'POSCO홀딩스', source: 'dividend' },
+            { date: '2026-02-23', title: 'KB금융 배당락일', company: 'KB금융', source: 'dividend' },
+
+            // 2026년 2월 - 뉴스
+            { date: '2026-02-02', title: 'AI 반도체 수요 급증 전망', company: '산업', source: 'news' },
+            { date: '2026-02-13', title: '전기차 배터리 기술 혁신', company: '산업', source: 'news' },
+            { date: '2026-02-25', title: '글로벌 빅테크 규제 강화', company: '산업', source: 'news' },
         ];
 
         function showCalendar() {
@@ -15096,21 +16026,37 @@ The First Descendant の日本展開が好調に推移し、
                         <select class="calendar-filter-select" id="sourceFilter" onchange="filterCalendarEvents()">
                             <option value="">전체 출처</option>
                             <option value="earnings">실적발표</option>
-                            <option value="news">뉴스</option>
+                            <option value="disclosure">공시</option>
+                            <option value="sec">SEC</option>
+                            <option value="legislation">법령/정책</option>
+                            <option value="macro">거시지표</option>
                             <option value="report">보고서</option>
                             <option value="conference">컨퍼런스</option>
                             <option value="dividend">배당</option>
+                            <option value="news">뉴스</option>
                         </select>
                     </div>
 
                     <div class="calendar-legend">
                         <div class="calendar-legend-item">
                             <div class="calendar-legend-color" style="background: var(--claude-crail);"></div>
-                            <span>실적발표</span>
+                            <span>실적</span>
                         </div>
                         <div class="calendar-legend-item">
-                            <div class="calendar-legend-color" style="background: var(--claude-sage);"></div>
-                            <span>뉴스</span>
+                            <div class="calendar-legend-color" style="background: #4a90d9;"></div>
+                            <span>공시</span>
+                        </div>
+                        <div class="calendar-legend-item">
+                            <div class="calendar-legend-color" style="background: #2e5a8c;"></div>
+                            <span>SEC</span>
+                        </div>
+                        <div class="calendar-legend-item">
+                            <div class="calendar-legend-color" style="background: #7c5cba;"></div>
+                            <span>법령</span>
+                        </div>
+                        <div class="calendar-legend-item">
+                            <div class="calendar-legend-color" style="background: #e67e22;"></div>
+                            <span>거시</span>
                         </div>
                         <div class="calendar-legend-item">
                             <div class="calendar-legend-color" style="background: var(--claude-tan);"></div>
@@ -15123,6 +16069,10 @@ The First Descendant の日本展開が好調に推移し、
                         <div class="calendar-legend-item">
                             <div class="calendar-legend-color" style="background: var(--claude-coffee);"></div>
                             <span>배당</span>
+                        </div>
+                        <div class="calendar-legend-item">
+                            <div class="calendar-legend-color" style="background: var(--claude-sage);"></div>
+                            <span>뉴스</span>
                         </div>
                     </div>
 
@@ -15304,10 +16254,14 @@ The First Descendant の日本展開が好調に推移し、
             // 이번 달 이벤트 필터링
             const monthEvents = calendarEvents.filter(e => e.date >= monthStart && e.date <= monthEnd);
             const earningsCount = monthEvents.filter(e => e.source === 'earnings').length;
-            const newsCount = monthEvents.filter(e => e.source === 'news').length;
+            const disclosureCount = monthEvents.filter(e => e.source === 'disclosure').length;
+            const secCount = monthEvents.filter(e => e.source === 'sec').length;
+            const legislationCount = monthEvents.filter(e => e.source === 'legislation').length;
+            const macroCount = monthEvents.filter(e => e.source === 'macro').length;
             const reportCount = monthEvents.filter(e => e.source === 'report').length;
             const conferenceCount = monthEvents.filter(e => e.source === 'conference').length;
             const dividendCount = monthEvents.filter(e => e.source === 'dividend').length;
+            const newsCount = monthEvents.filter(e => e.source === 'news').length;
 
             // 다가오는 일정 (오늘 이후)
             const today = new Date();
@@ -15316,19 +16270,27 @@ The First Descendant の日本展開が好調に推移し、
 
             const sourceColors = {
                 earnings: '#C15F3C',    // Crail (러스트 오렌지)
-                news: '#7D8471',        // Sage (세이지 그린)
+                disclosure: '#4a90d9',  // 블루
+                sec: '#2e5a8c',         // 다크 블루
+                legislation: '#7c5cba', // 퍼플
+                macro: '#e67e22',       // 오렌지
                 report: '#D4A574',      // Tan (따뜻한 베이지)
                 conference: '#9B8AA6',  // Lavender (라벤더)
-                dividend: '#A67B5B'     // Coffee (커피 브라운)
+                dividend: '#A67B5B',    // Coffee (커피 브라운)
+                news: '#7D8471'         // Sage (세이지 그린)
             };
 
             // 파이 차트 데이터
             const pieData = [
-                { label: '실적발표', value: earningsCount, color: sourceColors.earnings },
-                { label: '뉴스', value: newsCount, color: sourceColors.news },
+                { label: '실적', value: earningsCount, color: sourceColors.earnings },
+                { label: '공시', value: disclosureCount, color: sourceColors.disclosure },
+                { label: 'SEC', value: secCount, color: sourceColors.sec },
+                { label: '법령', value: legislationCount, color: sourceColors.legislation },
+                { label: '거시', value: macroCount, color: sourceColors.macro },
                 { label: '보고서', value: reportCount, color: sourceColors.report },
                 { label: '컨퍼런스', value: conferenceCount, color: sourceColors.conference },
-                { label: '배당', value: dividendCount, color: sourceColors.dividend }
+                { label: '배당', value: dividendCount, color: sourceColors.dividend },
+                { label: '뉴스', value: newsCount, color: sourceColors.news }
             ];
 
             const pieChartSvg = generatePieChart(pieData);
@@ -15526,10 +16488,14 @@ The First Descendant の日本展開が好調に推移し、
 
             const sourceNames = {
                 earnings: '실적발표',
-                news: '뉴스',
+                disclosure: '공시',
+                sec: 'SEC',
+                legislation: '법령/정책',
+                macro: '거시지표',
                 report: '보고서',
                 conference: '컨퍼런스',
-                dividend: '배당'
+                dividend: '배당',
+                news: '뉴스'
             };
 
             modal.innerHTML = `
@@ -16818,18 +17784,33 @@ The First Descendant の日本展開が好調に推移し、
             }
         }
 
-        // 탭 전환
+        // 탭 전환 (기존 호환성 유지)
         function switchIndustryTab(tab) {
             currentIndustryTab = tab;
+            currentIntraSubTab = tab;
 
-            // 탭 활성화 상태 변경
+            // 탭 활성화 상태 변경 (기존 industry-tab)
             document.querySelectorAll('.industry-tab').forEach(t => {
                 t.classList.remove('active');
             });
-            document.querySelector(`.industry-tab[data-tab="${tab}"]`).classList.add('active');
+            const oldTab = document.querySelector(`.industry-tab[data-tab="${tab}"]`);
+            if (oldTab) oldTab.classList.add('active');
+
+            // 서브탭 활성화 (새 industry-sub-tab)
+            document.querySelectorAll('.industry-sub-tab').forEach(t => {
+                t.classList.toggle('active', t.dataset.tab === tab);
+            });
+
+            // 선택 패널 제목 업데이트
+            const titleEl = document.getElementById('intraSelectionTitle');
+            if (titleEl) {
+                const titles = { competitors: '기업 선택', genres: '세부산업 선택', regions: '지역 선택' };
+                titleEl.textContent = titles[tab] || '항목 선택';
+            }
 
             // 선택기, 차트, 테이블 다시 렌더링
             renderIntraSelectorItems();
+            renderIntraCheckboxList();
             renderIntraIndustryChart();
             renderIntraTable();
         }
@@ -16882,53 +17863,54 @@ The First Descendant の日本展開が好調に推移し、
             'snapshot': {
                 title: '스냅샷',
                 icon: '📈',
-                description: '주가 차트, 캔들스틱/라인, 기간 조회',
+                description: '주가 차트, 시리즈 관리, 전망 토글',
                 content: {
                     title: '스냅샷 (주가 차트)',
-                    description: '실시간 주가 데이터를 다양한 차트 형식으로 확인하고 기술적 분석을 수행할 수 있습니다.',
+                    description: '주가 데이터와 다양한 지표를 차트로 시각화하고 분석할 수 있습니다. 차트 사이드바를 통해 차트 유형, 시리즈, 스타일을 설정합니다.',
                     sections: [
                         {
-                            subtitle: '차트 유형 선택',
-                            text: '상단의 차트 유형 버튼을 클릭하여 캔들스틱 차트와 라인 차트를 전환할 수 있습니다. 각 차트 유형은 서로 다른 분석 목적에 적합합니다.',
+                            subtitle: '차트 사이드바',
+                            text: '차트 좌측의 사이드바에서 차트 설정을 조정할 수 있습니다. <strong>데이터</strong> 탭과 <strong>스타일</strong> 탭으로 구분됩니다.',
                             list: [
-                                '<strong>캔들스틱 차트</strong>: 시가, 고가, 저가, 종가를 한눈에 파악할 수 있습니다. 양봉(상승)과 음봉(하락)으로 가격 움직임의 방향과 강도를 직관적으로 확인할 수 있어 단기 트레이딩에 유용합니다.',
-                                '<strong>라인 차트</strong>: 종가만을 연결한 부드러운 곡선으로 전체적인 추세를 파악하기 좋습니다. 장기 투자자에게 적합하며, 가격의 큰 흐름을 한눈에 볼 수 있습니다.'
+                                '<strong>데이터 탭</strong>: 차트 유형, X축 설정, 시리즈 관리, 전망 토글',
+                                '<strong>스타일 탭</strong>: 라인 스타일(선 두께, 마커), 축 설정(Y축 위치)'
+                            ]
+                        },
+                        {
+                            subtitle: '차트 유형 선택',
+                            text: '데이터 탭의 차트 유형 드롭다운에서 원하는 차트 형식을 선택합니다.',
+                            list: [
+                                '<strong>Line chart</strong>: 데이터 포인트를 선으로 연결하여 추세를 파악하기 좋습니다.',
+                                '<strong>Bar chart</strong>: 막대형 차트로 값의 크기를 직관적으로 비교할 수 있습니다.',
+                                '<strong>Area chart</strong>: 선 아래 영역을 채워 누적 효과나 규모를 강조합니다.'
                             ],
                             illustration: 'chart-types'
                         },
                         {
-                            subtitle: '기간 선택',
-                            text: '상단의 기간 버튼을 클릭하여 조회할 데이터 범위를 설정합니다.',
+                            subtitle: '시리즈 관리',
+                            text: '기본 주가 시리즈 외에 다양한 지표를 추가하여 비교 분석할 수 있습니다.',
                             list: [
-                                '<strong>1일</strong>: 당일 장중 가격 움직임 (분봉 기준)',
-                                '<strong>1주</strong>: 최근 7일간의 일봉 데이터',
-                                '<strong>1개월</strong>: 최근 30일간의 일봉 데이터',
-                                '<strong>3개월</strong>: 최근 90일간의 일봉 데이터',
-                                '<strong>1년</strong>: 최근 1년간의 주봉 데이터',
-                                '<strong>전체</strong>: 상장 이후 전체 데이터 (월봉 기준)'
+                                '<strong>주가</strong>: 기본 시리즈로 항상 표시됩니다.',
+                                '<strong>+ 추가 버튼</strong>: 클릭하면 추가 가능한 지표 목록이 표시됩니다.',
+                                '<strong>거시지표</strong>: 기준금리, 환율(USD/KRW) 등을 오버레이할 수 있습니다.',
+                                '<strong>시리즈 클릭</strong>: 해당 시리즈를 표시/숨김 토글합니다.',
+                                '<strong>× 버튼</strong>: 추가한 시리즈를 제거합니다.'
                             ],
-                            illustration: 'period-selector'
+                            tip: '여러 지표를 함께 표시하여 상관관계를 분석해보세요.'
                         },
                         {
-                            subtitle: '확대/축소',
-                            text: '차트 영역 위에서 마우스 휠을 스크롤하여 차트를 확대하거나 축소할 수 있습니다. 특정 기간의 세부적인 가격 움직임을 확인하거나, 전체 추세를 조망할 때 활용하세요.',
-                            tip: '마우스 휠을 위로 굴리면 확대, 아래로 굴리면 축소됩니다. 차트를 드래그하여 좌우로 이동할 수도 있습니다.'
+                            subtitle: '전망 토글',
+                            text: '데이터 탭 하단의 전망 영역에서 매출액 전망 데이터를 표시하거나 숨길 수 있습니다. 토글을 켜면 차트에 예측 데이터가 점선으로 표시됩니다.',
+                            tip: '전망 데이터는 실제 데이터와 구분되도록 점선 스타일로 표시됩니다.'
                         },
                         {
-                            subtitle: '상세 정보 확인',
-                            text: '차트 위에 마우스 커서를 올리면 해당 시점의 상세 정보가 툴팁으로 표시됩니다.',
+                            subtitle: '스타일 설정',
+                            text: '스타일 탭에서 차트의 시각적 요소를 조정할 수 있습니다.',
                             list: [
-                                '<strong>시가 (Open)</strong>: 해당 기간의 시작 가격',
-                                '<strong>고가 (High)</strong>: 해당 기간의 최고 가격',
-                                '<strong>저가 (Low)</strong>: 해당 기간의 최저 가격',
-                                '<strong>종가 (Close)</strong>: 해당 기간의 마감 가격',
-                                '<strong>거래량 (Volume)</strong>: 해당 기간의 총 거래량'
-                            ],
-                            tip: '십자선 커서를 따라 정확한 가격과 날짜를 확인할 수 있습니다.'
-                        },
-                        {
-                            subtitle: '거래량 차트',
-                            text: '메인 차트 하단에 거래량 바 차트가 함께 표시됩니다. 거래량은 가격 움직임의 신뢰도를 판단하는 중요한 지표입니다. 가격 상승 시 거래량이 함께 증가하면 상승 추세가 강하다고 볼 수 있습니다.'
+                                '<strong>선 두께</strong>: 1px ~ 4px 중 선택',
+                                '<strong>마커 표시</strong>: 데이터 포인트에 마커 표시 여부',
+                                '<strong>Y축 위치</strong>: 왼쪽 또는 오른쪽에 Y축 배치'
+                            ]
                         }
                     ]
                 }
@@ -18091,33 +19073,31 @@ The First Descendant の日本展開が好調に推移し、
                 'chart-types': `
                     <div class="manual-illustration">
                         <svg viewBox="0 0 400 150">
-                            <!-- 캔들스틱 -->
-                            <rect x="10" y="10" width="180" height="130" fill="var(--bg-dark)" rx="4"/>
-                            <text x="100" y="30" font-size="10" fill="var(--text-primary)" text-anchor="middle">캔들스틱</text>
-                            <!-- 캔들들 -->
-                            <rect x="35" y="50" width="8" height="40" fill="#7D8471"/>
-                            <line x1="39" y1="45" x2="39" y2="95" stroke="#7D8471" stroke-width="1"/>
-                            <rect x="55" y="60" width="8" height="30" fill="#C15F3C"/>
-                            <line x1="59" y1="55" x2="59" y2="100" stroke="#C15F3C" stroke-width="1"/>
-                            <rect x="75" y="45" width="8" height="50" fill="#7D8471"/>
-                            <line x1="79" y1="40" x2="79" y2="100" stroke="#7D8471" stroke-width="1"/>
-                            <rect x="95" y="55" width="8" height="35" fill="#7D8471"/>
-                            <line x1="99" y1="50" x2="99" y2="95" stroke="#7D8471" stroke-width="1"/>
-                            <rect x="115" y="70" width="8" height="25" fill="#C15F3C"/>
-                            <line x1="119" y1="65" x2="119" y2="105" stroke="#C15F3C" stroke-width="1"/>
-                            <rect x="135" y="50" width="8" height="45" fill="#7D8471"/>
-                            <line x1="139" y1="45" x2="139" y2="100" stroke="#7D8471" stroke-width="1"/>
-                            <rect x="155" y="40" width="8" height="50" fill="#7D8471"/>
-                            <line x1="159" y1="35" x2="159" y2="95" stroke="#7D8471" stroke-width="1"/>
-
-                            <!-- 라인 차트 -->
-                            <rect x="210" y="10" width="180" height="130" fill="var(--bg-dark)" rx="4"/>
-                            <text x="300" y="30" font-size="10" fill="var(--text-primary)" text-anchor="middle">라인 차트</text>
-                            <polyline points="230,90 250,70 270,80 290,50 310,60 330,45 350,55 370,40"
+                            <!-- Line Chart -->
+                            <rect x="5" y="10" width="125" height="130" fill="var(--bg-dark)" rx="4"/>
+                            <text x="67" y="28" font-size="9" fill="var(--text-primary)" text-anchor="middle">Line Chart</text>
+                            <polyline points="20,90 40,70 60,80 80,50 100,60 115,45"
                                       stroke="var(--claude-orange)" stroke-width="2" fill="none"/>
-                            <circle cx="230" cy="90" r="3" fill="var(--claude-orange)"/>
-                            <circle cx="290" cy="50" r="3" fill="var(--claude-orange)"/>
-                            <circle cx="370" cy="40" r="3" fill="var(--claude-orange)"/>
+                            <circle cx="20" cy="90" r="2" fill="var(--claude-orange)"/>
+                            <circle cx="60" cy="80" r="2" fill="var(--claude-orange)"/>
+                            <circle cx="100" cy="60" r="2" fill="var(--claude-orange)"/>
+
+                            <!-- Bar Chart -->
+                            <rect x="138" y="10" width="125" height="130" fill="var(--bg-dark)" rx="4"/>
+                            <text x="200" y="28" font-size="9" fill="var(--text-primary)" text-anchor="middle">Bar Chart</text>
+                            <rect x="155" y="70" width="15" height="50" fill="#7D8471" rx="2"/>
+                            <rect x="175" y="50" width="15" height="70" fill="var(--claude-orange)" rx="2"/>
+                            <rect x="195" y="60" width="15" height="60" fill="#6B7B8C" rx="2"/>
+                            <rect x="215" y="40" width="15" height="80" fill="#7D8471" rx="2"/>
+                            <rect x="235" y="55" width="15" height="65" fill="var(--claude-orange)" rx="2"/>
+
+                            <!-- Area Chart -->
+                            <rect x="271" y="10" width="125" height="130" fill="var(--bg-dark)" rx="4"/>
+                            <text x="333" y="28" font-size="9" fill="var(--text-primary)" text-anchor="middle">Area Chart</text>
+                            <path d="M286,100 L306,75 L326,85 L346,55 L366,65 L381,50 L381,120 L286,120 Z"
+                                  fill="var(--claude-orange)" fill-opacity="0.3"/>
+                            <polyline points="286,100 306,75 326,85 346,55 366,65 381,50"
+                                      stroke="var(--claude-orange)" stroke-width="2" fill="none"/>
                         </svg>
                         <div class="illustration-caption">차트 유형 비교</div>
                     </div>
