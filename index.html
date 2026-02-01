@@ -10680,9 +10680,9 @@ Continued investment in new game development and live services.`,
             };
 
             // colgroup으로 첫 번째 컬럼 너비 강제 설정
-            let html = `<colgroup><col style="width: 200px; min-width: 200px; max-width: 200px;">`;
+            let html = `<colgroup><col class="first-col" style="width: 200px; min-width: 200px; max-width: 200px;">`;
             columns.forEach(() => {
-                html += `<col style="width: 45px; min-width: 45px;">`;
+                html += `<col class="data-col">`;
             });
             html += '</colgroup><thead>';
 
@@ -10769,8 +10769,33 @@ Continued investment in new game development and live services.`,
             html += '</tbody>';
             table.innerHTML = html;
 
+            // 테이블 컬럼 너비 동적 조정
+            adjustTableColumnWidths();
+
             // 출처 관리 패널 렌더링
             renderSourceManagerPanel();
+        }
+
+        // 테이블 컬럼 너비 동적 조정 함수
+        function adjustTableColumnWidths() {
+            const container = document.querySelector('.table-container');
+            const table = document.getElementById('dataTable');
+            if (!container || !table) return;
+
+            const cols = table.querySelectorAll('colgroup col.data-col');
+            if (cols.length === 0) return;
+
+            const containerWidth = container.clientWidth;
+            const firstColWidth = 200;
+            const remainingWidth = containerWidth - firstColWidth - 2; // border 고려
+
+            if (remainingWidth > 0) {
+                const colWidth = Math.max(45, Math.floor(remainingWidth / cols.length));
+                cols.forEach(col => {
+                    col.style.width = colWidth + 'px';
+                    col.style.minWidth = '45px';
+                });
+            }
         }
 
         // 출처 클릭 시 우측 패널에 보고서 목록 표시
@@ -15588,6 +15613,9 @@ Continued investment in new game development and live services.`,
         document.addEventListener('DOMContentLoaded', function() {
             updateNotificationBadge();
             loadDrawingData();
+
+            // 윈도우 리사이즈 시 테이블 컬럼 너비 재조정
+            window.addEventListener('resize', adjustTableColumnWidths);
         });
 
         // 계정 표시 함수
